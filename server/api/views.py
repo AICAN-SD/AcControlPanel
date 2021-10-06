@@ -3,8 +3,64 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from .models import Floors
+from .models import Floors,Rooms,Machines,TimeScheduleFloor,TimeScheduleRoom,TimeScheduleMachine
+from .serializers import FloorSerializer,RoomSerializer,MachineSerializer,TimeSFSerializer,TimeSRSerializer,TimeSMSerializer
+from django.core import serializers
 
+# Floors Api
+def Floor(request,id=0):
+    if request.method =='GET':
+        if id:
+             floors = Floors.objects.get(FloorId=id)
+        else:
+            floors = Floors.objects.all()
+        floors_serializer = FloorSerializer(floors,many=True)
+        return JsonResponse(floors_serializer.data,safe=False)
 
-def SchedulingApi(request):
-    return HttpResponse("home")
+# Rooms Api
+def Room(request,id=0):
+    if request.method == 'GET':
+        if id:
+            rooms = Rooms.objects.filter(floor=id)
+        else:
+            rooms=Rooms.objects.all()    
+        rooms_serializer = RoomSerializer(rooms,many=True)
+        return JsonResponse(rooms_serializer.data,safe=False)
+
+# Machines api
+def Machine(request,id=0):
+    if request.method == 'GET':
+        machines = Machines.objects.filter(room=id)
+        machines_serializer = MachineSerializer(machines,many=True)
+        return JsonResponse(machines_serializer.data,safe=False)
+
+# Floor's Time Schedule Api
+def TimeSF(request,fid=0,id=0):
+    if(request.method) == 'GET':
+        if fid:
+            floor = Floors.objects.get(FloorId=fid)
+            floorS=TimeScheduleFloor.objects.filter(floor=floor)
+        else:
+            floorS=TimeScheduleFloor.objects.get(id=id)    
+        floorS_serializer = TimeSFSerializer(floorS,many=True)    
+        return JsonResponse(floorS_serializer,safe=False)
+
+# Room's Time Schedule Api
+def TimeSR(request,id=0):
+    if(request.method) == 'GET':
+        if id:
+            roomS=TimeScheduleRoom.objects.get(id=id)
+        else:
+            roomS=TimeScheduleRoom.objects.all()    
+        roomS_serializer = TimeSRSerializer(roomS,many=True)    
+        return JsonResponse(roomS_serializer,safe=False)        
+
+# Machines's Time Schedule Api
+def TimeSM(request,id=0):
+    if(request.method) == 'GET':
+        if id:
+            machineS=TimeScheduleMachine.objects.get(id=id)
+        else:
+            machineS=TimeScheduleMachine.objects.all()    
+        machineS_serializer = TimeSMSerializer(machineS,many=True)    
+        return JsonResponse(machineS_serializer,safe=False) 

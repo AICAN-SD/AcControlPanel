@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Floors(models.Model):
-    FloorId = models.AutoField(primary_key=True)
+    FloorId = models.AutoField(primary_key=True,unique=True)
     FloorName = models.CharField(max_length=200)
     status = models.BooleanField(default=False)
 
@@ -28,6 +28,7 @@ class Machines(models.Model):
         return self.MachineName  
 
 class TimeScheduleFloor(models.Model):
+    id =  models.AutoField(primary_key=True)
     floor=models.ForeignKey(Floors, on_delete=models.CASCADE)
     startTime = models.TimeField(auto_now=False, auto_now_add=False)
     endTime = models.TimeField(auto_now=False, auto_now_add=False)
@@ -36,6 +37,7 @@ class TimeScheduleFloor(models.Model):
         ordering=['startTime']
 
 class TimeScheduleRoom(models.Model):
+    id= models.AutoField(primary_key=True)
     room=models.ForeignKey(Rooms, on_delete=models.CASCADE)
     startTime = models.TimeField(auto_now=False, auto_now_add=False)
     endTime = models.TimeField(auto_now=False, auto_now_add=False)  
@@ -44,6 +46,8 @@ class TimeScheduleRoom(models.Model):
         ordering=['startTime']  
 
 class TimeScheduleMachine(models.Model):
+    id= models.AutoField(primary_key=True)
+    floor = models.ForeignKey(Floors,on_delete=models.CASCADE)
     machine=models.ForeignKey(Machines, on_delete=models.CASCADE)
     startTime = models.TimeField(auto_now=False, auto_now_add=False)
     endTime = models.TimeField(auto_now=False, auto_now_add=False)    
