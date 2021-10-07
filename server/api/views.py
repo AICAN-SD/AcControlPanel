@@ -11,12 +11,12 @@ from django.core import serializers
 def Floor(request,id=0):
     if request.method =='GET':
         if id:
-            floors = Floors.objects.filter(FloorId=id)#Solve This Error(Shows error for get method)
-             
+            floors = Floors.objects.filter(FloorId=id)
+            print(floors)
         else:
             floors = Floors.objects.all()
         floors_serializer = FloorSerializer(floors,many=True)
-        return JsonResponse(floors_serializer.data,safe=False)
+        return JsonResponse(floors_serializer.data,safe=False)#Solve This Error(Shows error for get method response)
 
 # Rooms Api
 def Room(request,id=0):
@@ -43,31 +43,33 @@ def Machine(request,id=0):
 def TimeSF(request,fid=0,id=0):
     if(request.method) == 'GET':
         if fid:
-            floor= Floors.objects.get(FloorId=id)
+            floor= Floors.objects.get(FloorId=fid)
             floorS=TimeScheduleFloor.objects.filter(floor=floor)
+    
         else:
-            floorS=TimeScheduleFloor.objects.get(id=id)    
+            print('else')
+            floorS=TimeScheduleFloor.objects.filter(id=id)    
         floorS_serializer = TimeSFSerializer(floorS,many=True)    
-        return JsonResponse(floorS_serializer,safe=False)
+        return JsonResponse(floorS_serializer.data,safe=False)
 
 # Room's Time Schedule Api
 def TimeSR(request,rid=0,id=0):
     if(request.method) == 'GET':
         if id:
-            roomS=TimeScheduleRoom.objects.get(id=id)
+            roomS=TimeScheduleRoom.objects.filter(id=id)
         else:
             room = Rooms.objects.get(RoomId=rid)
             roomS=TimeScheduleRoom.objects.filter(room=room)    
         roomS_serializer = TimeSRSerializer(roomS,many=True)    
-        return JsonResponse(roomS_serializer,safe=False)        
+        return JsonResponse(roomS_serializer.data,safe=False)        
 
 # Machines's Time Schedule Api
 def TimeSM(request,mid=0,id=0):
     if(request.method) == 'GET':
         if id:
-            machineS=TimeScheduleMachine.objects.get(id=id)
+            machineS=TimeScheduleMachine.objects.filter(id=id)
         else:
             machine = Machines.objects.get(MachineId=mid)
             machineS=TimeScheduleMachine.objects.filter(machine=machine)    
         machineS_serializer = TimeSMSerializer(machineS,many=True)    
-        return JsonResponse(machineS_serializer,safe=False) 
+        return JsonResponse(machineS_serializer.data,safe=False) 
