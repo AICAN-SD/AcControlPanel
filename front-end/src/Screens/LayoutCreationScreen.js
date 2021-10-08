@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
+import LayoutCreation from '../Components/LayoutCreation'
 
 export default class Hello extends Component {
     render() {
         return (
-            <div style={{backgroundColor:'green'}}>
-                LayoutCreation
-            </div>
+            <LayoutCreation></LayoutCreation>
         )
     }
 }
