@@ -3,66 +3,101 @@ import { Form, Button } from "react-bootstrap";
 import TimeField from "react-simple-timefield";
 
 function FloorSchedule() {
-  const [time, setTime] = useState("12:33");
-  function onTimeChange(e) {
-    setTime(e.target.value);
+  const [startTime, setStartTime] = useState("00.00");
+  const [endTime, setEndTime] = useState("00.00");
+  const [name, setName] = useState("");
+  const [list, setList] = useState([]);
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    setList([
+      {
+        id: 1,
+        start: "09:00",
+        end: "10.00",
+        hrs: "hrs"
+      },
+      {
+        id: 2,
+        start: "11.00",
+        end: "12.00",
+        hrs: "hrs"
+      }
+    ]);
+  }, []);
+  function submitHandler(e) {
+    e.preventDefault();
+    console.log(name);
+    console.log(list);
+  }
+  function addField() {
+    setList([...list, { id: 3, start: startTime, end: endTime, hrs: "hrs" }]);
+    setEndTime("00.00");
+    setStartTime("00.00");
+  }
+  function onStartTimeChange(e) {
+    setStartTime(e.target.value);
+  }
+  function onEndTimeChange(e) {
+    setEndTime(e.target.value);
   }
   return (
     <div>
-      <Form>
+      <Form onSubmit={submitHandler}>
         <Form.Label sm="2">Profile Name:</Form.Label>
-        <Form.Control type="text" placeholder="" />
+        <Form.Control
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          type="text"
+          placeholder=""
+        />
         <h4>Choose Floors:</h4>
         <Form.Check type="checkbox" label="Floor 1" />
         <Form.Check type="checkbox" label="Floor 2" />
         <Form.Check type="checkbox" label="Floor 3" />
-      </Form>
-      <Form.Label sm="2">Start Time:</Form.Label>
-      <TimeField
-        style={{ width: "80px", margin: "5px" }}
-        value={time}
-        onChange={onTimeChange}
-      />
-      <Form.Label sm="2">End Time:</Form.Label>
-      <TimeField
-        style={{ width: "80px", margin: "5px" }}
-        value={time}
-        onChange={onTimeChange}
-      />
+        <Form.Label sm="2">Start Time:</Form.Label>
+        <TimeField
+          style={{ width: "80px", margin: "5px" }}
+          value={startTime}
+          onChange={onStartTimeChange}
+        />
+        <Form.Label sm="2">End Time:</Form.Label>
+        <TimeField
+          style={{ width: "80px", margin: "5px" }}
+          value={endTime}
+          onChange={onEndTimeChange}
+        />
 
-      <Button style={{ margin: "5px" }} variant="primary" type="submit">
-        Add Field
-      </Button>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Start Time</th>
-            <th scope="col">End Time</th>
-            <th scope="col">Running Time</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>startTime</td>
-            <td>endTime</td>
-            <td>hrs</td>
-            <td>edit delete</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>startTime</td>
-            <td>endTime</td>
-            <td>hrs</td>
-            <td>edit delete</td>
-          </tr>
-        </tbody>
-      </table>
-      <Button variant="primary" type="submit">
-        Create
-      </Button>
+        <Button onClick={addField} style={{ margin: "5px" }} variant="primary">
+          Add Field
+        </Button>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">End Time</th>
+              <th scope="col">Running Time</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map((x) => {
+              return (
+                <tr>
+                  <th scope="row">{x.id}</th>
+                  <td>{x.start}</td>
+                  <td>{x.end}</td>
+                  <td>{x.hrs}</td>
+                  <td>delete</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <Button variant="primary" type="submit">
+          Create
+        </Button>
+      </Form>
     </div>
   );
 }
