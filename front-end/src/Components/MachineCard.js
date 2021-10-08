@@ -8,62 +8,30 @@ function MachineCard() {
       
             <Col xs={3}>
             <div className="machineCard">
-     
-         
-    
-        {/* <div className="dropdown">
-          <a
-            className="btn btn-default dropdown-toggle"
-            href="#"
-            role="button"
-            id="dropdownMenuLink"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Select Machine
-          </a>
-          <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <li>
-              <a className="dropdown-item" href="#">
-                AC1
-              </a>
-            </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                AC2
-              </a>
-            </li>
-            <li>
-              <a className="dropdown-item" href="#">
-                AC3
-              </a>
-            </li>
-          </ul>
-        </div> */}
         <Row>
           <Col xs={4}>
-          <p className="form-control">Assign Machine</p>
+          <p className="form-control">Assign Device</p>
           </Col>
           <Col xs={8}>
           <Form.Select aria-label="Default select example" required>
           <option></option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option value="1">PAC001</option>
+          <option value="2">PAC002</option>
+          <option value="3">PAC003</option>
         </Form.Select>
           </Col>
         </Row>
      
         <Row>
           <Col xs={4}>
-          <p className="form-control">Device Type</p>
+          <p className="form-control">Machine Type</p>
           </Col>
           <Col xs={8}>
           <Form.Select aria-label="Default select example" required>
           <option></option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option value="1">1 tonn</option>
+          <option value="2">2 tonn</option>
+          <option value="3">3 tonn</option>
         </Form.Select>
           </Col>
         </Row>
