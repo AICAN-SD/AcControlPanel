@@ -32,15 +32,16 @@ function TimeSchedulerScreen() {
   }
   return (
     <div>
-      <div style={{ padding: "30px" }}>
+      <h1 style={{ padding: "30px" }}>Create Profile:</h1>
+      <div style={{ padding: "0px 30px", paddingBottom: "20px" }}>
         <Button onClick={floorHandler} variant={floor ? "info" : "danger"}>
-          Floor
+          Floor Profile
         </Button>{" "}
         <Button onClick={roomHandler} variant={room ? "info" : "danger"}>
-          Room
+          Room Profile
         </Button>{" "}
         <Button onClick={machineHandler} variant={machine ? "info" : "danger"}>
-          Machines
+          Machine Profile
         </Button>{" "}
       </div>
       <div style={{ padding: "0px 30px" }}>
