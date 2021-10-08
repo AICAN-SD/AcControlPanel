@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button ,Row,Col} from "react-bootstrap";
 import TimeField from "react-simple-timefield";
 
 function RoomSchedule() {
@@ -51,12 +51,28 @@ function RoomSchedule() {
           placeholder=""
         />
         <h4>Choose Rooms:</h4>
+        <Row style={{marginBottom:"20px"}}>
+        <Col xs="3">
         <h5>Floor1:</h5>
         <Form.Check type="checkbox" label="Room 1" />
         <Form.Check type="checkbox" label="Room 2" />
+        </Col>
+        <Col sm="3" xs="4">
         <h5>Floor2:</h5>
         <Form.Check type="checkbox" label="Room 1" />
         <Form.Check type="checkbox" label="Room 2" />
+        </Col>
+        <Col sm="3" xs="4">
+        <h5>Floor2:</h5>
+        <Form.Check type="checkbox" label="Room 1" />
+        <Form.Check type="checkbox" label="Room 2" />
+        </Col>
+        <Col sm="3" xs="4">
+        <h5>Floor2:</h5>
+        <Form.Check type="checkbox" label="Room 1" />
+        <Form.Check type="checkbox" label="Room 2" />
+        </Col>
+        </Row>
         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField
           style={{ width: "80px", margin: "5px" }}
