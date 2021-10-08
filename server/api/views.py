@@ -6,6 +6,44 @@ from django.http.response import JsonResponse
 from .models import Floors,Rooms,Machines,TimeScheduleFloor,TimeScheduleRoom,TimeScheduleMachine
 from .serializers import FloorSerializer,RoomSerializer,MachineSerializer,TimeSFSerializer,TimeSRSerializer,TimeSMSerializer
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def data(request):
+    if request.method=='POST':
+        data=JSONParser().parse(request)['data']
+        
+        for x in data:
+            if 'RoomName' in x:
+                
+                roomArray=x.split('RoomName')
+                floorId=roomArray[0].split('Floor')[1]
+                roomId=roomArray[1]
+                modelRoom=Rooms(RoomId=roomId,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
+                modelRoom.save()
+            elif 'MachineAssignDevice' in x:
+                print(x)
+                MachineAssignDeviceArray=x.split('MachineAssignDevice')
+                machineId=MachineAssignDeviceArray[1]
+                roomArray=MachineAssignDeviceArray[0].split('Room')
+                floorId=roomArray[0].split('Floor')[1]
+                roomId=roomArray[1]
+                print('FloorId  '+floorId)
+                print('roomId  '+roomId)
+                print('machineId  '+machineId)
+                machineType=data['Floor'+floorId+'Room'+roomId+'MachineType'+machineId]
+                print(machineType)
+                modelMachine=Machines(room=Rooms.objects.get(RoomId=roomId),MachineId=machineId,MachineName=data[x],MachineType=machineType)
+                modelMachine.save()
+            elif 'FloorName' in x:
+                print(x)
+                floorId=x.split('FloorName')[1]
+                model=Floors(FloorName=data[x],FloorId=floorId)
+                model.save()
+            else:
+                print("In else "+x)
+        return JsonResponse('success',safe=False)
+
 
 # Floors Api
 def Floor(request,id=0):

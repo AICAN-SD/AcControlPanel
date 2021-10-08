@@ -22,6 +22,7 @@ class Machines(models.Model):
     MachineId = models.AutoField(primary_key=True,unique=True)
     room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
     MachineName = models.CharField(max_length=200) 
+    MachineType=models.CharField(max_length=100)
     status = models.BooleanField(default=False)
     
     def __str__(self):

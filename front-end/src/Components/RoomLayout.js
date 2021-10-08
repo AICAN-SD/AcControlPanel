@@ -5,7 +5,7 @@ import { Row ,Col} from 'react-bootstrap';
 import AddMachineButton from './AddMachineButton'
 import '../css/MachineCard.css'
 
-function RoomLayout() {
+function RoomLayout(props) {
     const [machine, setMachine] = useState(1);
     const [machineArray, setMachineArray] = useState([]);
   
@@ -14,11 +14,11 @@ function RoomLayout() {
             <div className="rectangle">
             <Row>
                 <Col xs={2}>
-                <AddMachineButton name='Add Machine' onClick={setMachine} onC={setMachineArray}></AddMachineButton>
+                <AddMachineButton name='Add Machine' onClick={setMachine} onC={setMachineArray} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={machine}></AddMachineButton>
 
                 </Col>
                 <Col xs={10}>
-                <input className="form-control ac" placeholder="Room Name" required />
+                <input name={'Floor'+props.floorNumber+'RoomName'+props.roomNumber} className="form-control ac" placeholder="Room Name" required />
                 </Col>
             </Row>
            
