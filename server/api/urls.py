@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+   path('api/data',views.data),
    path('floors/',views.Floor,name="floor"),
    path('floors/<str:id>/',views.Floor,name="floor"),
 
