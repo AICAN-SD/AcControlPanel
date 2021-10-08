@@ -50,8 +50,8 @@ function RoomSchedule() {
           type="text"
           placeholder=""
         />
-        <h4>Choose Rooms:</h4>
-        <Row style={{marginBottom:"20px"}}>
+        <h4 style={{margin:"10px 0px"}}>Choose Rooms:</h4>
+        <Row style={{marginBottom:"20px",marginLeft:"10px"}}>
         <Col xs="3">
         <h5>Floor1:</h5>
         <Form.Check type="checkbox" label="Room 1" />
