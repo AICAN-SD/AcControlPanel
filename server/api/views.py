@@ -78,49 +78,15 @@ def Machine(request):
                   }
             rooms=Rooms.objects.filter(floor=floor)
             rooms_serializer = RoomSerializer(rooms,many=True)
+            datay=[]
             for room in rooms:
                 machines=Machines.objects.filter(room=room)
                 machines_serializer = MachineSerializer(machines,many=True)
-                datay={
+                x={
                     "roomName":room.RoomName,
                     "machines":machines_serializer.data
                 }
-                datax["room"]=datay
+                datay.append(x)
+            datax["room"]=datay
             data.append(datax)   
-        
         return JsonResponse(data,safe=False)
-
-# Floor's Time Schedule Api
-def TimeSF(request,fid=0,id=0):
-    if(request.method) == 'GET':
-        if fid:
-            floor= Floors.objects.get(FloorId=fid)
-            floorS=TimeScheduleFloor.objects.filter(floor=floor)
-    
-        else:
-            print('else')
-            floorS=TimeScheduleFloor.objects.filter(id=id)    
-        floorS_serializer = TimeSFSerializer(floorS,many=True)    
-        return JsonResponse(floorS_serializer.data,safe=False)
-
-# Room's Time Schedule Api
-def TimeSR(request,rid=0,id=0):
-    if(request.method) == 'GET':
-        if id:
-            roomS=TimeScheduleRoom.objects.filter(id=id)
-        else:
-            room = Rooms.objects.get(RoomId=rid)
-            roomS=TimeScheduleRoom.objects.filter(room=room)    
-        roomS_serializer = TimeSRSerializer(roomS,many=True)    
-        return JsonResponse(roomS_serializer.data,safe=False)        
-
-# Machines's Time Schedule Api
-def TimeSM(request,mid=0,id=0):
-    if(request.method) == 'GET':
-        if id:
-            machineS=TimeScheduleMachine.objects.filter(id=id)
-        else:
-            machine = Machines.objects.get(MachineId=mid)
-            machineS=TimeScheduleMachine.objects.filter(machine=machine)    
-        machineS_serializer = TimeSMSerializer(machineS,many=True)    
-        return JsonResponse(machineS_serializer.data,safe=False) 

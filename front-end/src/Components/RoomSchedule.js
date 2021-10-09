@@ -20,6 +20,7 @@ function RoomSchedule() {
   }
     , []);
   function submitHandler(e) {
+    e.preventDefault()
     if(name === ''){return}
     if(list.length === 0){return}
     if(items.length ===0){return}
