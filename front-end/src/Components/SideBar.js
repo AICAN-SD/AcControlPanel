@@ -25,6 +25,11 @@ function onClick(){
     <Nav.Link href='/TimeScheduler'>TimeScheduler</Nav.Link>
     </Col>
   </Row>
+  <Row>
+    <Col>
+    <Nav.Link href='/ControlPanel'>ControlPanel</Nav.Link>
+    </Col>
+  </Row>
 </Container>
           </Offcanvas.Body>
         </Offcanvas> 

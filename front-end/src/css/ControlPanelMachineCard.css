@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,300&display=swap");
+
+.ControlPanelMachineCard {
+  width: 350px;
+  height: 240px;
+  margin: 10px 5px;
+  padding: 10px;
+  background-color: FFFFFF;
+  border-radius: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.ac {
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 2.5rem;
+}
+
+.num {
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.5rem;
+}
+#row1 {
+  padding-top: 5%;
+  padding-left: 8%;
+}
+
+#row1 button {
+  padding-right: 15px;
+  white-space: nowrap;
+  margin-top: 20px;
+}
+
+#row2 {
+  padding-left: 24%;
+}
+
+#row2 button {
+  font-size: small;
+}
+
+.sun {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  color: #ff9211;
+  padding-left: 2%;
+  white-space: nowrap;
+}
+
+.moon {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  color: #48465f;
+  padding-left: 2%;
+  white-space: nowrap;
+}
+.fa-sun {
+  color: #ff9211;
+}
+.fa-moon {
+  color: #48465f;
+}
+
+#on {
+  background-color: #ff9211;
+  font-family: "Montserrat", sans-serif;
+  color: #fff;
+}
+#of {
+  background-color: #48465f;
+  font-family: "Montserrat", sans-serif;
+  color: #fff;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #48465f;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #ff9211;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #ff9211;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
