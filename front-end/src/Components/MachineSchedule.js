@@ -74,13 +74,12 @@ function MachineSchedule() {
         <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
         {machines.map((machine,index)=>{
           return <Col key={index} sm="3" xs="4">
-            {(machine.room !== undefined) &&
-            <><h5>{machine.floor}-{machine.room.roomName}:</h5>
-            {machine.room.machines.map(mech=>{
-              return <Form.Check key={mech.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={mech.MachineId} value={mech.MachineName} label={mech.MachineName} />
+            {machine.room.map(()=>{
+              
             })}
+            <><h5>{machine.floor}-{machine.room.roomName}:</h5>
+            {/* return <Form.Check key={mech.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={mech.MachineId} value={mech.MachineName} label={mech.MachineName} /> */}
             </>
-            }
           </Col>
         })}
         </Row>

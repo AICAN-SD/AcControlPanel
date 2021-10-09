@@ -87,6 +87,6 @@ def Machine(request):
                     "machines":machines_serializer.data
                 }
                 datay.append(x)
-            datax["room"]=datay
+            datax["rooms"]=datay
             data.append(datax)   
         return JsonResponse(data,safe=False)
