@@ -3,14 +3,11 @@ from . import views
 
 urlpatterns = [
    path('api/data',views.data),
-   path('floors/',views.Floor,name="floor"),
-   path('floors/<str:id>/',views.Floor,name="floor"),
+   path('api/floors/',views.Floor,name="floor"),#get data for creating floorProfile
 
-   path('rooms/',views.Room,name="room"),
-   path('rooms/<str:id>/',views.Room,name="room"),#rooms for specific floor
+   path('api/rooms/',views.Room,name="room"),#get data for creating roomProfile
 
-   path('machines/',views.Machine,name="machine"),
-   path('machines/<str:id>/',views.Machine,name="machine"),#machines for specific room
+   path('api/machines/',views.Machine,name="machine"),#get data for creating machineProfile
 
    path('TSF1/<str:fid>/',views.TimeSF),#All Schedule records for a floor
    path('TSF/<str:id>/',views.TimeSF),#specific floor Schedule record

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button,Row,Col } from "react-bootstrap";
 import TimeField from "react-simple-timefield";
+import axios from "axios";
 
 function FloorSchedule() {
   const [startTime, setStartTime] = useState("00.00");
@@ -8,29 +9,35 @@ function FloorSchedule() {
   const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [items, setItems] = useState([]);
+  const [floors,setFloors]=useState([]);
   useEffect(() => {
-    setList([
-      {
-        id: 1,
-        start: "09:00",
-        end: "10.00",
-        hrs: "hrs"
-      },
-      {
-        id: 2,
-        start: "11.00",
-        end: "12.00",
-        hrs: "hrs"
-      }
-    ]);
+    axios.get('http://127.0.0.1:8000/api/floors')
+    .then(res=>{
+      setFloors(res.data)
+    }).catch(e=>{
+      console.log(e)
+    })
   }, []);
   function submitHandler(e) {
-    e.preventDefault();
-    console.log(name);
-    console.log(list);
+    // e.preventDefault();
+    if(name === ''){return}
+    if(list.length === 0){return}
+    if(items.length ===0){return}
+    const schedule={
+      profName:name,
+      timeSchedule:list,
+      selectedFloors:items
+    }
+    console.log(schedule)
+//     axios.post('http://127.0.0.1:8000/api/FloorSchedule',{data:schedule,headers: {
+//     'Content-Type' : 'application/json; charset=UTF-8',
+//     'Accept': 'Token',
+//     "Access-Control-Allow-Origin": "*",
+// }
+// })
   }
   function addField() {
-    setList([...list, { id: 3, start: startTime, end: endTime, hrs: "hrs" }]);
+    setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
     setEndTime("00.00");
     setStartTime("00.00");
   }
@@ -41,16 +48,20 @@ function FloorSchedule() {
     setEndTime(e.target.value);
   }
   function onCheckChange(e){
-    var value=e.target.value;
+    var value=e.target.id;
     if(items.includes(value)){
       setItems(items.filter(item => item!== value))
     }else{ 
       setItems(prevItem=>[...prevItem,value])
     }
    }
+   function deleteHandler(index){
+     list.splice(index,1);
+     setList([...list]);
+   }
   return (
     <div>
-      <Form onSubmit={submitHandler}>
+      <Form>
         <Form.Label sm="2">Profile Name:</Form.Label>
         <Form.Control
           value={name}
@@ -60,13 +71,11 @@ function FloorSchedule() {
         />
         <h4 style={{margin:"10px 0px"}}>Choose Floors:</h4>
         <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
-          <Col sm="3" xs="4">
-          <Form.Check type="checkbox" onChange={onCheckChange} value='Floor1' label="Floor 1" /></Col>
-        <Col sm="3" xs="4">
-        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor2' label="Floor 2" /></Col>
-        <Col sm="3" xs="4">
-        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor3' label="Floor 3" />
-        </Col>
+        {floors.map((floor)=>{
+          return <Col sm="3" xs="4">
+          <Form.Check type="checkbox" onChange={onCheckChange} id={floor.FloorId} value={floor.FloorName} label={floor.FloorName} />
+          </Col>
+        })}
         </Row>
         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField
@@ -95,20 +104,20 @@ function FloorSchedule() {
             </tr>
           </thead>
           <tbody>
-            {list.map((x) => {
+            {list.map((x,index) => {
               return (
                 <tr>
-                  <th scope="row">{x.id}</th>
+                  <th scope="row">{index+1}</th>
                   <td>{x.start}</td>
                   <td>{x.end}</td>
                   <td>{x.hrs}</td>
-                  <td>delete</td>
+                  <td><Button variant="danger" onClick={()=>deleteHandler(index)}>Delete</Button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" onClick={submitHandler}>
           Create
         </Button>
       </Form>

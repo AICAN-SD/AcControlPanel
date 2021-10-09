@@ -46,36 +46,49 @@ def data(request):
 
 
 # Floors Api
-def Floor(request,id=0):
+def Floor(request):
     if request.method =='GET':
-        if id:
-            floors = Floors.objects.filter(FloorId=id)
-            print(floors)
-        else:
-            floors = Floors.objects.all()
+        floors = Floors.objects.all()
         floors_serializer = FloorSerializer(floors,many=True)
         return JsonResponse(floors_serializer.data,safe=False)#Solve This Error(Shows error for get method response)
 
 # Rooms Api
-def Room(request,id=0):
+def Room(request):
     if request.method == 'GET':
-        if id:
-            floor= Floors.objects.get(FloorId=id)
-            rooms = Rooms.objects.filter(floor=floor)
-        else:
-            rooms=Rooms.objects.all()    
-        rooms_serializer = RoomSerializer(rooms,many=True)
-        return JsonResponse(rooms_serializer.data,safe=False)
+        floors=Floors.objects.all()
+        data=[]
+        for x in floors:
+            room = Rooms.objects.filter(floor=x)
+            rooms_serializer = RoomSerializer(room,many=True)
+            datax={
+                "floor":x.FloorName,
+                "rooms":rooms_serializer.data
+            }
+            data.append(datax)
+        return JsonResponse(data,safe=False)
 
 # Machines api
-def Machine(request,id=0):
+def Machine(request):
     if request.method == 'GET':
-        if id:
-            machines = Machines.objects.filter(room=id)
-        else:
-            machines = Machines.objects.all()    
-        machines_serializer = MachineSerializer(machines,many=True)
-        return JsonResponse(machines_serializer.data,safe=False)
+        floors=Floors.objects.all()
+        data=[]
+        for floor in floors:
+            datax={
+                    "floor":floor.FloorName,
+                  }
+            rooms=Rooms.objects.filter(floor=floor)
+            rooms_serializer = RoomSerializer(rooms,many=True)
+            for room in rooms:
+                machines=Machines.objects.filter(room=room)
+                machines_serializer = MachineSerializer(machines,many=True)
+                datay={
+                    "roomName":room.RoomName,
+                    "machines":machines_serializer.data
+                }
+                datax["room"]=datay
+            data.append(datax)   
+        
+        return JsonResponse(data,safe=False)
 
 # Floor's Time Schedule Api
 def TimeSF(request,fid=0,id=0):
