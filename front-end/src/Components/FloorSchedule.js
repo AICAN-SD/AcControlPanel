@@ -19,7 +19,7 @@ function FloorSchedule() {
     })
   }, []);
   function submitHandler(e) {
-    // e.preventDefault();
+    e.preventDefault();
     if(name === ''){return}
     if(list.length === 0){return}
     if(items.length ===0){return}
@@ -72,7 +72,7 @@ function FloorSchedule() {
         <h4 style={{margin:"10px 0px"}}>Choose Floors:</h4>
         <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
         {floors.map((floor)=>{
-          return <Col sm="3" xs="4">
+          return <Col key={floor.FloorId} sm="3" xs="4">
           <Form.Check type="checkbox" onChange={onCheckChange} id={floor.FloorId} value={floor.FloorName} label={floor.FloorName} />
           </Col>
         })}
@@ -106,7 +106,7 @@ function FloorSchedule() {
           <tbody>
             {list.map((x,index) => {
               return (
-                <tr>
+                <tr key={index}>
                   <th scope="row">{index+1}</th>
                   <td>{x.start}</td>
                   <td>{x.end}</td>
