@@ -40,6 +40,14 @@ function FloorSchedule() {
   function onEndTimeChange(e) {
     setEndTime(e.target.value);
   }
+  function onCheckChange(e){
+    var value=e.target.value;
+    if(items.includes(value)){
+      setItems(items.filter(item => item!== value))
+    }else{ 
+      setItems(prevItem=>[...prevItem,value])
+    }
+   }
   return (
     <div>
       <Form onSubmit={submitHandler}>
@@ -53,11 +61,12 @@ function FloorSchedule() {
         <h4 style={{margin:"10px 0px"}}>Choose Floors:</h4>
         <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
           <Col sm="3" xs="4">
-        <Form.Check type="checkbox" label="Floor 1" /></Col>
+          <Form.Check type="checkbox" onChange={onCheckChange} value='Floor1' label="Floor 1" /></Col>
         <Col sm="3" xs="4">
-        <Form.Check type="checkbox" label="Floor 2" /></Col>
+        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor2' label="Floor 2" /></Col>
         <Col sm="3" xs="4">
-        <Form.Check type="checkbox" label="Floor 3" /></Col>
+        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor3' label="Floor 3" />
+        </Col>
         </Row>
         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField

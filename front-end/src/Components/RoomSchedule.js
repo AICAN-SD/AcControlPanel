@@ -40,6 +40,14 @@ function RoomSchedule() {
   function onEndTimeChange(e) {
     setEndTime(e.target.value);
   }
+  function onCheckChange(e){
+    var value=e.target.value;
+    if(items.includes(value)){
+      setItems(items.filter(item => item!== value))
+    }else{ 
+      setItems(prevItem=>[...prevItem,value])
+    }
+   }
   return (
     <div>
       <Form onSubmit={submitHandler}>
@@ -54,24 +62,15 @@ function RoomSchedule() {
         <Row style={{marginBottom:"20px",marginLeft:"10px"}}>
         <Col xs="3">
         <h5>Floor1:</h5>
-        <Form.Check type="checkbox" label="Room 1" />
-        <Form.Check type="checkbox" label="Room 2" />
+        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor1Room1' label="Room 1" />
+        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor1Room2' label="Room 2" />
         </Col>
         <Col sm="3" xs="4">
         <h5>Floor2:</h5>
-        <Form.Check type="checkbox" label="Room 1" />
-        <Form.Check type="checkbox" label="Room 2" />
+        <Form.Check type="checkbox"  onChange={onCheckChange} value='Floor2Room1' label="Room 1" />
+        <Form.Check type="checkbox" onChange={onCheckChange} value='Floor2Room2'label="Room 2" />
         </Col>
-        <Col sm="3" xs="4">
-        <h5>Floor2:</h5>
-        <Form.Check type="checkbox" label="Room 1" />
-        <Form.Check type="checkbox" label="Room 2" />
-        </Col>
-        <Col sm="3" xs="4">
-        <h5>Floor2:</h5>
-        <Form.Check type="checkbox" label="Room 1" />
-        <Form.Check type="checkbox" label="Room 2" />
-        </Col>
+      
         </Row>
         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField

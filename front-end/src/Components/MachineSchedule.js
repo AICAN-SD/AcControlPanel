@@ -40,6 +40,17 @@ function MachineSchedule() {
   function onEndTimeChange(e) {
     setEndTime(e.target.value);
   }
+ 
+    function onCheckChange(e){
+      var value=e.target.value;
+      if(items.includes(value)){
+        setItems(items.filter(item => item!== value))
+      }else{ 
+        setItems(prevItem=>[...prevItem,value])
+      }
+     }
+    
+   
   return (
     <div>
       <Form onSubmit={submitHandler}>
@@ -52,15 +63,15 @@ function MachineSchedule() {
         />
         <h4>Choose Machines:</h4>
         <h5>Floor1-Room1:</h5>
-        <Form.Check type="checkbox" label="Machine 1" />
-        <Form.Check type="checkbox" label="Machine 2" />
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor1Room1Machine1' label="Machine 1" />
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor1Room1Machine2' label="Machine 2" />
         <h5>Floor1-Room2:</h5>
-        <Form.Check type="checkbox" label="Machine 1" />
-        <Form.Check type="checkbox" label="Machine 2" />
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor1Room2Machine1' label="Machine 1" />
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor1Room2Machine2' label="Machine 2" />
         <h5>Floor2-Room1:</h5>
-        <Form.Check type="checkbox" label="Machine 1" />
-        <Form.Check type="checkbox" label="Machine 2" />
-        <Form.Label sm="2">Start Time:</Form.Label>
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor2Room1Machine1' label="Machine 1" />
+        <Form.Check type="checkbox" onChange={(e) => onCheckChange(e)} value='Floor2Room1Machine2' label="Machine 2" />
+         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField
           style={{ width: "80px", margin: "5px" }}
           value={startTime}
