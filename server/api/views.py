@@ -90,3 +90,21 @@ def Machine(request):
             datax["rooms"]=datay
             data.append(datax)   
         return JsonResponse(data,safe=False)
+
+@csrf_exempt
+def FloorSchedule(request):
+    if request.method == 'POST':
+        print(JSONParser().parse(request)['data'])
+        return JsonResponse({},safe=False)
+
+@csrf_exempt    
+def RoomSchedule(request):
+    if request.method == 'POST':
+        print(JSONParser().parse(request)['data'])
+        return JsonResponse({},safe=False)
+
+@csrf_exempt
+def MachineSchedule(request):
+    if request.method == 'POST':
+        print(JSONParser().parse(request)['data'])
+        return JsonResponse({},safe=False)
