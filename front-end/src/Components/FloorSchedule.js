@@ -19,10 +19,22 @@ function FloorSchedule() {
     })
   }, []);
   function submitHandler(e) {
-    e.preventDefault();
-    console.log(name);
-    console.log(list);
-    console.log(items);
+    // e.preventDefault();
+    if(name === ''){return}
+    if(list.length === 0){return}
+    if(items.length ===0){return}
+    const schedule={
+      profName:name,
+      timeSchedule:list,
+      selectedFloors:items
+    }
+    console.log(schedule)
+//     axios.post('http://127.0.0.1:8000/api/FloorSchedule',{data:schedule,headers: {
+//     'Content-Type' : 'application/json; charset=UTF-8',
+//     'Accept': 'Token',
+//     "Access-Control-Allow-Origin": "*",
+// }
+// })
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
@@ -43,9 +55,13 @@ function FloorSchedule() {
       setItems(prevItem=>[...prevItem,value])
     }
    }
+   function deleteHandler(index){
+     list.splice(index,1);
+     setList([...list]);
+   }
   return (
     <div>
-      <Form onSubmit={submitHandler}>
+      <Form>
         <Form.Label sm="2">Profile Name:</Form.Label>
         <Form.Control
           value={name}
@@ -95,13 +111,13 @@ function FloorSchedule() {
                   <td>{x.start}</td>
                   <td>{x.end}</td>
                   <td>{x.hrs}</td>
-                  <td>delete</td>
+                  <td><Button variant="danger" onClick={()=>deleteHandler(index)}>Delete</Button></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" onClick={submitHandler}>
           Create
         </Button>
       </Form>
