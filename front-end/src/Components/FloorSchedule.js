@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button,Row,Col } from "react-bootstrap";
 import TimeField from "react-simple-timefield";
 import axios from "axios";
+import '../css/Schedule.css'
+
 
 function FloorSchedule() {
   const [startTime, setStartTime] = useState("00.00");
@@ -64,17 +66,22 @@ function FloorSchedule() {
   return (
     <div>
       <Form>
-        <Form.Label sm="2">Profile Name:</Form.Label>
-        <Form.Control
+      <Row>
+          <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
+          <Col xs="5"> 
+          <Form.Control
+         
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder=""
         />
-        <h4 style={{margin:"10px 0px"}}>Choose Floors:</h4>
-        <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
+        </Col>
+        </Row>
+        <h4  className="title">Choose Floors:</h4>
+        <Row className="mainRow">
         {floors.map((floor)=>{
-          return <Col key={floor.FloorId} sm="3" xs="4">
+          return <Col key={floor.FloorId} className="mainCol" sm="3" xs="4">
           <Form.Check type="checkbox" onChange={onCheckChange} id={floor.FloorId} value={floor.FloorName} label={floor.FloorName} />
           </Col>
         })}

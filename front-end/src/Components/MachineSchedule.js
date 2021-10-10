@@ -66,7 +66,7 @@ function MachineSchedule() {
       <Form>
         <Row>
           <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
-          <Col xs="4"> 
+          <Col xs="5"> 
           <Form.Control
          
           value={name}
