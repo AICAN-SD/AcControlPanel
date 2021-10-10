@@ -29,12 +29,12 @@ function MachineSchedule() {
       selectedMachines:items
     }
     console.log(schedule)
-//     axios.post('http://127.0.0.1:8000/api/MachineSchedule',{data:schedule,headers: {
-//     'Content-Type' : 'application/json; charset=UTF-8',
-//     'Accept': 'Token',
-//     "Access-Control-Allow-Origin": "*",
-// }
-// })
+    axios.post('http://127.0.0.1:8000/api/MachineSchedule/',{data:schedule,headers: {
+    'Content-Type' : 'application/json; charset=UTF-8',
+    'Accept': 'Token',
+    "Access-Control-Allow-Origin": "*",
+}
+})
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
@@ -74,11 +74,15 @@ function MachineSchedule() {
         <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
         {machines.map((machine,index)=>{
           return <Col key={index} sm="3" xs="4">
-            {machine.room.map(()=>{
-              
+            <><h5>{machine.floor}:</h5>
+            {machine.rooms.map((room,index)=>{
+              return <div style={{marginLeft:"10px"}} key={index}><b>{room.roomName}:</b>
+              {room.machines.map(machine=>{
+                 return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} />
+              })}
+              </div>
             })}
-            <><h5>{machine.floor}-{machine.room.roomName}:</h5>
-            {/* return <Form.Check key={mech.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={mech.MachineId} value={mech.MachineName} label={mech.MachineName} /> */}
+            
             </>
           </Col>
         })}
