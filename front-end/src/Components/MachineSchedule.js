@@ -89,6 +89,7 @@ function MachineSchedule() {
               <div  key={index}><b>{room.roomName}:</b>
               {room.machines.map(machine=>{
                  return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} />
+             
               })}
               </div>
               </Col>

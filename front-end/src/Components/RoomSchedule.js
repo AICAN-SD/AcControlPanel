@@ -82,9 +82,11 @@ function RoomSchedule() {
           {rooms.map((room,index)=>{
             return <Col key={index} className="mainCol" sm="3" xs="4">
             <h5 className='mainColTitle'>{room.floor}</h5>
+            <Row>
             {room.rooms.map((x)=>{
-              return <Form.Check key={x.RoomId} type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} />
+              return<Col sm="6"> <Form.Check key={x.RoomId} type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} /></Col>
             })}
+            </Row>
             </Col>
           })}
         </Row>
