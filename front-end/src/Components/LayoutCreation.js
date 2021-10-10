@@ -10,9 +10,12 @@ function formSave(e){
  var data=e.target
 
  for(var x in data){
-    if(data[x] instanceof HTMLInputElement || data[x] instanceof HTMLSelectElement){
+    var floorId;
+    var obj=data[x]
+    if(obj instanceof HTMLInputElement || obj instanceof HTMLSelectElement){
         dictionary[data[x].name]=data[x].value;
-    }
+     
+        }
  }
  
 if(dictionary!=={}){

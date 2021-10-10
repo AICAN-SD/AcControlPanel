@@ -6,6 +6,7 @@ import LayoutCreation from "./LayoutCreationScreen"
 import {useState } from 'react';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ControlPanel from "../Components/ControlPanel";
 
 function BaseScreen() {
     const [show, setShow] = useState(false);
@@ -21,6 +22,7 @@ function BaseScreen() {
     <Switch>
       <Route path='/TimeScheduler' exact component={TimeScheduler}/>
       <Route path='/LayoutCreation' exact component={LayoutCreation}/>
+      <Route path='/ControlPanel' exact component={ControlPanel}/>
       </Switch>
       </Router>
   </>
