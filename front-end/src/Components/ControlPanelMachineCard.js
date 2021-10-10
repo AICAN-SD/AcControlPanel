@@ -1,30 +1,30 @@
 import React from 'react'
-import { Col } from 'react-bootstrap'
+import { Col, Row } from 'react-bootstrap'
 import '../css/ControlPanelMachineCard.css'
 
-function ControlPanelMachineCard() {
+function ControlPanelMachineCard(props) {
     return (
-        <Col xs={3}>
-            <div className="ControlPanelMachineCard">
-        <div className="row">
-          <div className="col-sm-4" />
-          <div className="col-sm-4">
-            <h1 className="ac">
-              <strong>AC 1</strong>
-            </h1>{" "}
-            <h4 className="num">PAC001</h4>
-          </div>
-          <div className="col-sm-4">
-            {" "}
-            <label className="switch" style={{ float: "right" }}>
+    <Col xs={3}>
+      <div className="ControlPanelMachineCard">
+        <Row>
+       
+          <Col xs={9}>
+            <h1 className="MachineName">
+              <strong>{props.machineData.MachineName}</strong>
+            </h1>
+            <h4 className="num">{props.machineData.MachineType}</h4>
+            <h4 className="num">{props.floor}</h4>
+            </Col>
+          <Col xs={3}>
+            <label className="switch" >
               <input type="checkbox" />
               <span className="slider round">
                 <i className="fa fa-on" />
               </span>
             </label>
-          </div>
-        </div>
-        <div className="row" id="row1">
+            </Col>
+        </Row>
+        <Row id="row1">
           <div className="col-sm-6">
             <i className="fas fa-sun fa-2x">
               <span className="sun">9:00 AM</span>
@@ -54,9 +54,9 @@ function ControlPanelMachineCard() {
               </button>
             </div>
           </div>
-        </div>
+        </Row>
       </div>
-      </Col>   
+    </Col>   
        )
 }
 
