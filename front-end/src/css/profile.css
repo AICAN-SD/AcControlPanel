@@ -1,0 +1,67 @@
+.rectangle {
+    width: 800px;
+    height: 280px;
+    margin: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  .name {
+    text-align: center;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border: 0;
+    margin-left: 205px;
+  }
+  
+  span {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.2rem;
+    margin-left: 28px;
+    margin-top: 20;
+    font-weight: 600;
+  }
+  
+  p {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.2rem;
+    margin-left: 28px;
+    font-weight: 700;
+  }
+  
+  input:focus {
+    outline: none;
+  }
+  
+  .btn2 {
+    background-color: #3326ae !important;
+    color: #ffffff !important;
+    margin-left: 340px;
+    border-radius: 34px !important;
+  }
+  
+  .btn1 {
+    background-color: #3326ae !important;
+    color: #ffffff !important;
+    border-radius: 34px !important;
+    margin-left: 40px;
+    margin-top: 30px;
+  }
+  
+  .chk {
+    margin-left: 28px;
+    margin-top: 10px;
+  }
+  
+  .chk1 {
+    margin-left: 28px;
+    margin-top: 10px;
+  }
+  
+  .form-control {
+    margin-left: 30px;
+    margin-top: 30px;
+  }
+  
