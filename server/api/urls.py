@@ -8,7 +8,10 @@ urlpatterns = [
    path('api/rooms/',views.Room,name="room"),#get data for creating roomProfile
 
    path('api/machines/',views.Machine,name="machine"),#get data for creating machineProfile
-   path('api/FloorSchedule/',views.FloorSchedule,name="FloorSchedule"),
-   path('api/RoomSchedule/',views.RoomSchedule,name="RoomSchedule"),
-   path('api/MachineSchedule/',views.MachineSchedule,name="MachineSchedule"),
+
+   path('api/FloorSchedule/',views.FloorSchedule,name="FloorSchedule"),#post data of room profile
+
+   path('api/RoomSchedule/',views.RoomSchedule,name="RoomSchedule"),#post data of room profile
+   
+   path('api/MachineSchedule/',views.MachineSchedule,name="MachineSchedule"),#post data of machine profile
 ]

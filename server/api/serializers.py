@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Floors,Rooms,Machines,TimeScheduleFloor,TimeScheduleRoom,TimeScheduleMachine
+from .models import Floors,Rooms,Machines
 
 class FloorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,18 +15,3 @@ class MachineSerializer(serializers.ModelSerializer):
     class Meta:
         model=Machines
         fields='__all__'        
-
-class TimeSFSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=TimeScheduleFloor
-        fields='__all__'            
-
-class TimeSRSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=TimeScheduleRoom
-        fields='__all__'     
-
-class TimeSMSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=TimeScheduleMachine
-        fields='__all__'             

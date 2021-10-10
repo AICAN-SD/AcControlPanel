@@ -28,30 +28,9 @@ class Machines(models.Model):
     def __str__(self):
         return self.MachineName  
 
-class TimeScheduleFloor(models.Model):
-    id =  models.AutoField(primary_key=True,unique=True)
-    floor=models.ForeignKey(Floors, on_delete=models.CASCADE)
-    startTime = models.TimeField(auto_now=False, auto_now_add=False)
-    endTime = models.TimeField(auto_now=False, auto_now_add=False)
-
-    class Meta:
-        ordering=['startTime']
-
-class TimeScheduleRoom(models.Model):
+class Profiles(models.Model): #1 for floorprofile, 2 for room profile, 3 for machine profile
     id= models.AutoField(primary_key=True,unique=True)
-    room=models.ForeignKey(Rooms, on_delete=models.CASCADE)
-    startTime = models.TimeField(auto_now=False, auto_now_add=False)
-    endTime = models.TimeField(auto_now=False, auto_now_add=False)  
+    type = models.IntegerField()
+    data = models.JSONField()
+    status=models.BooleanField(default=False)
 
-    class Meta:
-        ordering=['startTime']  
-
-class TimeScheduleMachine(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    floor = models.ForeignKey(Floors,on_delete=models.CASCADE)
-    machine=models.ForeignKey(Machines, on_delete=models.CASCADE)
-    startTime = models.TimeField(auto_now=False, auto_now_add=False)
-    endTime = models.TimeField(auto_now=False, auto_now_add=False)    
-
-    class Meta:
-        ordering=['startTime']

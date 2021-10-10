@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from .models import Floors,Rooms,Machines,TimeScheduleFloor,TimeScheduleRoom,TimeScheduleMachine
-from .serializers import FloorSerializer,RoomSerializer,MachineSerializer,TimeSFSerializer,TimeSRSerializer,TimeSMSerializer
-from django.core import serializers
+from .models import Floors,Rooms,Machines,Profiles
+from .serializers import FloorSerializer,RoomSerializer,MachineSerializer
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -94,17 +91,23 @@ def Machine(request):
 @csrf_exempt
 def FloorSchedule(request):
     if request.method == 'POST':
-        print(JSONParser().parse(request)['data'])
-        return JsonResponse({},safe=False)
+        data = JSONParser().parse(request)['data']
+        profile = Profiles(type=1,data=data)
+        profile.save()
+        return JsonResponse(data,safe=False)
 
 @csrf_exempt    
 def RoomSchedule(request):
     if request.method == 'POST':
-        print(JSONParser().parse(request)['data'])
-        return JsonResponse({},safe=False)
+        data =JSONParser().parse(request)['data']
+        profile = Profiles(type=2,data=data)
+        profile.save()
+        return JsonResponse(data,safe=False)
 
 @csrf_exempt
 def MachineSchedule(request):
     if request.method == 'POST':
-        print(JSONParser().parse(request)['data'])
-        return JsonResponse({},safe=False)
+        data = JSONParser().parse(request)['data']
+        profile = Profiles(type=3,data=data)
+        profile.save()
+        return JsonResponse(data,safe=False)
