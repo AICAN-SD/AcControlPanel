@@ -34,8 +34,7 @@ class Profiles(models.Model): #1 for floorprofile, 2 for room profile, 3 for mac
     data = models.JSONField(null=True, blank=True)
     status=models.BooleanField(default=False)
     def __unicode__(self):
-        return "{0} {1} {2} {3}".format(
-            self, self.id,self.type, self.jsonData)
-    def __str__(self):
-        return self.id
+        return "{0} {1} {2} {3} {4}".format(
+            self, self.id,self.type, self.data,self.status)
+    
 

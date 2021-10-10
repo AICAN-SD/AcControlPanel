@@ -75,14 +75,17 @@ function MachineSchedule() {
         {machines.map((machine,index)=>{
           return <Col key={index} sm="3" xs="4">
             <><h5>{machine.floor}:</h5>
+            <Row>
             {machine.rooms.map((room,index)=>{
-              return <div style={{marginLeft:"10px"}} key={index}><b>{room.roomName}:</b>
+              return<Col sm="6">
+              <div style={{marginLeft:"10px"}} key={index}><b>{room.roomName}:</b>
               {room.machines.map(machine=>{
                  return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} />
               })}
               </div>
+              </Col>
             })}
-            
+            </Row>
             </>
           </Col>
         })}
