@@ -31,6 +31,11 @@ class Machines(models.Model):
 class Profiles(models.Model): #1 for floorprofile, 2 for room profile, 3 for machine profile
     id= models.AutoField(primary_key=True,unique=True)
     type = models.IntegerField()
-    data = models.JSONField()
+    data = models.JSONField(null=True, blank=True)
     status=models.BooleanField(default=False)
+    def __unicode__(self):
+        return "{0} {1} {2} {3}".format(
+            self, self.id,self.type, self.jsonData)
+    def __str__(self):
+        return self.id
 

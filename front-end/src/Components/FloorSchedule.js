@@ -34,6 +34,8 @@ function FloorSchedule() {
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
 }
+}).then((data)=>{
+  console.log(data.data)
 })
   }
   function addField() {
