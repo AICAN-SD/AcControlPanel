@@ -16,7 +16,7 @@ def data(request):
                 roomArray=x.split('RoomName')
                 floorId=roomArray[0].split('Floor')[1]
                 roomId=roomArray[1]
-                modelRoom=Rooms(RoomId=roomId,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
+                modelRoom=Rooms(RoomId=x,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
                 modelRoom.save()
             elif 'MachineAssignDevice' in x:
                 print(x)
@@ -30,7 +30,7 @@ def data(request):
                 print('machineId  '+machineId)
                 machineType=data['Floor'+floorId+'Room'+roomId+'MachineType'+machineId]
                 print(machineType)
-                modelMachine=Machines(room=Rooms.objects.get(RoomId=roomId),MachineId=machineId,MachineName=data[x],MachineType=machineType)
+                modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
                 modelMachine.save()
             elif 'FloorName' in x:
                 print(x)
@@ -91,7 +91,9 @@ def Machine(request):
 @csrf_exempt
 def FloorSchedule(request):
     if request.method == 'POST':
+        
         data = JSONParser().parse(request)['data']
+        print(data)
         profile = Profiles(type=1,data=data)
         profile.save()
         return JsonResponse(data,safe=False)

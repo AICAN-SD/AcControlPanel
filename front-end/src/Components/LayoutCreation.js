@@ -11,21 +11,10 @@ function formSave(e){
 
  for(var x in data){
     var floorId;
-    obj=data[x]
+    var obj=data[x]
     if(obj instanceof HTMLInputElement || obj instanceof HTMLSelectElement){
         dictionary[data[x].name]=data[x].value;
-        if((obj.name).includes("FloorName")){
-         console.log('floor')
-          floorId=(obj.name).split('FloorName')[1]
-           
-        }else if((obj.name).includes("RoomName")){
-              
-            roomArray=(obj.name).split('RoomName')
-            floorId=roomArray[0].split('Floor')[1]
-            roomId=roomArray[1]
-        }else if((obj.name).includes("MachineAssignDevice") || (obj.name).includes("MachineType")){
-
-        }
+     
         }
  }
  
