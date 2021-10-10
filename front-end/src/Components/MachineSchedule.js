@@ -4,21 +4,13 @@ import TimeField from "react-simple-timefield";
 import axios from "axios";
 import '../css/Schedule.css'
 
-function MachineSchedule() {
+function MachineSchedule({machines}) {
   const [startTime, setStartTime] = useState("00.00");
   const [endTime, setEndTime] = useState("00.00");
   const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [items, setItems] = useState([]);
-  const[machines,setMachines] = useState([])
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/machines')
-    .then(res=>{
-      setMachines(res.data)
-    }).catch(e=>{
-      console.log(e)
-    })
-  }, []);
+
   function submitHandler(e) {
     e.preventDefault();
     if(name === ''){return}
