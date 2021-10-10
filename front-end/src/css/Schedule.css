@@ -1,0 +1,16 @@
+.title{
+    padding-top: 10px;
+}
+.mainRow{
+    margin-bottom:"20px";
+    margin-left:"0px";
+}
+.mainCol{
+    margin:0 2px 0 0;
+    padding:10px;
+    background-color:#F0F0F0 
+}
+.mainColTitle
+{
+    text-align:center
+}

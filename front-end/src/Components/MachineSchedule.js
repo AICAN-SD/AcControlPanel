@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button,Row,Col } from "react-bootstrap";
 import TimeField from "react-simple-timefield";
 import axios from "axios";
+import '../css/Schedule.css'
 
 function MachineSchedule() {
   const [startTime, setStartTime] = useState("00.00");
@@ -63,22 +64,29 @@ function MachineSchedule() {
   return (
     <div>
       <Form>
-        <Form.Label sm="2">Profile Name:</Form.Label>
-        <Form.Control
+        <Row>
+          <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
+          <Col xs="4"> 
+          <Form.Control
+         
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder=""
         />
-        <h4>Choose Machines:</h4>
-        <Row style={{marginBottom:"20px", marginLeft:"10px"}}>
+        </Col>
+        </Row>
+       
+       
+        <h4 className="title">Choose Machines:</h4>
+        <Row className="mainRow" >
         {machines.map((machine,index)=>{
-          return <Col key={index} sm="3" xs="4">
-            <><h5>{machine.floor}:</h5>
-            <Row>
+          return <Col key={index} sm="3" xs="4" className="mainCol">
+            <><h5 className='mainColTitle'>{machine.floor}:</h5>
+            <Row >
             {machine.rooms.map((room,index)=>{
-              return<Col sm="6">
-              <div style={{marginLeft:"10px"}} key={index}><b>{room.roomName}:</b>
+              return<Col sm="6" >
+              <div  key={index}><b>{room.roomName}:</b>
               {room.machines.map(machine=>{
                  return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} />
               })}
