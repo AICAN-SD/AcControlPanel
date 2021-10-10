@@ -28,9 +28,10 @@ function FloorSchedule({floors}) {
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
 }
-}).then((data)=>{
-  console.log(data.data)
+}).catch(e=>{
+  console.log(e)
 })
+window.location.reload(false);
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);

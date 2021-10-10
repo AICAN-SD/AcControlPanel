@@ -28,7 +28,10 @@ function RoomSchedule({rooms}) {
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
 }
+}).catch(e=>{
+  console.log(e)
 })
+window.location.reload(false);
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
