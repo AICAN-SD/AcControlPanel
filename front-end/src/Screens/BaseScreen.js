@@ -1,23 +1,19 @@
-import NavBar from "../Components/NavBar";
-import SideBar from "../Components/SideBar";
 import TimeScheduler from "./TimeSchedulerScreen";
 import LayoutCreation from "./LayoutCreationScreen"
-
-import {useState } from 'react';
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ControlPanel from "../Components/ControlPanel";
+import SideBar from "../Components/SideBar";
+import { Container } from "react-bootstrap";
+import NavBar from "../Components/NavBar";
+import '../css/Screens.css'
 
 function BaseScreen() {
-    const [show, setShow] = useState(false);
-  
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   return (
     <>
-     <NavBar obj={{show:show,setShow:setShow}}></NavBar>
-    <SideBar obj={{show:show,setShow:setShow}}></SideBar>
+    <SideBar></SideBar>
+    <NavBar></NavBar>
+     
+    <Container className="Container">
     <Router>
     <Switch>
       <Route path='/TimeScheduler' exact component={TimeScheduler}/>
@@ -25,6 +21,7 @@ function BaseScreen() {
       <Route path='/ControlPanel' exact component={ControlPanel}/>
       </Switch>
       </Router>
+      </Container>
   </>
   );
 }

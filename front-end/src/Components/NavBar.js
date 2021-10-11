@@ -1,34 +1,72 @@
-import {Navbar,Container,NavDropdown,Nav,Offcanvas,Form,FormControl,Button} from 'react-bootstrap'
-import { useEffect } from 'react';
-function NavBar({obj}){
-   
-    function onClick(){
-       
-        obj.setShow(true);
-        console.log(obj.show)
-    }
-  return(  <Navbar bg="light" expand="lg">
-  <Container>
-    <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="me-auto">
-        <Nav.Link href="#home">Home</Nav.Link>
-        <Nav.Link href="#link">Link</Nav.Link>
-        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-          <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-        </NavDropdown>
-      </Nav>
-    </Navbar.Collapse>
-    <Button variant="secondary" onClick={onClick}>
-          Side Bar
-        </Button>
-  </Container>
-</Navbar>
-  )
+import React from 'react'
+import '../css/NavBar.css'
+
+function NavBar1() {
+    return (
+        <div>
+             <div className="main-content">
+        <header>
+          <h2>
+            <label htmlFor>
+              <span className="las la-bars" />
+            </label>
+            Dashboard
+          </h2>
+          <div className="search-wrapper">
+            <span className="las la-search" />
+            <input type="search" placeholder="Search here" />
+          </div>
+          <div className="dropdown">
+            <button
+              className="btn btn-secondary dropdown-toggle btn1"
+              type="button"
+              id="dropdownMenu2"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Schedule
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <button className="dropdown-item" type="button">
+                Action
+              </button>
+              <button className="dropdown-item" type="button">
+                Another action
+              </button>
+              <button className="dropdown-item" type="button">
+                Something else here
+              </button>
+            </div>
+          </div>
+          <div className="dropdown">
+            <button
+              className="btn btn-secondary dropdown-toggle btn2"
+              type="button"
+              id="dropdownMenu2"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              On Off Machines
+            </button>
+            <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <button className="dropdown-item" type="button">
+                Action
+              </button>
+              <button className="dropdown-item" type="button">
+                Another action
+              </button>
+              <button className="dropdown-item" type="button">
+                Something else here
+              </button>
+            </div>
+          </div>
+        </header>
+      </div>
+            
+        </div>
+    )
 }
-export default NavBar;
+
+export default NavBar1

@@ -14,34 +14,28 @@ function TimeSchedulerScreen() {
   const [machineData, setMachineData] = useState([]);
 
   useEffect(()=>{
-    const getFloors = async ()=>{
-      await axios.get('http://127.0.0.1:8000/api/floors')
+    axios.get('http://127.0.0.1:8000/api/floors/')
     .then(res=>{
       setFloorData(res.data)
     }).catch(e=>{
       console.log(e)
     })
-    }
-    const getRooms = async ()=>{
-      await axios.get('http://127.0.0.1:8000/api/rooms')
+    
+    axios.get('http://127.0.0.1:8000/api/rooms/')
       .then(res=>{
         setRoomData(res.data)
       }).catch(e=>{
         console.log(e)
       })
-    }
-    const getMachines = async ()=>{
-      await axios.get('http://127.0.0.1:8000/api/machines')
+    
+    axios.get('http://127.0.0.1:8000/api/machines/')
       .then(res=>{
         setMachineData(res.data)
       }).catch(e=>{
         console.log(e)
       })
-    }
+    
 
-    getFloors()
-    getRooms()
-    getMachines()
   },[])
 
   function floorHandler() {

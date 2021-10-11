@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,300&display=swap");
 
 .ControlPanelMachineCard {
-  width: 350px;
-  height: 240px;
+  width: 100%;
+  height:270px;
   margin: 10px 5px;
   padding: 10px;
   background-color: FFFFFF;

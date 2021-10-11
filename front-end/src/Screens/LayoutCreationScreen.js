@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import LayoutCreation from '../Components/LayoutCreation'
+import '../css/Screens.css'
 
 function LayoutCreationScreen() {
     return (
-        <LayoutCreation></LayoutCreation>
+        <div className='LayoutCreation'>
+        <LayoutCreation ></LayoutCreation>
+    </div>
     )
 }
 
