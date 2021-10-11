@@ -30,7 +30,7 @@ function TimeSchedulerScreen() {
     
     axios.get('http://127.0.0.1:8000/api/machines/')
       .then(res=>{
-        setMachineData(res.data)
+        setMachineData(res.data.Data)
       }).catch(e=>{
         console.log(e)
       })
