@@ -13,7 +13,7 @@ function ControlPanelMachineCard(props) {
               <strong>{props.machineData.MachineName}</strong>
             </h1>
             <h4 className="num">{props.machineData.MachineType}</h4>
-            <h4 className="num">{props.floor}</h4>
+            
             </Col>
           <Col xs={3}>
             <label className="switch" >

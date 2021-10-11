@@ -31,7 +31,7 @@ def data(request):
                 print('machineId  '+machineId)
                 machineType=data['Floor'+floorId+'Room'+roomId+'MachineType'+machineId]
                 print(machineType)
-                modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
+                modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),floor=Floors.objects.get(FloorId=floorId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
                 modelMachine.save()
             elif 'FloorName' in x:
                 print(x)
