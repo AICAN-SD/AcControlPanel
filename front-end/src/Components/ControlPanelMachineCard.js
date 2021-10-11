@@ -1,6 +1,7 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import '../css/ControlPanelMachineCard.css'
+import SwitchButton from './SwitchButton'
 
 function ControlPanelMachineCard(props) {
     return (
@@ -16,12 +17,7 @@ function ControlPanelMachineCard(props) {
             
             </Col>
           <Col xs={3}>
-            <label className="switch" >
-              <input type="checkbox" />
-              <span className="slider round">
-                <i className="fa fa-on" />
-              </span>
-            </label>
+            <SwitchButton></SwitchButton>
             </Col>
         </Row>
         <Row id="row1">

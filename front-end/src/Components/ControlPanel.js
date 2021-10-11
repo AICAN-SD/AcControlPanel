@@ -1,21 +1,127 @@
 import React from "react";
 import "../css/FloorLayout.css";
+import '../css/ControlPanel.css'
 import { useEffect, useState } from "react";
 import ControlPanelMachineCard from "./ControlPanelMachineCard";
-import { Row } from "react-bootstrap";
+import { Row,Dropdown,Col } from "react-bootstrap";
 import axios from "axios";
+import SwitchButton from "./SwitchButton";
 
 function ControlPanel() {
   const [data, setData] = useState([]);
+  const [floorProfile,setFloorProfile]=useState([])
+  const [roomProfile,setRoomProfile]=useState([])
+  const [machineProfile,setMachineProfile]=useState([])
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
       console.log(response.data);
-      setData(response.data);
+      setFloorProfile(response.data.floorProfiles)
+      setRoomProfile(response.data.roomProfiles)
+      setMachineProfile(response.data.machineProfiles)
+      setData(response.data.Data);
     });
   }, []);
   return (
     <div>
+                  <div className="dropdown chooseProfile">
+  <button className="btn btn-default dropdown-toggle chooseProfileBut" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+   Choose Profile
+  </button>
+  <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <ul>
+    <li onClick={(e)=>{e.stopPropagation();}}>
+
+  
+    <Dropdown>
+  <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
+    Floor Profile
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
+    <>
+  {floorProfile!== undefined && floorProfile.map((floor, index) => {
+    console.log(floor.data.profName)
+        return (
+        <>
+      
+          
+           <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
+             <li >
+             <Row>
+               <Col xs={6}> { floor.data.profName}</Col>
+               <Col><SwitchButton></SwitchButton></Col>
+             </Row>
+             </li>
+            </ul>
+         
+        </>
+        );
+      })}
+    </>
+  </Dropdown.Menu>
+</Dropdown>
+    </li>
+    <li onClick={(e)=>{e.stopPropagation();}}>
+
+  
+    <Dropdown>
+  <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
+    Room Profile
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
+  {roomProfile!== undefined && roomProfile.map((room, index) => {
+    console.log(room.data.profName)
+        return (
+        <>
+      
+          
+           <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
+           <Row>
+               <Col> { room.data.profName}</Col>
+               <Col> <SwitchButton></SwitchButton></Col>
+             </Row>
+           </ul>
+         
+        </>
+        );
+      })}
+  </Dropdown.Menu>
+</Dropdown>
+    </li>
+    <li onClick={(e)=>{e.stopPropagation();}}>
+
+  
+    <Dropdown>
+  <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
+    Machine Profile
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
+  {machineProfile!== undefined && machineProfile.map((machine, index) => {
+    console.log(machine.data.profName)
+        return (
+        <>
+      
+          
+           <ul  onClick={(e)=>{e.stopPropagation();}}>
+           <Row>
+               <Col>{ machine.data.profName}</Col>
+               <Col>  <SwitchButton></SwitchButton></Col>
+             </Row>
+           </ul>
+         
+        </>
+        );
+      })}
+  </Dropdown.Menu>
+</Dropdown>
+    </li>
+   
+    </ul>
+  </div>
+</div>
       {data.map((floor, index) => {
         return (
           <>

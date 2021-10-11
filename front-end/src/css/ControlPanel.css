@@ -1,0 +1,13 @@
+.dropdown-menu{
+  width:max-content
+}
+.chooseProfile{
+    float: right;
+}
+.chooseProfileBut{
+    background-color: #3326ae;
+    color: white;
+}
+.chooseProfileBut :hover{
+    color: white !important;
+}
