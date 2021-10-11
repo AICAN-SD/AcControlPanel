@@ -14,4 +14,6 @@ urlpatterns = [
    path('api/RoomSchedule/',views.RoomSchedule,name="RoomSchedule"),#post data of room profile
    
    path('api/MachineSchedule/',views.MachineSchedule,name="MachineSchedule"),#post data of machine profile
+
+   path('api/profile/<str:id>',views.ProfileToggle),#make profile active
 ]

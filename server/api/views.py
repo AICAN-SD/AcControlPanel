@@ -4,7 +4,6 @@ from django.http.response import JsonResponse
 from .models import Floors,Rooms,Machines,Profiles
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer
 from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
 
 @csrf_exempt
 def data(request):
@@ -134,3 +133,75 @@ def MachineSchedule(request):
         profile = Profiles(type=3,data=data)
         profile.save()
         return JsonResponse(data,safe=False)
+
+@csrf_exempt
+def ProfileToggle(request,id):
+    if request.method == 'POST':
+        machines = Machines.objects.all()
+        for machine in machines:
+            machine.status=False
+            machine.save()
+        profiles = Profiles.objects.all()
+        for x in profiles:
+            x.status=False
+            x.save()    
+        profile=Profiles.objects.get(id=id)
+        profile.status=True
+        profile.save()
+        if profile.type == 1:
+            floors = profile.data['selectedFloors']
+            for floorid in floors:
+                floor = Floors.objects.get(FloorId=floorid)
+                Machines.objects.filter(floor=floor).update(status=True)
+        elif profile.type == 2:
+            rooms = profile.data['selectedRooms']
+            for roomid in rooms:
+                room=Rooms.objects.get(RoomId=roomid)
+                Machines.objects.filter(room=room).update(status=True)
+        elif profile.type == 3:  
+             machineids = profile.data['selectedMachines'] 
+             for machineid in machineids:
+                 machine = Machines.objects.get(MachineId=machineid)
+                 machine.status=True
+                 machine.save()    
+    # get all data
+        floors=Floors.objects.all()
+        profiles = Profiles.objects.all()
+        floorProfiles=[]
+        roomProfiles=[]
+        machineProfiles=[]
+        for profile in profiles:
+            if profile.type == 1:
+                floorProfiles.append(profile) 
+            elif profile.type==2:
+                roomProfiles.append(profile) 
+            else:
+                machineProfiles.append(profile)         
+        data=[]
+        for floor in floors:
+            datax={
+                    "floor":floor.FloorName,
+                  }
+            rooms=Rooms.objects.filter(floor=floor)
+            rooms_serializer = RoomSerializer(rooms,many=True)
+            datay=[]
+            for room in rooms:
+                machines=Machines.objects.filter(room=room)
+                machines_serializer = MachineSerializer(machines,many=True)
+                x={
+                    "roomName":room.RoomName,
+                    "machines":machines_serializer.data
+                }
+                datay.append(x)
+            datax["rooms"]=datay
+            data.append(datax) 
+            floorProfilesS=ProfileSerializer(floorProfiles,many=True)
+            roomProfilesS=ProfileSerializer(roomProfiles,many=True)
+            machineProfilesS=ProfileSerializer(machineProfiles,many=True)
+            finalData={
+                "floorProfiles":floorProfilesS.data,
+                "roomProfiles":roomProfilesS.data,
+                "machineProfiles":machineProfilesS.data,
+                "Data":data
+            }  
+        return JsonResponse(finalData,safe=False)           
