@@ -23,6 +23,18 @@ function ControlPanel() {
       setData(response.data.Data);
     });
   }, []);
+
+  function submitHandler(id){
+    axios.get(`http://127.0.0.1:8000/api/profile/${id}`).then((response) => {
+      console.log(response.data);
+      setFloorProfile(response.data.floorProfiles)
+      setRoomProfile(response.data.roomProfiles)
+      setMachineProfile(response.data.machineProfiles)
+      setData(response.data.Data);
+    }).catch(e=>{
+      console.log(e);
+    })
+  }
   return (
     <div>
                   <div className="dropdown chooseProfile">
