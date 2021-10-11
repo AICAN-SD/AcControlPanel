@@ -2,8 +2,9 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from .models import Floors,Rooms,Machines,Profiles
-from .serializers import FloorSerializer,RoomSerializer,MachineSerializer
+from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 @csrf_exempt
 def data(request):
@@ -64,10 +65,21 @@ def Room(request):
             data.append(datax)
         return JsonResponse(data,safe=False)
 
-# Machines api
+# Machines api to get data for control panel
 def Machine(request):
     if request.method == 'GET':
         floors=Floors.objects.all()
+        profiles = Profiles.objects.all()
+        floorProfiles=[]
+        roomProfiles=[]
+        machineProfiles=[]
+        for profile in profiles:
+            if profile.type == 1:
+                floorProfiles.append(profile) 
+            elif profile.type==2:
+                roomProfiles.append(profile) 
+            else:
+                machineProfiles.append(profile)         
         data=[]
         for floor in floors:
             datax={
@@ -85,8 +97,17 @@ def Machine(request):
                 }
                 datay.append(x)
             datax["rooms"]=datay
-            data.append(datax)   
-        return JsonResponse(data,safe=False)
+            data.append(datax) 
+            floorProfilesS=ProfileSerializer(floorProfiles,many=True)
+            roomProfilesS=ProfileSerializer(roomProfiles,many=True)
+            machineProfilesS=ProfileSerializer(machineProfiles,many=True)
+            finalData={
+                "floorProfiles":floorProfilesS.data,
+                "roomProfiles":roomProfilesS.data,
+                "machineProfiles":machineProfilesS.data,
+                "Data":data
+            }  
+        return JsonResponse(finalData,safe=False)
 
 @csrf_exempt
 def FloorSchedule(request):
