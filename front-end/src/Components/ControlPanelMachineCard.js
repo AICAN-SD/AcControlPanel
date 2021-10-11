@@ -2,6 +2,7 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 import '../css/ControlPanelMachineCard.css'
 import SwitchButton from './SwitchButton'
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanelMachineCard(props) {
     return (
@@ -17,7 +18,7 @@ function ControlPanelMachineCard(props) {
             
             </Col>
           <Col xs={3}>
-            <SwitchButton></SwitchButton>
+          <BootstrapSwitchButton checked={props.machineData.status} onstyle="success" size="sm" />
             </Col>
         </Row>
         <Row id="row1">

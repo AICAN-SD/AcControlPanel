@@ -136,7 +136,7 @@ def MachineSchedule(request):
 
 @csrf_exempt
 def ProfileToggle(request,id):
-    if request.method == 'POST':
+    if request.method == 'GET':
         machines = Machines.objects.all()
         for machine in machines:
             machine.status=False

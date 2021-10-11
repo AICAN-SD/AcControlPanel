@@ -6,6 +6,7 @@ import ControlPanelMachineCard from "./ControlPanelMachineCard";
 import { Row,Dropdown,Col } from "react-bootstrap";
 import axios from "axios";
 import SwitchButton from "./SwitchButton";
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanel() {
   const [data, setData] = useState([]);
@@ -50,7 +51,7 @@ function ControlPanel() {
              <li >
              <Row>
                <Col xs={6}> { floor.data.profName}</Col>
-               <Col><SwitchButton></SwitchButton></Col>
+               <Col><BootstrapSwitchButton checked={floor.status} onstyle="success" size="xs"/></Col>
              </Row>
              </li>
             </ul>
@@ -80,7 +81,7 @@ function ControlPanel() {
            <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
            <Row>
                <Col> { room.data.profName}</Col>
-               <Col> <SwitchButton></SwitchButton></Col>
+               <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs"/></Col>
              </Row>
            </ul>
          
@@ -108,7 +109,7 @@ function ControlPanel() {
            <ul  onClick={(e)=>{e.stopPropagation();}}>
            <Row>
                <Col>{ machine.data.profName}</Col>
-               <Col>  <SwitchButton></SwitchButton></Col>
+               <Col><BootstrapSwitchButton checked={machine.status} onstyle="success" size="xs"/></Col>
              </Row>
            </ul>
          
