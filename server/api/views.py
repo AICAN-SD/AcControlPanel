@@ -204,6 +204,7 @@ def deleteProf(request,id):
 
 def ProfileToggle(request,id):
     if request.method == 'GET':
+        nowTime=datetime.now().strftime('%H:%M')
         machines = Machines.objects.all()
         for machine in machines:
             machine.status=False
@@ -220,23 +221,27 @@ def ProfileToggle(request,id):
             for floorid in floors:
                 floor = Floors.objects.get(FloorId=floorid)
                 Machines.objects.filter(floor=floor).update(status=True)
-                print(profile.data['selectedFloors'])
-                nowTime=datetime.now().strftime('%H:%M')
+                
                 truth=True
                 for var in profile.data['timeSchedule']:
                     startTime=var['start']
                     endTime=var['end']
-                    print(datetime.strptime(startTime,'%H:%M'))
-                    
-                    print(datetime.strptime(str(nowTime), '%H:%M')>=datetime.strptime(startTime,'%H:%M'))
                     if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
                         truth=False
-                        print('in if')
                         mac=Machines.objects.filter(MachineId__contains='Floor'+floorid)
                         for m in mac:
-                            print(m.MachineId)
+                            m.startTime=startTime
+                            m.endTime=endTime
+                            m.save()
                     else:
-                        print('in else')
+                        pass
+                if(truth):
+                    mac=Machines.objects.filter(MachineId__contains='Floor'+floorid)
+                    for m in mac:
+                        m.startTime='00:00'
+                        m.endTime='00:00'
+                        m.save()
+
 
 
             
@@ -244,16 +249,54 @@ def ProfileToggle(request,id):
         elif profile.type == 2:
             rooms = profile.data['selectedRooms']
             for roomid in rooms:
+                
+                
                 room=Rooms.objects.get(RoomId=roomid)
                 Machines.objects.filter(room=room).update(status=True)
+                roomID=roomid.split('RoomName')[1]
+                floorID=roomid.split('RoomName')[0].split('Floor')[1]
+
+                
+                truth=True
+                for var in profile.data['timeSchedule']:
+                    startTime=var['start']
+                    endTime=var['end']
+                    if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                        truth=False
+                        mac=Machines.objects.filter(MachineId__contains='Floor'+floorID+'Room'+roomID)
+                        for m in mac:
+                            m.startTime=startTime
+                            m.endTime=endTime
+                            m.save()
+                    else:
+                        print('in else')
+                if(truth):
+                    mac=Machines.objects.filter(MachineId__contains='Floor'+floorID+'Room'+roomID)
+                    for m in mac:
+                        m.startTime='00:00'
+                        m.endTime='00:00'
+                        m.save()
             
         elif profile.type == 3:  
              machineids = profile.data['selectedMachines'] 
              for machineid in machineids:
                  machine = Machines.objects.get(MachineId=machineid)
                  machine.status=True
-                 machine.save()   
-             print(machineids) 
+                 truth=True
+                 for var in profile.data['timeSchedule']:
+                     startTime=var['start']
+                     endTime=var['end']
+                     if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                         truth=False
+                         machine.startTime=startTime
+                         machine.endTime=endTime
+                         machine.save()
+                     else:
+                         print('in else')
+                 if(truth):
+                     machine.startTime='00:00'
+                     machine.endTime='00:00'
+                     machine.save() 
     # get all data
         floors=Floors.objects.all()
         profiles = Profiles.objects.all()
