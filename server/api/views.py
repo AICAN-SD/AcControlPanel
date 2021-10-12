@@ -143,7 +143,17 @@ def MachineToggle(request,id):
     machine.save()         
     return JsonResponse({'message':'changed'},safe=False)
 
-@csrf_exempt
+def ProfileOff(request):
+    machines = Machines.objects.all()
+    for machine in machines:
+        machine.status=False
+        machine.save()
+    profiles = Profiles.objects.all()
+    for x in profiles:
+        x.status=False
+        x.save()  
+    return JsonResponse({"message":"Turned off"},safe=False)       
+
 def ProfileToggle(request,id):
     if request.method == 'GET':
         machines = Machines.objects.all()
