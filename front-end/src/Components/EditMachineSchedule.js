@@ -4,22 +4,23 @@ import TimeField from "react-simple-timefield";
 import axios from "axios";
 import '../css/Schedule.css'
 
-function EditFloorSchedule({floors,fid}) {
+function EditMachineSchedule ({machines,mid=7}) {
     const [startTime, setStartTime] = useState("00.00");
   const [endTime, setEndTime] = useState("00.00");
   const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [items, setItems] = useState([]);
- 
+
   useEffect(() => {
-    const profile = async ()=> await axios.get(`http://127.0.0.1:8000/api/getProf/${fid}`)
+    const profile = async ()=> await axios.get(`http://127.0.0.1:8000/api/getProf/${mid}`)
     .then(res=>{
         setName(res.data.data.profName)
         setList([...res.data.data.timeSchedule])
-        setItems([...res.data.data.selectedFloors])
+        setItems([...res.data.data.selectedMachines])
     })
     profile()
   }, [])
+
   function submitHandler(e) {
     e.preventDefault();
     if(name === ''){return}
@@ -28,10 +29,10 @@ function EditFloorSchedule({floors,fid}) {
     const schedule={
       profName:name,
       timeSchedule:list,
-      selectedFloors:items
+      selectedMachines:items
     }
     console.log(schedule)
-    axios.post('http://127.0.0.1:8000/api/FloorSchedule/',{data:schedule,headers: {
+    axios.post('http://127.0.0.1:8000/api/MachineSchedule/',{data:schedule,headers: {
     'Content-Type' : 'application/json; charset=UTF-8',
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
@@ -52,6 +53,7 @@ window.location.reload(false);
   function onEndTimeChange(e) {
     setEndTime(e.target.value);
   }
+ 
   function onCheckChange(e){
     var value=e.target.id;
     if(e.target.checked){
@@ -65,14 +67,15 @@ window.location.reload(false);
           }  
     }
    }
-   function deleteHandler(index){
-     list.splice(index,1);
-     setList([...list]);
-   }
+
+     function deleteHandler(index){
+      list.splice(index,1);
+      setList([...list]);
+    }
   return (
     <div>
       <Form>
-      <Row>
+        <Row>
           <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
           <Col xs="5"> 
           <Form.Control
@@ -84,15 +87,29 @@ window.location.reload(false);
         />
         </Col>
         </Row>
-        <h4  className="title">Choose Floors:</h4>
-        <Row className="mainRow">
-        {floors.map((floor)=>{
-          return <Col key={floor.FloorId} className="mainCol" sm="3" xs="4">
-          <Form.Check type="checkbox" onChange={onCheckChange} id={floor.FloorId} value={floor.FloorName} label={floor.FloorName} checked={items.includes(`${floor.FloorId}`)?true:false}/>
+       
+       
+        <h4 className="title">Choose Machines:</h4>
+        <Row className="mainRow" >
+        {machines.map((machine,index)=>{
+          return <Col key={index} sm="3" xs="4" className="mainCol">
+            <><h5 className='mainColTitle'>{machine.floor}:</h5>
+            <Row >
+            {machine.rooms.map((room,index)=>{
+              return<Col key={index} sm="6" >
+              <div><b>{room.roomName}:</b>
+              {room.machines.map(machine=>{
+                 return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} checked={items.includes(`${machine.MachineId}`)?true:false} />
+              })}
+              </div>
+              </Col>
+            })}
+            </Row>
+            </>
           </Col>
         })}
         </Row>
-        <Form.Label sm="2">Start Time:</Form.Label>
+         <Form.Label sm="2">Start Time:</Form.Label>
         <TimeField
           style={{ width: "80px", margin: "5px" }}
           value={startTime}
@@ -140,4 +157,4 @@ window.location.reload(false);
   );
 }
 
-export default EditFloorSchedule
+export default EditMachineSchedule 
