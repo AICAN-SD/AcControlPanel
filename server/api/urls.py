@@ -17,5 +17,6 @@ urlpatterns = [
 
    path('api/profile/<str:id>',views.ProfileToggle),#make profile active
    path('api/profile/',views.ProfileOff),
+   path('api/deleteProf/<str:id>',views.deleteProf),
    path('api/machine/<str:id>',views.MachineToggle),
 ]

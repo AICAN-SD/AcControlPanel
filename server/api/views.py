@@ -152,7 +152,13 @@ def ProfileOff(request):
     for x in profiles:
         x.status=False
         x.save()  
-    return JsonResponse({"message":"Turned off"},safe=False)       
+    return JsonResponse({"message":"Turned off"},safe=False)     
+
+@csrf_exempt
+def deleteProf(request,id):
+    if request.method == "DELETE":
+        Profiles.objects.get(id=id).delete()
+        return JsonResponse({"message":"Profile Deleted"},safe=False)       
 
 def ProfileToggle(request,id):
     if request.method == 'GET':

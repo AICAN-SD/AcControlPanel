@@ -1,9 +1,11 @@
 import React, { useState,useEffect} from "react";
 import { Button } from "react-bootstrap";
-import FloorSchedule from "../Components/FloorSchedule";
 import RoomSchedule from "../Components/RoomSchedule";
 import MachineSchedule from "../Components/MachineSchedule";
 import axios from "axios";
+import FloorProfiles  from "../Components/FloorProfiles";
+import RoomProfiles from "../Components/RoomProfiles";
+import MachineProfiles from "../Components/MachineProfiles";
 
 function TimeSchedulerScreen() {
   const [floor, setFloor] = useState(true);
@@ -12,29 +14,37 @@ function TimeSchedulerScreen() {
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
   const [machineData, setMachineData] = useState([]);
+  const [floorProfiles, setfloorProfiles] = useState([]);
+  const [roomProfiles, setroomProfiles] = useState([]);
+  const [machineProfiles, setmachineProfiles] = useState([]);
 
   useEffect(()=>{
-    axios.get('http://127.0.0.1:8000/api/floors/')
+    const getFloors = async ()=> await axios.get('http://127.0.0.1:8000/api/floors/')
     .then(res=>{
       setFloorData(res.data)
     }).catch(e=>{
       console.log(e)
     })
     
-    axios.get('http://127.0.0.1:8000/api/rooms/')
+    const getRooms = async ()=> await axios.get('http://127.0.0.1:8000/api/rooms/')
       .then(res=>{
         setRoomData(res.data)
       }).catch(e=>{
         console.log(e)
       })
     
-    axios.get('http://127.0.0.1:8000/api/machines/')
+      const getMachines = async ()=> await axios.get('http://127.0.0.1:8000/api/machines/')
       .then(res=>{
         setMachineData(res.data.Data)
+        setfloorProfiles(res.data.floorProfiles)
+        setroomProfiles(res.data.roomProfiles)
+        setmachineProfiles(res.data.machineProfiles)
       }).catch(e=>{
         console.log(e)
       })
-    
+      getMachines()
+      getFloors()
+      getRooms()
 
   },[])
 
@@ -59,6 +69,37 @@ function TimeSchedulerScreen() {
       setMachine(true);
     }
   }
+
+  function onDeleteFloor(id){
+    const newP = floorProfiles.filter(profile=>{
+      return profile.id!==id  
+    })
+    setfloorProfiles([...newP])
+    axios.delete(`http://127.0.0.1:8000/api/deleteProf/${id}`)
+    .catch(e=>{
+      console.log(e)
+    })
+  }
+  function onDeleteRoom(id){
+    const newP = roomProfiles.filter(profile=>{
+      return profile.id!==id  
+    })
+    setroomProfiles([...newP])
+    axios.delete(`http://127.0.0.1:8000/api/deleteProf/${id}`)
+    .catch(e=>{
+      console.log(e)
+    })
+  }
+  function onDeleteMachine(id){
+    const newP = machineProfiles.filter(profile=>{
+      return profile.id!==id  
+    })
+    setmachineProfiles([...newP])
+    axios.delete(`http://127.0.0.1:8000/api/deleteProf/${id}`)
+    .catch(e=>{
+      console.log(e)
+    })
+  }
   return (
     <div>
       <h1 style={{ padding: "30px" }}>Create Profile:</h1>
@@ -74,9 +115,9 @@ function TimeSchedulerScreen() {
         </Button>{" "}
       </div>
       <div style={{ padding: "0px 30px" }}>
-        {floor && <FloorSchedule floors={floorData} />}
-        {room && <RoomSchedule rooms={roomData} />}
-        {machine && <MachineSchedule machines={machineData} />}
+        {floor && <FloorProfiles onDelete={onDeleteFloor} profiles={floorProfiles} floors={floorData} />}
+       {room && <RoomProfiles profiles={roomProfiles} onDelete={onDeleteRoom} rooms={roomData}/>}
+        {machine && <MachineProfiles profiles={machineProfiles} onDelete={onDeleteMachine} machines={machineData} />}
       </div>
     </div>
   );
