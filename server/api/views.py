@@ -152,7 +152,46 @@ def ProfileOff(request):
     for x in profiles:
         x.status=False
         x.save()  
-    return JsonResponse({"message":"Turned off"},safe=False)     
+    floors=Floors.objects.all()
+    profiles = Profiles.objects.all()
+    floorProfiles=[]
+    roomProfiles=[]
+    machineProfiles=[]
+    for profile in profiles:
+        if profile.type == 1:
+            floorProfiles.append(profile) 
+        elif profile.type==2:
+            roomProfiles.append(profile) 
+        else:
+            machineProfiles.append(profile)         
+    data=[]
+    for floor in floors:
+        datax={
+                "floor":floor.FloorName,
+                }
+        rooms=Rooms.objects.filter(floor=floor)
+        rooms_serializer = RoomSerializer(rooms,many=True)
+        datay=[]
+        for room in rooms:
+            machines=Machines.objects.filter(room=room)
+            machines_serializer = MachineSerializer(machines,many=True)
+            x={
+                "roomName":room.RoomName,
+                "machines":machines_serializer.data
+            }
+            datay.append(x)
+        datax["rooms"]=datay
+        data.append(datax) 
+        floorProfilesS=ProfileSerializer(floorProfiles,many=True)
+        roomProfilesS=ProfileSerializer(roomProfiles,many=True)
+        machineProfilesS=ProfileSerializer(machineProfiles,many=True)
+        finalData={
+            "floorProfiles":floorProfilesS.data,
+            "roomProfiles":roomProfilesS.data,
+            "machineProfiles":machineProfilesS.data,
+            "Data":data
+        }  
+    return JsonResponse(finalData,safe=False)    
 
 @csrf_exempt
 def deleteProf(request,id):
