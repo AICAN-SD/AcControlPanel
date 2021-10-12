@@ -4,6 +4,9 @@ from django.http.response import JsonResponse
 from .models import Floors,Rooms,Machines,Profiles
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+
+
 
 @csrf_exempt
 def data(request):
@@ -201,6 +204,7 @@ def deleteProf(request,id):
 
 def ProfileToggle(request,id):
     if request.method == 'GET':
+        nowTime=datetime.now().strftime('%H:%M')
         machines = Machines.objects.all()
         for machine in machines:
             machine.status=False
@@ -217,17 +221,82 @@ def ProfileToggle(request,id):
             for floorid in floors:
                 floor = Floors.objects.get(FloorId=floorid)
                 Machines.objects.filter(floor=floor).update(status=True)
+                
+                truth=True
+                for var in profile.data['timeSchedule']:
+                    startTime=var['start']
+                    endTime=var['end']
+                    if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                        truth=False
+                        mac=Machines.objects.filter(MachineId__contains='Floor'+floorid)
+                        for m in mac:
+                            m.startTime=startTime
+                            m.endTime=endTime
+                            m.save()
+                    else:
+                        pass
+                if(truth):
+                    mac=Machines.objects.filter(MachineId__contains='Floor'+floorid)
+                    for m in mac:
+                        m.startTime='00:00'
+                        m.endTime='00:00'
+                        m.save()
+
+
+
+            
+
         elif profile.type == 2:
             rooms = profile.data['selectedRooms']
             for roomid in rooms:
+                
+                
                 room=Rooms.objects.get(RoomId=roomid)
                 Machines.objects.filter(room=room).update(status=True)
+                roomID=roomid.split('RoomName')[1]
+                floorID=roomid.split('RoomName')[0].split('Floor')[1]
+
+                
+                truth=True
+                for var in profile.data['timeSchedule']:
+                    startTime=var['start']
+                    endTime=var['end']
+                    if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                        truth=False
+                        mac=Machines.objects.filter(MachineId__contains='Floor'+floorID+'Room'+roomID)
+                        for m in mac:
+                            m.startTime=startTime
+                            m.endTime=endTime
+                            m.save()
+                    else:
+                        print('in else')
+                if(truth):
+                    mac=Machines.objects.filter(MachineId__contains='Floor'+floorID+'Room'+roomID)
+                    for m in mac:
+                        m.startTime='00:00'
+                        m.endTime='00:00'
+                        m.save()
+            
         elif profile.type == 3:  
              machineids = profile.data['selectedMachines'] 
              for machineid in machineids:
                  machine = Machines.objects.get(MachineId=machineid)
                  machine.status=True
-                 machine.save()    
+                 truth=True
+                 for var in profile.data['timeSchedule']:
+                     startTime=var['start']
+                     endTime=var['end']
+                     if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                         truth=False
+                         machine.startTime=startTime
+                         machine.endTime=endTime
+                         machine.save()
+                     else:
+                         print('in else')
+                 if(truth):
+                     machine.startTime='00:00'
+                     machine.endTime='00:00'
+                     machine.save() 
     # get all data
         floors=Floors.objects.all()
         profiles = Profiles.objects.all()
@@ -268,4 +337,9 @@ def ProfileToggle(request,id):
                 "machineProfiles":machineProfilesS.data,
                 "Data":data
             }  
-        return JsonResponse(finalData,safe=False)           
+        return JsonResponse(finalData,safe=False)   
+def GetProfile(request,id):
+    if request.method=='GET':
+        profile = Profiles.objects.filter(id=id)
+        profile_serializer = ProfileSerializer(profile,many=True)
+        return JsonResponse(profile_serializer.data[0],safe=False)        

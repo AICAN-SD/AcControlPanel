@@ -24,12 +24,12 @@ function ControlPanelMachineCard(props) {
         <Row id="row1">
           <div className="col-sm-6" style={{paddingLeft:'0'}}>
          
-              <span className="sun">9:00 AM</span>
+              <span className="sun">{props.machineData.startTime}</span>
           
           </div>
           <div className="col-sm-6" style={{paddingLeft:'0'}}>
         
-              <span className="moon">19:00 PM</span>
+              <span className="moon">{props.machineData.endTime}</span>
             
           </div>
           <div className="row" id="row2">
