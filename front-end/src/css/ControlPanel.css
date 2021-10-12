@@ -8,6 +8,27 @@
     background-color: #3326ae;
     color: white;
 }
+
 .chooseProfileBut :hover{
-    color: white !important;
+    color: black !important;
 }
+
+.switch-on{
+    background-color: #ff9211 !important;
+    color: white;
+}
+.switch{
+    border: none !important;
+    border-color: transparent !important;
+    border-radius: 25px;
+    padding-right: 15px;
+    
+}
+.switch :hover{
+    color: white;
+}
+.switch-off{
+    background-color: #48465f !important;
+    color: white;
+}
+

@@ -24,7 +24,8 @@ function ControlPanel() {
     });
   }, []);
 
-  function submitHandler(id){
+  function submitHandler(e,id){
+    if(e){
     axios.get(`http://127.0.0.1:8000/api/profile/${id}`).then((response) => {
       console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
@@ -34,6 +35,18 @@ function ControlPanel() {
     }).catch(e=>{
       console.log(e);
     })
+  }else{
+    axios.get('http://127.0.0.1:8000/api/profile/').then((response) => {
+      console.log(response.data);
+      setFloorProfile(response.data.floorProfiles)
+      setRoomProfile(response.data.roomProfiles)
+      setMachineProfile(response.data.machineProfiles)
+      setData(response.data.Data);
+    }).catch(e=>{
+      console.log(e);
+    })
+
+  }
   }
   function MachineToggle(id){
     axios.get(`http://127.0.0.1:8000/api/machine/${id}`)
@@ -62,7 +75,7 @@ function ControlPanel() {
   <Dropdown.Menu>
     <>
   {floorProfile!== undefined && floorProfile.map((floor, index) => {
-    console.log(floor.data.profName)
+   
         return (
         <>
       
@@ -71,7 +84,7 @@ function ControlPanel() {
              <li >
              <Row>
                <Col xs={6}> { floor.data.profName}</Col>
-               <Col><BootstrapSwitchButton checked={floor.status} onstyle="success" size="xs"/></Col>
+               <Col><BootstrapSwitchButton checked={floor.status} onstyle="success" size="xs" onChange={(e)=>{submitHandler(e,floor.id)}}/></Col>
              </Row>
              </li>
             </ul>
@@ -93,7 +106,7 @@ function ControlPanel() {
 
   <Dropdown.Menu>
   {roomProfile!== undefined && roomProfile.map((room, index) => {
-    console.log(room.data.profName)
+    console.log(room)
         return (
         <>
       
@@ -101,7 +114,7 @@ function ControlPanel() {
            <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
            <Row>
                <Col> { room.data.profName}</Col>
-               <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs"/></Col>
+               <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs" onChange={(e)=>{submitHandler(e,room.id)}}/></Col>
              </Row>
            </ul>
          
@@ -121,7 +134,6 @@ function ControlPanel() {
 
   <Dropdown.Menu>
   {machineProfile!== undefined && machineProfile.map((machine, index) => {
-    console.log(machine.data.profName)
         return (
         <>
       
@@ -129,7 +141,7 @@ function ControlPanel() {
            <ul  onClick={(e)=>{e.stopPropagation();}}>
            <Row>
                <Col>{ machine.data.profName}</Col>
-               <Col><BootstrapSwitchButton checked={machine.status} onstyle="success" size="xs"/></Col>
+               <Col><BootstrapSwitchButton checked={machine.status} onstyle="success" size="xs" onChange={(e)=>{submitHandler(e,machine.id)}}/></Col>
              </Row>
            </ul>
          
@@ -146,13 +158,13 @@ function ControlPanel() {
       {data.map((floor, index) => {
         return (
           <>
-            <div className="rectangle">
-              <strong className="ac"> {floor.floor}</strong>
+            <div className="rectangle" >
+              <strong className="ac"  > {floor.floor}</strong>
               {floor.rooms !== undefined &&
                 floor.rooms.map((room, indx) => {
                   return (
                     <>
-                      <div className="rectangle">
+                      <div className="">
                         <strong className="ac"> {room.roomName}</strong>
 
                         <Row>
@@ -160,9 +172,10 @@ function ControlPanel() {
                             room.machines.map((machine, indxx) => {
                               return (
                                 <>
+
                                   <ControlPanelMachineCard
                                     machineData={machine}
-                                    floor={floor.floor}
+                                    floor={floor.floor} 
                                   ></ControlPanelMachineCard>
                                 </>
                               );

@@ -22,15 +22,15 @@ function ControlPanelMachineCard(props) {
             </Col>
         </Row>
         <Row id="row1">
-          <div className="col-sm-6">
-            <i className="fas fa-sun fa-2x">
+          <div className="col-sm-6" style={{paddingLeft:'0'}}>
+         
               <span className="sun">9:00 AM</span>
-            </i>
+          
           </div>
-          <div className="col-sm-6">
-            <i className="fas fa-moon fa-2x">
+          <div className="col-sm-6" style={{paddingLeft:'0'}}>
+        
               <span className="moon">19:00 PM</span>
-            </i>
+            
           </div>
           <div className="row" id="row2">
             <div className="col-sm-4">
