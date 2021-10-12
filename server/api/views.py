@@ -4,6 +4,9 @@ from django.http.response import JsonResponse
 from .models import Floors,Rooms,Machines,Profiles
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+
+
 
 @csrf_exempt
 def data(request):
@@ -217,17 +220,40 @@ def ProfileToggle(request,id):
             for floorid in floors:
                 floor = Floors.objects.get(FloorId=floorid)
                 Machines.objects.filter(floor=floor).update(status=True)
+                print(profile.data['selectedFloors'])
+                nowTime=datetime.now().strftime('%H:%M')
+                truth=True
+                for var in profile.data['timeSchedule']:
+                    startTime=var['start']
+                    endTime=var['end']
+                    print(datetime.strptime(startTime,'%H:%M'))
+                    
+                    print(datetime.strptime(str(nowTime), '%H:%M')>=datetime.strptime(startTime,'%H:%M'))
+                    if(truth and datetime.strptime(endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') ):
+                        truth=False
+                        print('in if')
+                        mac=Machines.objects.filter(MachineId__contains='Floor'+floorid)
+                        for m in mac:
+                            print(m.MachineId)
+                    else:
+                        print('in else')
+
+
+            
+
         elif profile.type == 2:
             rooms = profile.data['selectedRooms']
             for roomid in rooms:
                 room=Rooms.objects.get(RoomId=roomid)
                 Machines.objects.filter(room=room).update(status=True)
+            
         elif profile.type == 3:  
              machineids = profile.data['selectedMachines'] 
              for machineid in machineids:
                  machine = Machines.objects.get(MachineId=machineid)
                  machine.status=True
-                 machine.save()    
+                 machine.save()   
+             print(machineids) 
     # get all data
         floors=Floors.objects.all()
         profiles = Profiles.objects.all()
@@ -268,4 +294,9 @@ def ProfileToggle(request,id):
                 "machineProfiles":machineProfilesS.data,
                 "Data":data
             }  
-        return JsonResponse(finalData,safe=False)           
+        return JsonResponse(finalData,safe=False)   
+def GetProfile(request,id):
+    if request.method=='GET':
+        profile = Profiles.objects.filter(id=id)
+        profile_serializer = ProfileSerializer(profile,many=True)
+        return JsonResponse(profile_serializer.data[0],safe=False)        
