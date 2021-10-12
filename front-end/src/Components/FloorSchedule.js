@@ -95,7 +95,7 @@ window.location.reload(false);
         <Button onClick={addField} style={{ margin: "5px" }} variant="primary">
           Add Field
         </Button>
-        <table class="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>

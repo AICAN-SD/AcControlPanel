@@ -80,8 +80,8 @@ window.location.reload(false);
             <><h5 className='mainColTitle'>{machine.floor}:</h5>
             <Row >
             {machine.rooms.map((room,index)=>{
-              return<Col sm="6" >
-              <div  key={index}><b>{room.roomName}:</b>
+              return<Col key={index} sm="6" >
+              <div><b>{room.roomName}:</b>
               {room.machines.map(machine=>{
                  return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} />
              
@@ -110,7 +110,7 @@ window.location.reload(false);
         <Button onClick={addField} style={{ margin: "5px" }} variant="primary">
           Add Field
         </Button>
-        <table class="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>

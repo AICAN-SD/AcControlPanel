@@ -78,7 +78,7 @@ window.location.reload(false);
             <h5 className='mainColTitle'>{room.floor}</h5>
             <Row>
             {room.rooms.map((x)=>{
-              return<Col sm="6"> <Form.Check key={x.RoomId} type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} /></Col>
+              return<Col key={x.RoomId} sm="6"> <Form.Check type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} /></Col>
             })}
             </Row>
             </Col>
@@ -100,7 +100,7 @@ window.location.reload(false);
         <Button onClick={addField} style={{ margin: "5px" }} variant="primary">
           Add Field
         </Button>
-        <table class="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>
