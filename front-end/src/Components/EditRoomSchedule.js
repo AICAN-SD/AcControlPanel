@@ -32,14 +32,14 @@ function EditRoomSchedule({rooms,rid}) {
         selectedRooms:items
       }
       console.log(schedule)
-      axios.post('http://127.0.0.1:8000/api/RoomSchedule/',{data:schedule,headers: {
-      'Content-Type' : 'application/json; charset=UTF-8',
-      'Accept': 'Token',
-      "Access-Control-Allow-Origin": "*",
-  }
-  }).catch(e=>{
-    console.log(e)
-  })
+      axios.post(`http://127.0.0.1:8000/api/editProf/${rid}`,{data:schedule,headers: {
+        'Content-Type' : 'application/json; charset=UTF-8',
+        'Accept': 'Token',
+        "Access-Control-Allow-Origin": "*",
+    }
+    }).catch(e=>{
+      console.log(e)
+    })
   window.location.reload(false);
     }
     function addField() {

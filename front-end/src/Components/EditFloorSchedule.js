@@ -10,15 +10,15 @@ function EditFloorSchedule({floors,fid}) {
   const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [items, setItems] = useState([]);
- 
   useEffect(() => {
+      if(fid!== null){
     const profile = async ()=> await axios.get(`http://127.0.0.1:8000/api/getProf/${fid}`)
     .then(res=>{
         setName(res.data.data.profName)
         setList([...res.data.data.timeSchedule])
         setItems([...res.data.data.selectedFloors])
     })
-    profile()
+    profile()}
   }, [])
   function submitHandler(e) {
     e.preventDefault();
@@ -31,15 +31,17 @@ function EditFloorSchedule({floors,fid}) {
       selectedFloors:items
     }
     console.log(schedule)
-    axios.post('http://127.0.0.1:8000/api/FloorSchedule/',{data:schedule,headers: {
+    axios.post(`http://127.0.0.1:8000/api/editProf/${fid}`,{data:schedule,headers: {
     'Content-Type' : 'application/json; charset=UTF-8',
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
 }
-}).catch(e=>{
+}).then(()=>{
+    window.location.reload(false);
+})
+.catch(e=>{
   console.log(e)
 })
-window.location.reload(false);
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
@@ -71,6 +73,7 @@ window.location.reload(false);
    }
   return (
     <div>
+        {(fid!==null) && 
       <Form>
       <Row>
           <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
@@ -135,7 +138,8 @@ window.location.reload(false);
         <Button variant="primary" onClick={submitHandler}>
           Update
         </Button>
-      </Form>
+      </Form>}
+      {fid === null && <h2>Select Valid id to be updated</h2>}
     </div>
   );
 }

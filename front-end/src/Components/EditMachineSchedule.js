@@ -4,7 +4,7 @@ import TimeField from "react-simple-timefield";
 import axios from "axios";
 import '../css/Schedule.css'
 
-function EditMachineSchedule ({machines,mid=7}) {
+function EditMachineSchedule ({machines}) {
     const [startTime, setStartTime] = useState("00.00");
   const [endTime, setEndTime] = useState("00.00");
   const [name, setName] = useState("");
@@ -32,7 +32,7 @@ function EditMachineSchedule ({machines,mid=7}) {
       selectedMachines:items
     }
     console.log(schedule)
-    axios.post('http://127.0.0.1:8000/api/MachineSchedule/',{data:schedule,headers: {
+    axios.post(`http://127.0.0.1:8000/api/editProf/${mid}`,{data:schedule,headers: {
     'Content-Type' : 'application/json; charset=UTF-8',
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",

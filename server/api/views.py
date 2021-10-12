@@ -343,3 +343,19 @@ def GetProfile(request,id):
         profile = Profiles.objects.filter(id=id)
         profile_serializer = ProfileSerializer(profile,many=True)
         return JsonResponse(profile_serializer.data[0],safe=False)        
+
+@csrf_exempt
+def EditProfile(request,id):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)['data']
+        profile = Profiles.objects.get(id=id)
+        profile.data['profName'] = data['profName']
+        profile.data['timeSchedule']= data['timeSchedule']
+        if profile.type == 1:
+           profile.data['selectedFloors']= data['selectedFloors']
+        if profile.type == 2:
+           profile.data["selectedRooms"]= data['selectedRooms'] 
+        if profile.type == 3:
+           profile.data['selectedMachines']= data['selectedMachines']        
+        profile.save()
+        return JsonResponse({'message':'updated'},safe=False) 
