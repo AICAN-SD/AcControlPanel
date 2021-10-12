@@ -134,6 +134,15 @@ def MachineSchedule(request):
         profile.save()
         return JsonResponse(data,safe=False)
 
+def MachineToggle(request,id):
+    machine = Machines.objects.get(MachineId = id)
+    if machine.status == True:
+        machine.status=False
+    else:
+        machine.status = True
+    machine.save()         
+    return JsonResponse({'message':'changed'},safe=False)
+
 @csrf_exempt
 def ProfileToggle(request,id):
     if request.method == 'GET':

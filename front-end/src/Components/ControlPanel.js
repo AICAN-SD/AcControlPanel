@@ -35,6 +35,14 @@ function ControlPanel() {
       console.log(e);
     })
   }
+  function MachineToggle(id){
+    axios.get(`http://127.0.0.1:8000/api/machine/${id}`)
+    .then(res=>{
+      console.log(res.data)
+    }).catch(e=>{
+      console.log(e)
+    })
+  }
   return (
     <div>
                   <div className="dropdown chooseProfile">
