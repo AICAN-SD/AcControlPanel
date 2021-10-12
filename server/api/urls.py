@@ -16,6 +16,7 @@ urlpatterns = [
    path('api/MachineSchedule/',views.MachineSchedule,name="MachineSchedule"),#post data of machine profile
 
    path('api/profile/<str:id>',views.ProfileToggle),#make profile active
+   path('api/getProf/<str:id>',views.GetProfile),
    path('api/profile/',views.ProfileOff),
    path('api/deleteProf/<str:id>',views.deleteProf),
    path('api/machine/<str:id>',views.MachineToggle),
