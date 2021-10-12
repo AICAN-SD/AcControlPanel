@@ -5,20 +5,21 @@ import axios from "axios";
 import '../css/Schedule.css'
 
 function EditRoomSchedule({rooms,rid}) {
-    const [startTime, setStartTime] = useState("00.00");
-    const [endTime, setEndTime] = useState("00.00");
+    const [startTime, setStartTime] = useState("00:00");
+    const [endTime, setEndTime] = useState("00:00");
     const [name, setName] = useState("");
     const [list, setList] = useState([]);
     const [items, setItems] = useState([]);
   
     useEffect(() => {
+      if(rid!== null){
         const profile = async ()=> await axios.get(`http://127.0.0.1:8000/api/getProf/${rid}`)
         .then(res=>{
             setName(res.data.data.profName)
             setList([...res.data.data.timeSchedule])
             setItems([...res.data.data.selectedRooms])
         })
-        profile()
+        profile()}
       }, [])
 
     function submitHandler(e) {
@@ -37,15 +38,19 @@ function EditRoomSchedule({rooms,rid}) {
         'Accept': 'Token',
         "Access-Control-Allow-Origin": "*",
     }
-    }).catch(e=>{
+    })
+    .then(()=>{
+      window.location.reload(false);
+    })
+    .catch(e=>{
       console.log(e)
     })
-  window.location.reload(false);
+  
     }
     function addField() {
       setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
-      setEndTime("00.00");
-      setStartTime("00.00");
+      setEndTime("00:00");
+      setStartTime("00:00");
     }
     function onStartTimeChange(e) {
       setStartTime(e.target.value);
@@ -72,6 +77,7 @@ function EditRoomSchedule({rooms,rid}) {
     }
     return (
       <div>
+        {(rid!==null) && 
         <Form>
         <Row>
             <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
@@ -141,7 +147,8 @@ function EditRoomSchedule({rooms,rid}) {
           <Button variant="primary" onClick={submitHandler}>
             Update
           </Button>
-        </Form>
+        </Form>}
+        {rid === null && <h2>Select Valid id to be updated</h2>}
       </div>
     );
   }

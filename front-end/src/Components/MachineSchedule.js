@@ -5,8 +5,8 @@ import axios from "axios";
 import '../css/Schedule.css'
 
 function MachineSchedule({machines}) {
-  const [startTime, setStartTime] = useState("00.00");
-  const [endTime, setEndTime] = useState("00.00");
+  const [startTime, setStartTime] = useState("00:00");
+  const [endTime, setEndTime] = useState("00:00");
   const [name, setName] = useState("");
   const [list, setList] = useState([]);
   const [items, setItems] = useState([]);
@@ -27,15 +27,17 @@ function MachineSchedule({machines}) {
     'Accept': 'Token',
     "Access-Control-Allow-Origin": "*",
 }
-}).catch(e=>{
+}).then(()=>{
+  window.location.reload(false);
+})
+.catch(e=>{
   console.log(e)
 })
-window.location.reload(false);
   }
   function addField() {
     setList([...list, {start: startTime, end: endTime, hrs: "hrs" }]);
-    setEndTime("00.00");
-    setStartTime("00.00");
+    setEndTime("00:00");
+    setStartTime("00:00");
   }
   function onStartTimeChange(e) {
     setStartTime(e.target.value);
