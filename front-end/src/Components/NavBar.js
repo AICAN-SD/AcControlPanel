@@ -12,10 +12,7 @@ function NavBar1() {
             </label>
             Dashboard
           </h2>
-          <div className="search-wrapper">
-            <span className="las la-search" />
-            <input type="search" placeholder="Search here" />
-          </div>
+        
         
         </header>
       </div>

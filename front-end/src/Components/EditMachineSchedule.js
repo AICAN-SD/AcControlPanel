@@ -75,10 +75,9 @@ window.location.reload(false);
     }
   return (
     <div>
-      {(mid!==null) && 
+      {(mid!==null) && <><p>Profile Name</p>
       <Form>
         <Row>
-          <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
           <Col xs="5"> 
           <Form.Control
          
@@ -154,7 +153,7 @@ window.location.reload(false);
         <Button variant="primary" onClick={submitHandler}>
           Update
         </Button>
-      </Form>}
+      </Form></>}
       {mid === null && <h2>Select Valid id to be updated</h2>}
     </div>
   );

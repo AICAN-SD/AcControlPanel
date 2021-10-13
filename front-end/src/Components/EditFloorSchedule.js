@@ -73,13 +73,11 @@ function EditFloorSchedule({floors,fid}) {
    }
   return (
     <div>
-        {(fid!==null) && 
+        {(fid!==null) && <><p>Profile Name</p>
       <Form>
       <Row>
-          <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
           <Col xs="5"> 
           <Form.Control
-         
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
@@ -138,7 +136,7 @@ function EditFloorSchedule({floors,fid}) {
         <Button variant="primary" onClick={submitHandler}>
           Update
         </Button>
-      </Form>}
+      </Form></>}
       {fid === null && <h2>Select Valid id to be updated</h2>}
     </div>
   );

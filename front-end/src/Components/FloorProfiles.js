@@ -24,7 +24,7 @@ function FloorProfiles({profiles,floors,onDelete}) {
     return (
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
-                <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/><br/> 
+                <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/>
             {!form && 
             <Row>
             {profiles.map(profile=>{
@@ -39,7 +39,7 @@ function FloorProfiles({profiles,floors,onDelete}) {
             } 
             {form && <FloorSchedule floors={floors}/>}
             </>}
-             {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/><br/><br/> <EditFloorSchedule floors={floors} fid={fid} /></>}
+             {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/> <EditFloorSchedule floors={floors} fid={fid} /></>}
         </div>
     )
 }

@@ -6,6 +6,7 @@ import axios from "axios";
 import FloorProfiles  from "../Components/FloorProfiles";
 import RoomProfiles from "../Components/RoomProfiles";
 import MachineProfiles from "../Components/MachineProfiles";
+import '../css/profile.css';
 
 function TimeSchedulerScreen() {
   const [floor, setFloor] = useState(true);
@@ -101,24 +102,43 @@ function TimeSchedulerScreen() {
     })
   }
   return (
-    <div>
-      <h1 style={{ padding: "30px" }}>Create Profile:</h1>
-      <div style={{ padding: "0px 30px", paddingBottom: "20px" }}>
-        <Button onClick={floorHandler} variant={floor ? "info" : "danger"}>
-          Floor Profile
-        </Button>{" "}
-        <Button onClick={roomHandler} variant={room ? "info" : "danger"}>
+    <div className="panel panel-default pan">
+      <link
+        rel="stylesheet"
+        href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+      />
+      <div className="panel-heading panel-heading-nav panl">
+      <h1 style={{paddingLeft:"20px"}}>Create Profile:</h1>
+      <ul className="nav nav-tabs">
+          <li className={floor?"active":""}>
+            <a onClick={floorHandler} data-toggle="tab" className="prf1">
+            
+             Floor Profile
+            
+            </a>
+          </li>
+          <li className={room?"active":""}>
+            <a onClick={roomHandler} data-toggle="tab" className="prf1">
+      
           Room Profile
-        </Button>{" "}
-        <Button onClick={machineHandler} variant={machine ? "info" : "danger"}>
+        
+            </a>
+          </li>
+          <li className={machine?"active":""}>
+          <a onClick={machineHandler} data-toggle="tab" className="prf1">
+          
           Machine Profile
-        </Button>{" "}
-      </div>
-      <div style={{ padding: "0px 30px" }}>
+       
+        </a>
+          </li>
+        </ul>
+      
+      <div >
         {floor && <FloorProfiles onDelete={onDeleteFloor} profiles={floorProfiles} floors={floorData} />}
        {room && <RoomProfiles profiles={roomProfiles} onDelete={onDeleteRoom} rooms={roomData}/>}
         {machine && <MachineProfiles profiles={machineProfiles} onDelete={onDeleteMachine} machines={machineData} />}
       </div>
+    </div>
     </div>
   );
 }

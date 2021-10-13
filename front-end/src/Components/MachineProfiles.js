@@ -23,7 +23,7 @@ function MachineProfiles({profiles,machines,onDelete}){
     return (
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
-            <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/><br/>
+            <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/>
             {console.log(profiles)}
             {!form && 
             <Row>
@@ -40,7 +40,7 @@ function MachineProfiles({profiles,machines,onDelete}){
             } 
             {form && <MachineSchedule machines={machines}/>}  
             </>}
-             {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/><br/><br/> <EditMachineSchedule machines={machines} mid={mid} /></>}
+             {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/> <EditMachineSchedule machines={machines} mid={mid} /></>}
         </div>
     )
 }

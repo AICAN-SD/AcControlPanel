@@ -23,7 +23,7 @@ function RoomProfiles({profiles,rooms,onDelete}) {
     return (
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
-            <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/><br/>
+            <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/>
             {console.log(profiles)}
             {!form && 
             <Row>
@@ -40,7 +40,7 @@ function RoomProfiles({profiles,rooms,onDelete}) {
             } 
             {form && <RoomSchedule rooms={rooms}/>}  
             </>}
-            {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/><br/><br/> <EditRoomSchedule rooms={rooms} rid={rid} /></>}
+            {editForm &&<> <Button onClick={back} style={{float:"right"}}>Cancel</Button><br/><EditRoomSchedule rooms={rooms} rid={rid} /></>}
         </div>
     )
 }

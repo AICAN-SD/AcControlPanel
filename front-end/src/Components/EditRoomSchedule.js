@@ -77,10 +77,9 @@ function EditRoomSchedule({rooms,rid}) {
     }
     return (
       <div>
-        {(rid!==null) && 
+        {(rid!==null) && <><p>Profile Name</p>
         <Form>
         <Row>
-            <Col xs="1"> <Form.Label >Profile Name:</Form.Label></Col>
             <Col xs="5"> 
             <Form.Control
            
@@ -147,7 +146,7 @@ function EditRoomSchedule({rooms,rid}) {
           <Button variant="primary" onClick={submitHandler}>
             Update
           </Button>
-        </Form>}
+        </Form></>}
         {rid === null && <h2>Select Valid id to be updated</h2>}
       </div>
     );
