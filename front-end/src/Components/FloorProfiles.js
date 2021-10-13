@@ -24,18 +24,17 @@ function FloorProfiles({profiles,floors,onDelete}) {
     return (
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
-                <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/>
+                <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/>
             {!form && 
-            <Row>
+            <>
             {profiles.map(profile=>{
-                return <Col sm="3" xs="4" key={profile.id}>
-                    <h3>{profile.data.profName}{' '}</h3>
-                    <Button variant="light" onClick={()=>update(profile.id)}><FontAwesomeIcon icon={faEdit} style={{color:"blue"}} size="lg"/></Button>
-                    <Button variant="light" onClick={()=>onDelete(profile.id)}><FontAwesomeIcon icon={faTrash} style={{color:"red"}} size="lg"/></Button>
-                    <h4>{(profile.status)?"ON":"OFF"}</h4>
-                    </Col>
+                return <div style={{margin:"10px",padding:"20px",borderRadius:"10px",border: '1px solid black'}} key={profile.id}>
+                    <h3 style={{display:"inline"}}>{profile.data.profName}{' '}</h3>
+                    <Button style={{float:"right"}} variant="clear"  onClick={()=>update(profile.id)}><FontAwesomeIcon icon={faEdit} style={{color:"blue"}} size="lg"/></Button>
+                    <Button style={{float:"right"}} variant="clear" onClick={()=>onDelete(profile.id)}><FontAwesomeIcon icon={faTrash} style={{color:"red"}} size="lg"/></Button><br/>
+                    </div>
             })}
-            </Row>
+            </>
             } 
             {form && <FloorSchedule floors={floors}/>}
             </>}
