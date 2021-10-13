@@ -50,15 +50,19 @@ function ControlPanel() {
   }
   function MachineToggle(id){
     axios.get(`http://127.0.0.1:8000/api/machine/${id}`)
-    .then(res=>{
-      console.log(res.data)
+    .then((response) => {
+      console.log(response.data);
+      setFloorProfile(response.data.floorProfiles)
+      setRoomProfile(response.data.roomProfiles)
+      setMachineProfile(response.data.machineProfiles)
+      setData(response.data.Data);
     }).catch(e=>{
       console.log(e)
     })
   }
   return (
     <div>
-                  <div className="dropdown chooseProfile">
+    <div className="dropdown chooseProfile">
   <button className="btn btn-default dropdown-toggle chooseProfileBut" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Choose Profile
   </button>
@@ -174,6 +178,7 @@ function ControlPanel() {
                                 <>
 
                                   <ControlPanelMachineCard
+                                      MachineToggle={MachineToggle}
                                     machineData={machine}
                                     floor={floor.floor} 
                                   ></ControlPanelMachineCard>
@@ -192,21 +197,7 @@ function ControlPanel() {
     </div>
   );
 
-  // <div className='rectangle'>
-  //       <strong className='ac'> Floor 1</strong>
-  //      <div className='rectangle'>
-  //     <strong className='ac'> Room 1</strong>
-
-  //         <Row >
-
-  //         <ControlPanelMachineCard></ControlPanelMachineCard>
-  //         <ControlPanelMachineCard></ControlPanelMachineCard>
-  //         <ControlPanelMachineCard></ControlPanelMachineCard>
-  //         <ControlPanelMachineCard></ControlPanelMachineCard>
-  //         </Row>
-  //         </div>
-
-  // </div>
+  
 }
 
 export default ControlPanel;

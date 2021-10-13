@@ -5,6 +5,7 @@ import SwitchButton from './SwitchButton'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanelMachineCard(props) {
+  console.log(props.machineData)
     return (
     <Col xs={3}>
       <div className="ControlPanelMachineCard">
@@ -18,7 +19,7 @@ function ControlPanelMachineCard(props) {
             
             </Col>
           <Col xs={3}>
-          <BootstrapSwitchButton checked={props.machineData.status} onstyle="success" size="sm" />
+          <BootstrapSwitchButton onChange={()=>{props.MachineToggle(props.machineData.MachineId)}} checked={props.machineData.status} size="sm" />
             </Col>
         </Row>
         <Row id="row1">
