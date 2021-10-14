@@ -47,6 +47,13 @@ function btnClick(){
           </li>
          
           <li>
+            <a href="/CreateMachine">
+              <i className="bx bxs-save" />
+              <span className="links_name">CreateMachine</span>
+            </a>
+            <span className="tooltip">CreateMachine</span>
+          </li>
+          <li>
             <a href="www.df.com">
               <i className="bx bxs-save" />
               <span className="links_name">Save Profile</span>

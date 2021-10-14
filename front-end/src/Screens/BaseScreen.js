@@ -2,6 +2,7 @@ import Settings from "./Settings";
 import LayoutCreation from "./LayoutCreationScreen"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ControlPanel from "../Components/ControlPanel";
+import CreateMachine from "./CreateMachine";
 import SideBar from "../Components/SideBar";
 import { Container } from "react-bootstrap";
 import NavBar from "../Components/NavBar";
@@ -19,6 +20,7 @@ function BaseScreen() {
       <Route path='/Settings' exact component={Settings}/>
       <Route path='/LayoutCreation' exact component={LayoutCreation}/>
       <Route path='/ControlPanel' exact component={ControlPanel}/>
+      <Route path='/CreateMachine' exact component={CreateMachine}/>
       </Switch>
       </Router>
       </Container>

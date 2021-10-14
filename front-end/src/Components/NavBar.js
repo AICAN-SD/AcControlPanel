@@ -1,5 +1,6 @@
 import React from 'react'
 import '../css/NavBar.css'
+import NavBarDropDown from './NavBarDropDown'
 
 function NavBar1() {
     return (
@@ -12,7 +13,7 @@ function NavBar1() {
             </label>
             Dashboard
           </h2>
-        
+        <NavBarDropDown></NavBarDropDown>
         
         </header>
       </div>
