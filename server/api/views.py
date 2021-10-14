@@ -290,4 +290,4 @@ def AllData():
             "machineProfiles":machineProfilesS.data,
             "Data":data
         }  
-        return finalData
+    return finalData

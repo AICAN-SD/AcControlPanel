@@ -1,14 +1,12 @@
 import React, { useState,useEffect} from "react";
 import axios from "axios";
+import {Tabs,Tab} from "react-bootstrap"
 import FloorProfiles  from "../Components/FloorProfiles";
 import RoomProfiles from "../Components/RoomProfiles";
 import MachineProfiles from "../Components/MachineProfiles";
 import '../css/profile.css';
 
 function Settings() {
-  const [floor, setFloor] = useState(true);
-  const [room, setRoom] = useState(false);
-  const [machine, setMachine] = useState(false);
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
   const [machineData, setMachineData] = useState([]);
@@ -45,29 +43,6 @@ function Settings() {
       getRooms()
 
   },[])
-
-  function floorHandler() {
-    if (!floor) {
-      setFloor(true);
-      setRoom(false);
-      setMachine(false);
-    }
-  }
-  function roomHandler() {
-    if (!room) {
-      setFloor(false);
-      setRoom(true);
-      setMachine(false);
-    }
-  }
-  function machineHandler() {
-    if (!machine) {
-      setFloor(false);
-      setRoom(false);
-      setMachine(true);
-    }
-  }
-
   function onDeleteFloor(id){
     const newP = floorProfiles.filter(profile=>{
       return profile.id!==id  
@@ -99,47 +74,20 @@ function Settings() {
     })
   }
   return (
-    <>
-    <link
-    rel="stylesheet"
-    href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-  />
     <div className="panel panel-default pan" >
-     
-      <div className="panel-heading panel-heading-nav panl">
       <h1 style={{paddingLeft:"20px"}}>Create Profile:</h1>
-      <ul className="nav nav-tabs">
-          <li className={floor?"active":""}>
-            <a onClick={floorHandler} data-toggle="tab" className="prf1">
-            
-             Floor Profile
-            
-            </a>
-          </li>
-          <li className={room?"active":""}>
-            <a onClick={roomHandler} data-toggle="tab" className="prf1">
-      
-          Room Profile
-        
-            </a>
-          </li>
-          <li className={machine?"active":""}>
-          <a onClick={machineHandler} data-toggle="tab" className="prf1">
-          
-          Machine Profile
-       
-        </a>
-          </li>
-        </ul>
-      
-      <div >
-        {floor && <FloorProfiles onDelete={onDeleteFloor} profiles={floorProfiles} floors={floorData} />}
-       {room && <RoomProfiles profiles={roomProfiles} onDelete={onDeleteRoom} rooms={roomData}/>}
-        {machine && <MachineProfiles profiles={machineProfiles} onDelete={onDeleteMachine} machines={machineData} />}
-      </div>
+      <Tabs defaultActiveKey="floor" id="uncontrolled-tab-example" className="mb-3">
+      <Tab eventKey="floor" title="Floor Profile">
+      <FloorProfiles onDelete={onDeleteFloor} profiles={floorProfiles} floors={floorData} />
+        </Tab>
+        <Tab  eventKey="room" title="Room Profile">
+        <RoomProfiles profiles={roomProfiles} onDelete={onDeleteRoom} rooms={roomData}/>
+        </Tab>
+        <Tab eventKey="machine" title="Machine Profile">
+        <MachineProfiles profiles={machineProfiles} onDelete={onDeleteMachine} machines={machineData} />
+        </Tab>
+      </Tabs>
     </div>
-    </div>
-    </>
   );
 }
 

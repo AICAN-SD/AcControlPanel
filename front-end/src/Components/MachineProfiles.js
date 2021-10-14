@@ -24,7 +24,6 @@ function MachineProfiles({profiles,machines,onDelete}){
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
             <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/>
-            {console.log(profiles)}
             {!form && <>
             {profiles.map(profile=>{
                 return <div style={{margin:"10px",padding:"20px",borderRadius:"10px",border: '1px solid black'}} key={profile.id}>

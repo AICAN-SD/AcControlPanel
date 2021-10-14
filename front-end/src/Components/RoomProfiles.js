@@ -24,7 +24,6 @@ function RoomProfiles({profiles,rooms,onDelete}) {
         <div style={{paddingLeft:"40px"}}>
             {!editForm && <>
             <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/>
-            {console.log(profiles)}
             {!form && 
             <>
             {profiles.map(profile=>{
