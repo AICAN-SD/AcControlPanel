@@ -1,14 +1,11 @@
 import React, { useState,useEffect} from "react";
-import { Button } from "react-bootstrap";
-import RoomSchedule from "../Components/RoomSchedule";
-import MachineSchedule from "../Components/MachineSchedule";
 import axios from "axios";
 import FloorProfiles  from "../Components/FloorProfiles";
 import RoomProfiles from "../Components/RoomProfiles";
 import MachineProfiles from "../Components/MachineProfiles";
 import '../css/profile.css';
 
-function TimeSchedulerScreen() {
+function Settings() {
   const [floor, setFloor] = useState(true);
   const [room, setRoom] = useState(false);
   const [machine, setMachine] = useState(false);
@@ -102,11 +99,13 @@ function TimeSchedulerScreen() {
     })
   }
   return (
-    <div className="panel panel-default pan">
-      <link
-        rel="stylesheet"
-        href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
-      />
+    <>
+    <link
+    rel="stylesheet"
+    href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+  />
+    <div className="panel panel-default pan" >
+     
       <div className="panel-heading panel-heading-nav panl">
       <h1 style={{paddingLeft:"20px"}}>Create Profile:</h1>
       <ul className="nav nav-tabs">
@@ -140,7 +139,8 @@ function TimeSchedulerScreen() {
       </div>
     </div>
     </div>
+    </>
   );
 }
 
-export default TimeSchedulerScreen;
+export default Settings;

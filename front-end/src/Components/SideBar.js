@@ -32,7 +32,7 @@ function btnClick(){
           </li>
           <li></li>
           <li>
-            <a href="www.df.com">
+            <a href="/Settings">
               <i className="bx bx-cog" />
               <span className="links_name">Settings</span>
             </a>
@@ -45,14 +45,7 @@ function btnClick(){
             </a>
             <span className="tooltip">Create Profile</span>
           </li>
-          
-          <li>
-            <a href="/TimeScheduler">
-              <i className="bx bx-user" />
-              <span className="links_name">Schedule Profile</span>
-            </a>
-            <span className="tooltip">Schedule Profile</span>
-          </li>
+         
           <li>
             <a href="www.df.com">
               <i className="bx bxs-save" />
