@@ -31,7 +31,7 @@ function NavBarDropDown() {
         <div>
                <div className="dropdown chooseProfile">
   <button className="btn btn-default dropdown-toggle chooseProfileBut" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-   Choose Profile
+   Choose 
   </button>
   <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <ul>
@@ -40,7 +40,7 @@ function NavBarDropDown() {
   
     <Dropdown>
   <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
-    Floor Profile
+    Floor 
   </Dropdown.Toggle>
 
   <Dropdown.Menu>
@@ -72,7 +72,7 @@ function NavBarDropDown() {
   
     <Dropdown>
   <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
-    Room Profile
+    Room 
   </Dropdown.Toggle>
 
   <Dropdown.Menu>
@@ -100,7 +100,7 @@ function NavBarDropDown() {
   
     <Dropdown>
   <Dropdown.Toggle style={{border: 'none',background:'none',outline: 'none',color:'black'}}  id="dropdown-basic">
-    Machine Profile
+    Machine 
   </Dropdown.Toggle>
 
   <Dropdown.Menu>
