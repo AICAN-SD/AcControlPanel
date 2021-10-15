@@ -70,6 +70,7 @@ function RoomSchedule({rooms}) {
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder=""
+          required
         />
         </Col>
         </Row>

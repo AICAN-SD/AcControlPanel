@@ -87,6 +87,7 @@ function EditRoomSchedule({rooms,rid}) {
             onChange={(e) => setName(e.target.value)}
             type="text"
             placeholder=""
+            required
           />
           </Col>
           </Row>

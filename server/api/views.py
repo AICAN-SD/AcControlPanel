@@ -86,9 +86,15 @@ def Machine(request):
 @csrf_exempt
 def FloorSchedule(request):
     if request.method == 'POST':
-        
         data = JSONParser().parse(request)['data']
-        print(data)
+        floors = data['selectedFloors']
+        selectedMachines = []
+        for floorid in floors:
+            floor = Floors.objects.get(FloorId = floorid)
+            machines = Machines.objects.filter(floor=floor)
+            m_serialized = MachineSerializer(machines,many=True)
+            selectedMachines  = selectedMachines + m_serialized.data
+        data['selectedMachines'] = selectedMachines
         profile = Profiles(type=1,data=data)
         profile.save()
         return JsonResponse(data,safe=False)
@@ -97,6 +103,14 @@ def FloorSchedule(request):
 def RoomSchedule(request):
     if request.method == 'POST':
         data =JSONParser().parse(request)['data']
+        rooms = data['selectedRooms']
+        selectedMachines = []
+        for roomid in rooms:
+            room = Rooms.objects.get(RoomId = roomid)
+            machines = Machines.objects.filter(room=room)
+            m_serialized = MachineSerializer(machines,many=True)
+            selectedMachines  = selectedMachines + m_serialized.data
+        data['selectedMachines'] = selectedMachines
         profile = Profiles(type=2,data=data)
         profile.save()
         return JsonResponse(data,safe=False)
@@ -252,30 +266,30 @@ def EditProfile(request,id):
         profile.data['profName'] = data['profName']
         profile.data['timeSchedule']= data['timeSchedule']
         if profile.type == 1:
+           floors = data['selectedFloors']
+           selectedMachines = []
+           for floorid in floors:
+                floor = Floors.objects.get(FloorId = floorid)
+                machines = Machines.objects.filter(floor=floor)
+                m_serialized = MachineSerializer(machines,many=True)
+                selectedMachines  = selectedMachines + m_serialized.data
+           profile.data['selectedMachines'] = selectedMachines
            profile.data['selectedFloors']= data['selectedFloors']
         if profile.type == 2:
+           rooms = data['selectedRooms']
+           selectedMachines = []
+           for roomid in rooms:
+                room = Rooms.objects.get(RoomId = roomid)
+                machines = Machines.objects.filter(room=room)
+                m_serialized = MachineSerializer(machines,many=True)
+                selectedMachines  = selectedMachines + m_serialized.data
+           profile.data['selectedMachines'] = selectedMachines     
            profile.data["selectedRooms"]= data['selectedRooms'] 
         if profile.type == 3:
            profile.data['selectedMachines']= data['selectedMachines']        
         profile.save()
         return JsonResponse({'message':'updated'},safe=False) 
 
-def devices(request,id=0):
-    if request.method=='GET':
-        if id:
-            data = Devices.objects.filter(deviceId = id)
-        else:    
-            data = Devices.objects.all()
-        jsonData = DeviceSerializer(data,many=True)
-        return JsonResponse(jsonData.data,safe=False)
-    if request.method=='POST':
-        data = JSONParser().parse(request)['data']
-        device = Devices(name=data.name,powerRating=data.power,capacity=data.capacity,costperunit=data.costperunit)
-        device.save()
-        return JsonResponse({'message':'created'},safe=False) 
-    if request.method=='DELETE':
-        Devices.objects.get(deviceId = id).delete()
-        return JsonResponse({'message':'Deleted'},safe=False)  
 @csrf_exempt
 def devices(request,id=0):
     if request.method=='GET':
@@ -287,7 +301,6 @@ def devices(request,id=0):
         return JsonResponse(jsonData.data,safe=False)
     if request.method=='POST':
         data = JSONParser().parse(request)['data']
-        print(data)
         device = Devices(name=data['name'],powerRating=data['power'],capacity=data['capacity'],costperunit=data['costperunit'])
         device.save()
         return JsonResponse({'message':'created'},safe=False) 

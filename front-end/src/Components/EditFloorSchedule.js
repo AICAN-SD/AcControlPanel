@@ -82,6 +82,7 @@ function EditFloorSchedule({floors,fid}) {
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder=""
+          required
         />
         </Col>
         </Row>
