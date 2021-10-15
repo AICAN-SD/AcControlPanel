@@ -1,11 +1,20 @@
-from typing import final
+from django.http import response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 from .models import Floors,Rooms,Machines,Profiles,Devices
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer,DeviceSerializer
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+import csv
+import pandas as pd
+
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+ 
 
 
 
@@ -154,6 +163,7 @@ def ProfileToggle(request,id):
         profile=Profiles.objects.get(id=id)
         profile.status=True
         profile.save()
+        appendToCsv(profile)
         if profile.type == 1:
             floors = profile.data['selectedFloors']
             for floorid in floors:
@@ -265,7 +275,44 @@ def devices(request,id=0):
         return JsonResponse({'message':'created'},safe=False) 
     if request.method=='DELETE':
         Devices.objects.get(deviceId = id).delete()
-        return JsonResponse({'message':'Deleted'},safe=False)     
+        return JsonResponse({'message':'Deleted'},safe=False)  
+@csrf_exempt
+def devices(request,id=0):
+    if request.method=='GET':
+        if id:
+            data = Devices.objects.filter(deviceId = id)
+        else:
+            data = Devices.objects.all()
+        jsonData = DeviceSerializer(data,many=True)
+        return JsonResponse(jsonData.data,safe=False)
+    if request.method=='POST':
+        data = JSONParser().parse(request)['data']
+        print(data)
+        device = Devices(name=data['name'],powerRating=data['power'],capacity=data['capacity'],costperunit=data['costperunit'])
+        device.save()
+        return JsonResponse({'message':'created'},safe=False) 
+    if request.method=='DELETE':
+        Devices.objects.get(deviceId = id).delete()
+        return JsonResponse({'message':'Deleted'},safe=False)
+    if request.method=='PUT':
+        data = JSONParser().parse(request)['data']
+        device = Devices.objects.get(deviceId = id)
+        device.name = data['name']
+        device.powerRating=data['power']
+        device.capacity=data['capacity']
+        device.costperunit=data['costperunit']
+        device.save()
+        return JsonResponse({'message':'Updated'},safe=False) 
+
+@csrf_exempt
+def UpdateCost(request): 
+    if request.method == 'POST':
+        data = JSONParser().parse(request)['data']
+        devices = Devices.objects.all()
+        for device in devices:
+            device.costperunit = data['cost']
+            device.save()
+        return JsonResponse({'message':'Updated'},safe=False)   
 
 def AllData():
     floors=Floors.objects.all()
@@ -308,3 +355,38 @@ def AllData():
             "Data":data
         }  
     return finalData
+
+def Csvv(request):
+    data=pd.read_csv(BASE_DIR/'sample.csv')
+    print(data)
+    return JsonResponse(data.to_json(),safe=False)
+
+def appendToCsv(data):
+    print('<<<<<<<')
+    print(data.data)
+    f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
+    writer = csv.writer(f)
+    if(data.type==1):
+        for x in data.data['selectedFloors']:
+            print(x)
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
+            for y in data.data['timeSchedule']:
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+    elif(data.type==2):
+        for x in data.data['selectedRooms']:
+            print(x)
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
+            for y in data.data['timeSchedule']:
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+    else:
+        for x in data.data['selectedMachines']:
+            print(x)
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
+            
+            for y in data.data['timeSchedule']:
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+            
+
+
+    f.close()
+    return True

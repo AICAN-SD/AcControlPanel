@@ -1,0 +1,15 @@
+PROFILE_ID,ID,ON_TIME,OFF_TIME,HRS
+4,Floor1RoomName1,00:00,00:00,hrs
+4,Floor3RoomName1,00:00,00:00,hrs
+5,Floor1RoomName1,00:00,00:00,hrs
+5,Floor1RoomName2,00:00,00:00,hrs
+6,Floor1Room1Machine1,00:00,00:00,hrs
+6,Floor1Room1Machine1,11:11,22:22,hrs
+6,Floor2Room1Machine1,00:00,00:00,hrs
+6,Floor2Room1Machine1,11:11,22:22,hrs
+6,Floor3Room1Machine3,00:00,00:00,hrs
+6,Floor3Room1Machine3,11:11,22:22,hrs
+6,Floor3Room1Machine2,00:00,00:00,hrs
+6,Floor3Room1Machine2,11:11,22:22,hrs
+2,1,12:22,13:33,hrs
+2,3,12:22,13:33,hrs
