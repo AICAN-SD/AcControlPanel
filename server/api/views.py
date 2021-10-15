@@ -364,29 +364,60 @@ def Csvv(request):
 def appendToCsv(data):
     print('<<<<<<<')
     print(data.data)
+    nowTime=datetime.now().strftime('%H:%M')
+    df = pd.read_csv(BASE_DIR/'sample.csv')
+    count_row = df.shape[0] 
+    for x in range(count_row):
+        if(df.loc[x,'STATUS']=='ONGOING'):
+            df.loc[x,'OFF_TIME']=nowTime
+            df.loc[x,'STATUS']='DONE'
+        elif(df.loc[x,'STATUS']=='PENDING'):
+            pass
+
+    print('[[[[[[[')
     f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
     writer = csv.writer(f)
+    
+
     if(data.type==1):
         for x in data.data['selectedFloors']:
             print(x)
             print('>>>>>>>>>>>>>>>>>>>>>>>>>')
             for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+                if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+                    status='PENDING'
+                else:
+                    status='DONE'
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs'],status])
     elif(data.type==2):
         for x in data.data['selectedRooms']:
             print(x)
             print('>>>>>>>>>>>>>>>>>>>>>>>>>')
             for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+                if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+                    if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
+                        status='ONGOING'
+                    else:
+                        status='PENDING'
+                else:
+                    status='DONE'
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs'],status])
     else:
         for x in data.data['selectedMachines']:
             print(x)
             print('>>>>>>>>>>>>>>>>>>>>>>>>>')
             
             for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
+                if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+                    status='PENDING'
+                else:
+                    status='DONE'
+                writer.writerow([data.id,x,y['start'],y['end'],y['hrs'],status])
             
 
 
     f.close()
     return True
+
+
+
