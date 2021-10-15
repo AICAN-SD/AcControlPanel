@@ -39,5 +39,13 @@ class Profiles(models.Model): #1 for floorprofile, 2 for room profile, 3 for mac
     def __unicode__(self):
         return "{0} {1} {2} {3} {4}".format(
             self, self.id,self.type, self.data,self.status)
-    
 
+class Devices(models.Model):
+     deviceId= models.AutoField(primary_key=True,unique=True)
+     name= models.CharField(max_length=200)
+     powerRating=models.IntegerField()
+     capacity = models.IntegerField()
+     costperunit = models.DecimalField(default=6.5,max_digits=3,decimal_places=2)
+
+     def __str__(self):
+        return self.name

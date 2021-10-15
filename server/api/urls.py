@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
    path('api/data',views.data),
+   path('api/devices/',views.devices),
+   path('api/devices/<str:id>',views.devices),
    path('api/floors/',views.Floor,name="floor"),#get data for creating floorProfile
 
    path('api/rooms/',views.Room,name="room"),#get data for creating roomProfile

@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import {Button ,Row,Col} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons'
 import RoomSchedule from './RoomSchedule'
