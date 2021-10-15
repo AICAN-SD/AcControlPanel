@@ -85,6 +85,7 @@ window.location.reload(false);
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder=""
+          required
         />
         </Col>
         </Row>
