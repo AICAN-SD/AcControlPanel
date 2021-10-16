@@ -1,3 +1,4 @@
+from django.db.models import indexes
 from django.http import response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
@@ -139,8 +140,11 @@ def MachineToggle(request,id):
         machine.status=False
         machine.startTime='00:00'
         machine.endTime='00:00'
+        appendToCsv()
         
     else:
+        appendToCsv(indvData=machine)
+
         machine.status = True
         machine.startTime=str(time.hour)+':'+str(time.minute)
         machine.endTime='00:00'
@@ -185,7 +189,8 @@ def ProfileToggle(request,id):
         profile=Profiles.objects.get(id=id)
         profile.status=True
         profile.save()
-        appendToCsv(profile)
+        print('@@@@@@@@@@@@@@@@@@@@@@@@@')
+        appendToCsv(data=profile)
         if profile.type == 1:
             floors = profile.data['selectedFloors']
             for floorid in floors:
@@ -389,43 +394,78 @@ def Csvv(request):
     print(data)
     return JsonResponse(data.to_json(),safe=False)
 
-def appendToCsv(data=0):
-    print(data.data)
+def appendToCsv(data=0,indvData=0):
+
     nowTime=datetime.now().strftime('%H:%M')
     df = pd.read_csv(BASE_DIR/'sample.csv')
-    count_row = df.shape[0] 
-    for x in range(count_row):
-        if(str(df.loc[x,'STATUS'])=='ONGOING'):
-            print('[[[[[[[')
-            tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
-            tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
-            
-            df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
-            df.loc[x,'OFF_TIME']=nowTime
-            df.loc[x,'STATUS']='DONE'            
-        elif(str(df.loc[x,'STATUS'])=='PENDING'):
-            df=df.drop(x)
-    df.to_csv(BASE_DIR/'sample.csv',index=False)
-    
-    if(data):
-        f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
-        writer = csv.writer(f)
-        for x in data.data['selectedMachines']:
-            for y in data.data['timeSchedule']:
-                if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+    count_row = df.shape[0]
+    if(indvData==0): 
+        for x in range(count_row):
+            if(str(df.loc[x,'STATUS'])=='ONGOING'):
+                print('[[[[[[[')
+                tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
+                tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
+                
+                df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
+                df.loc[x,'OFF_TIME']=nowTime
+                df.loc[x,'STATUS']='DONE'            
+            elif(str(df.loc[x,'STATUS'])=='PENDING'):
+                df=df.drop(x)
+        df.to_csv(BASE_DIR/'sample.csv',index=False)
 
-                    if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
-                        status='ONGOING'
-                        strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+    # append to csv
+    f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
+    writer = csv.writer(f)
+    if(data):
+        if(data.type!=3):
+            for x in data.data['selectedMachines']:
+                for y in data.data['timeSchedule']:
+                    if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+
+                        if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
+                            status='ONGOING'
+                            strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                        else:
+                            status='PENDING'
+                            strt=y['start']
+                        print(data.data)
+                        writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
                     else:
-                        status='PENDING'
-                        strt=y['start']
-                    print(data.data)
-                    writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
-                else:
-                    #Already Done Before Selection
-                    pass         
-        f.close()
+                        #Already Done Before Selection
+                        pass       
+        else:
+            for x in data.data['machineObjects']:
+                for y in data.data['timeSchedule']:
+                    if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
+
+                        if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
+                            status='ONGOING'
+                            strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                        else:
+                            status='PENDING'
+                            strt=y['start']
+                        print(data.data)
+                        writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
+                    else:
+                        #Already Done Before Selection
+                        pass 
+
+    elif(indvData):
+        print(str(datetime.strptime(indvData.endTime, '%H:%M').hour)+':'+str(datetime.strptime(indvData.endTime, '%H:%M').minute))
+        if(datetime.strptime(indvData.endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') or str(datetime.strptime(indvData.endTime, '%H:%M').hour)+':'+str(datetime.strptime(indvData.endTime, '%H:%M').minute)=='0:0'):
+            print('MMMMMMMMMMMMMMMMMMMMMMMMM')
+            if(datetime.strptime(indvData.startTime, '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
+                status='ONGOING'
+                strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+            else:
+                status='PENDING'
+                strt=indvData.startTime
+            writer.writerow(['-1',indvData.MachineName,strt,indvData.endTime,0,status])
+        else:
+            #Already Done Before Selection
+            pass 
+
+    f.close()
     return True
 
 
