@@ -1,4 +1,4 @@
-import Settings from "./Settings";
+import ScheduleProfiles from "./ScheduleProfiles";
 import LayoutCreation from "./LayoutCreationScreen"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ControlPanel from "../Components/ControlPanel";
@@ -17,7 +17,7 @@ function BaseScreen() {
     <Container className="Container">
     <Router>
     <Switch>
-      <Route path='/Settings' exact component={Settings}/>
+      <Route path='/Schedules' exact component={ScheduleProfiles}/>
       <Route path='/LayoutCreation' exact component={LayoutCreation}/>
       <Route path='/ControlPanel' exact component={ControlPanel}/>
       <Route path='/CreateMachine' exact component={CreateMachine}/>

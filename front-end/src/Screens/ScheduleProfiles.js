@@ -6,7 +6,7 @@ import RoomProfiles from "../Components/RoomProfiles";
 import MachineProfiles from "../Components/MachineProfiles";
 import '../css/profile.css';
 
-function Settings() {
+function ScheduleProfiles() {
   const [floorData, setFloorData] = useState([]);
   const [roomData, setRoomData] = useState([]);
   const [machineData, setMachineData] = useState([]);
@@ -91,4 +91,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default ScheduleProfiles;

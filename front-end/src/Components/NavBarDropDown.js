@@ -15,15 +15,16 @@ function NavBarDropDown() {
   const [machine,setMachine]=useState([])
     useEffect(() => {
         axios.get("http://127.0.0.1:8000/api/floors").then((response) => {
-          console.log(response.data);
-      // setFloorProfile(response.data.floorProfiles)
+          setFloor(response.data)
         });
         axios.get("http://127.0.0.1:8000/api/rooms").then((response) => {
-          console.log(response.data);
+          // console.log(response.data);
+          setRoom(response.data)
        ////   setRoomProfile(response.data.roomProfiles)
         });
         axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
-          console.log(response.data);
+          // console.log(response.data.Data);
+          setMachine(response.data.Data)
       //    setMachineProfile(response.data.machineProfiles)
         });
       }, []);
@@ -49,12 +50,10 @@ function NavBarDropDown() {
    
         return (
         <>
-      
-          
            <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
              <li >
              <Row>
-               <Col xs={6}> { floor.data.profName}</Col>
+               <Col xs={6}> { floor.FloorName}</Col>
                <Col><BootstrapSwitchButton checked={floor.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
              </Row>
              </li>
@@ -77,18 +76,16 @@ function NavBarDropDown() {
 
   <Dropdown.Menu>
   {room!== undefined && room.map((room, index) => {
-    console.log(room)
         return (
         <>
-      
-          
-           <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
-           <Row>
-               <Col> { room.data.profName}</Col>
-               <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
-             </Row>
-           </ul>
-         
+        {room.rooms.map(r=>{
+          return <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
+          <Row key={r.RoomId}>
+              <Col> { room.floor}-{r.RoomName}</Col>
+              <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
+            </Row>
+          </ul>
+        })}  
         </>
         );
       })}
@@ -107,15 +104,18 @@ function NavBarDropDown() {
   {machine!== undefined && machine.map((machine, index) => {
         return (
         <>
-      
-          
-           <ul  onClick={(e)=>{e.stopPropagation();}}>
-           <Row>
-               <Col>{ machine.data.profName}</Col>
-               <Col><BootstrapSwitchButton checked={machine.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
-             </Row>
-           </ul>
-         
+        {machine.rooms.map((r,index)=>{
+          return <div key={index}>
+          {r.machines.map(m=>{
+            return <ul key={m.MachineId}  onClick={(e)=>{e.stopPropagation();}}>
+              <Row >
+                <Col>{machine.floor}-{r.roomName}-{m.MachineName}</Col>
+                <Col><BootstrapSwitchButton checked={machine.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
+              </Row>
+            </ul>
+          })}
+          </div>
+        })}
         </>
         );
       })}

@@ -1,11 +1,18 @@
-import React from 'react'
+import React,{useState} from 'react'
 import '../css/SideBar.css';
+import {Accordion} from "react-bootstrap"
 
 function SideBar1() {
+const [drop,setDrop] = useState(false)
 
 function btnClick(){
+  setDrop(false)
   document.getElementsByClassName("sidebar")[0].classList.toggle("open");
 };
+
+function dropdown(){
+  setDrop(!drop)
+}
 
     return (
         <div>
@@ -30,13 +37,20 @@ function btnClick(){
             </a>
             <span className="tooltip">Dashboard</span>
           </li>
-          <li></li>
-          <li>
-            <a href="/Settings">
+          <li >
+            <a onClick={dropdown} >
               <i className="bx bx-cog" />
-              <span className="links_name">Settings</span>
+              <span className="links_name">Settings {drop?"▲":"▼"}</span>
             </a>
-            <span className="tooltip">Settings</span>
+            <span className="tooltip">Settings({drop?"Show Less":"ShowMore"})</span>
+          </li>
+          {drop && <>
+            <li>
+            <a href="/Schedules">
+              <i className="far fa-calendar"/>
+              <span className="links_name">ScheduleProfiles</span>
+            </a>
+            <span className="tooltip">Schedule Profiles</span>
           </li>
           <li>
             <a href="/LayoutCreation">
@@ -53,6 +67,7 @@ function btnClick(){
             </a>
             <span className="tooltip">CreateMachine</span>
           </li>
+          </>}
           <li>
             <a href="www.df.com">
               <i className="bx bxs-save" />

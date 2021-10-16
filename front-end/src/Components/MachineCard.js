@@ -1,8 +1,21 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { Col,Dropdown,Form, Row} from 'react-bootstrap'
 import '../css/MachineCard.css'
+import axios from 'axios'
 
 function MachineCard(props) {
+  const [devices,setDevices] = useState([])
+
+  useEffect(()=>{
+    const data =async ()=>await axios.get('http://127.0.0.1:8000/api/devices/')
+    .then(res=>{
+        setDevices(res.data)
+    })
+    .catch(e=>{
+        console.log(e)
+    })
+    data()
+},[])
     return (
         <>
       
@@ -29,9 +42,9 @@ function MachineCard(props) {
           <Col xs={8}>
           <Form.Select aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineType'+props.machineNumber} required>
           <option></option>
-          <option value="1 tonn">1 tonn</option>
-          <option value="2 tonn">2 tonn</option>
-          <option value="3 tonn">3 tonn</option>
+          {devices.map(device=>{
+            return  <option key={device.deviceId} value={device.name}>{device.name}</option>
+          })}
         </Form.Select>
           </Col>
         </Row>

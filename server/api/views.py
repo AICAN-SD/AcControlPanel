@@ -119,6 +119,13 @@ def RoomSchedule(request):
 def MachineSchedule(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)['data']
+        machines = data['selectedMachines']
+        machineObjects = []
+        for machineid in machines:
+            machine = Machines.objects.filter(MachineId=machineid)
+            m_serialized = MachineSerializer(machine,many=True)
+            machineObjects = machineObjects + m_serialized
+        data['machineObjects'] = machineObjects    
         profile = Profiles(type=3,data=data)
         profile.save()
         return JsonResponse(data,safe=False)
@@ -286,7 +293,14 @@ def EditProfile(request,id):
            profile.data['selectedMachines'] = selectedMachines     
            profile.data["selectedRooms"]= data['selectedRooms'] 
         if profile.type == 3:
-           profile.data['selectedMachines']= data['selectedMachines']        
+            getmachines = data['selectedMachines']
+            machineObjects = []
+            for machineid in getmachines:
+                machine = Machines.objects.filter(MachineId=machineid)
+                m_serialized = MachineSerializer(machine,many=True)
+                machineObjects = machineObjects + m_serialized.data
+            profile.data['machineObjects'] = machineObjects
+            profile.data['selectedMachines']= data['selectedMachines']        
         profile.save()
         return JsonResponse({'message':'updated'},safe=False) 
 
