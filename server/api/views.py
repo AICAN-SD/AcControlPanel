@@ -125,7 +125,7 @@ def MachineSchedule(request):
             machine = Machines.objects.filter(MachineId=machineid)
             m_serialized = MachineSerializer(machine,many=True)
             machineObjects = machineObjects + m_serialized
-        data['machineObjects'] = machineObjects    
+        data['machineObjects'] = machineObjects
         profile = Profiles(type=3,data=data)
         profile.save()
         return JsonResponse(data,safe=False)
@@ -158,7 +158,8 @@ def ProfileOff(request):
     profiles = Profiles.objects.all()
     for x in profiles:
         x.status=False
-        x.save()  
+        x.save() 
+    appendToCsv() 
     finalData=AllData()
     return JsonResponse(finalData,safe=False)    
 
@@ -290,7 +291,7 @@ def EditProfile(request,id):
                 machines = Machines.objects.filter(room=room)
                 m_serialized = MachineSerializer(machines,many=True)
                 selectedMachines  = selectedMachines + m_serialized.data
-           profile.data['selectedMachines'] = selectedMachines     
+           profile.data['selectedMachines'] = selectedMachines
            profile.data["selectedRooms"]= data['selectedRooms'] 
         if profile.type == 3:
             getmachines = data['selectedMachines']
@@ -300,9 +301,9 @@ def EditProfile(request,id):
                 m_serialized = MachineSerializer(machine,many=True)
                 machineObjects = machineObjects + m_serialized.data
             profile.data['machineObjects'] = machineObjects
-            profile.data['selectedMachines']= data['selectedMachines']        
+            profile.data['selectedMachines']= data['selectedMachines']
         profile.save()
-        return JsonResponse({'message':'updated'},safe=False) 
+        return JsonResponse({'message':'updated'},safe=False)
 
 @csrf_exempt
 def devices(request,id=0):
@@ -388,32 +389,44 @@ def Csvv(request):
     print(data)
     return JsonResponse(data.to_json(),safe=False)
 
-def appendToCsv(data):
-    print('<<<<<<<')
+def appendToCsv(data=0):
     print(data.data)
-    f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
-    writer = csv.writer(f)
-    if(data.type==1):
-        for x in data.data['selectedFloors']:
-            print(x)
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
-            for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
-    elif(data.type==2):
-        for x in data.data['selectedRooms']:
-            print(x)
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
-            for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
-    else:
+    nowTime=datetime.now().strftime('%H:%M')
+    df = pd.read_csv(BASE_DIR/'sample.csv')
+    count_row = df.shape[0] 
+    for x in range(count_row):
+        if(str(df.loc[x,'STATUS'])=='ONGOING'):
+            print('[[[[[[[')
+            tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
+            tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
+            
+            df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
+            df.loc[x,'OFF_TIME']=nowTime
+            df.loc[x,'STATUS']='DONE'            
+        elif(str(df.loc[x,'STATUS'])=='PENDING'):
+            df=df.drop(x)
+    df.to_csv(BASE_DIR/'sample.csv',index=False)
+    
+    if(data):
+        f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
+        writer = csv.writer(f)
         for x in data.data['selectedMachines']:
-            print(x)
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>')
-            
             for y in data.data['timeSchedule']:
-                writer.writerow([data.id,x,y['start'],y['end'],y['hrs']])
-            
+                if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
 
-
-    f.close()
+                    if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
+                        status='ONGOING'
+                        strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                    else:
+                        status='PENDING'
+                        strt=y['start']
+                    print(data.data)
+                    writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
+                else:
+                    #Already Done Before Selection
+                    pass         
+        f.close()
     return True
+
+
+
