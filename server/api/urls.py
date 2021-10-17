@@ -19,4 +19,5 @@ urlpatterns = [
    path('api/deleteProf/<str:id>',views.deleteProf),
    path('api/machine/<str:id>',views.MachineToggle),
    path('api/csvv',views.Csvv),
+   path('api/readcsv',views.readCsv),
 ]

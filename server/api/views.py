@@ -394,6 +394,28 @@ def Csvv(request):
     print(data)
     return JsonResponse(data.to_json(),safe=False)
 
+@csrf_exempt
+def readCsv(request,id=0):
+    data = pd.read_csv(BASE_DIR/'machines.csv')
+    count_row = data.shape[0]
+    if request.method == 'GET':
+        response = []
+        for x in range(count_row):
+            if data.loc[x,'ASSIGNED'] == False:
+                response.append(data.loc[x,'MACHINE_ID'])
+        print(response)        
+        return JsonResponse(data.to_json(),safe=False)
+    if request.method == 'POST':
+        array = ['PAC001','PAC005','PAC007']
+        for x in range(count_row):
+            data.loc[x,'ASSIGNED'] = False
+        for x in range(count_row):
+            if data.loc[x,'MACHINE_ID'] in array:
+               data.loc[x,'ASSIGNED'] = True 
+        print(data)       
+        data.to_csv(BASE_DIR/'machines.csv',index=False)       
+        return JsonResponse({'message':"Done"},safe=False)  
+
 def appendToCsv(data=0,indvData=0):
 
     nowTime=datetime.now().strftime('%H:%M')
