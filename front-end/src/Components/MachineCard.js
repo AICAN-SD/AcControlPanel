@@ -16,6 +16,8 @@ function MachineCard(props) {
     })
     data()
 },[])
+
+
     return (
         <>
       
@@ -26,11 +28,11 @@ function MachineCard(props) {
           <p className="form-control">Assign Device</p>
           </Col>
           <Col xs={8}>
-          <Form.Select aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
+          <Form.Select onChange={props.clickHandler} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
           <option></option>
-          <option value="PAC001">PAC001</option>
-          <option value="PAC002">PAC002</option>
-          <option value="PAC003">PAC003</option>
+          {props.names.map(name=>{
+            return <option key={name.ID} value={name.MACHINE_ID}>{name.MACHINE_ID}</option>
+          })}
         </Form.Select>
           </Col>
         </Row>
