@@ -142,7 +142,7 @@ def MachineToggle(request,id):
         machine.status=False
         machine.startTime='00:00'
         machine.endTime='00:00'
-        appendToCsv()
+        appendToCsv()                 
         
     else:
         appendToCsv(indvData=machine)
@@ -191,7 +191,6 @@ def ProfileToggle(request,id):
         profile=Profiles.objects.get(id=id)
         profile.status=True
         profile.save()
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@')
         appendToCsv(data=profile,from_multiData=1)
         if profile.type == 1:
             floors = profile.data['selectedFloors']
@@ -395,23 +394,6 @@ def Csvv(request):
     data=pd.read_csv(BASE_DIR/'sample.csv')
     print(data)
     return JsonResponse(data.to_json(),safe=False)
-
-@csrf_exempt
-def readCsv(request,id=0):
-    data = pd.read_csv(BASE_DIR/'machines.csv')
-    count_row = data.shape[0]
-    if request.method == 'GET':    
-        return JsonResponse(data.to_json(orient='records'),safe=False)
-    if request.method == 'POST':
-        array = ['PAC001','PAC005','PAC007']
-        for x in range(count_row):
-            data.loc[x,'ASSIGNED'] = False
-        for x in range(count_row):
-            if data.loc[x,'MACHINE_ID'] in array:
-               data.loc[x,'ASSIGNED'] = True 
-        print(data)       
-        data.to_csv(BASE_DIR/'machines.csv',index=False)       
-        return JsonResponse({'message':"Done"},safe=False)  
 
 def appendToCsv(data=0,indvData=0,from_multiData=0):
 
