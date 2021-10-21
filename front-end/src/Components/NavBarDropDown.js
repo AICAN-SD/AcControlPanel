@@ -49,8 +49,8 @@ function NavBarDropDown() {
   {floor!== undefined && floor.map((floor, index) => {
    
         return (
-        <>
-           <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
+        <div key={index}>
+           <ul href="#/action-1" key={index} onClick={(e)=>{e.stopPropagation();}}>
              <li >
              <Row>
                <Col xs={6}> { floor.FloorName}</Col>
@@ -59,7 +59,7 @@ function NavBarDropDown() {
              </li>
             </ul>
          
-        </>
+        </div>
         );
       })}
     </>
@@ -77,16 +77,16 @@ function NavBarDropDown() {
   <Dropdown.Menu>
   {room!== undefined && room.map((room, index) => {
         return (
-        <>
-        {room.rooms.map(r=>{
-          return <ul href="#/action-1" onClick={(e)=>{e.stopPropagation();}}>
-          <Row key={r.RoomId}>
+        <div key={index}>
+        {room.rooms.map((r,i)=>{
+          return <ul href="#/action-1" key={i} onClick={(e)=>{e.stopPropagation();}}>
+          <Row key={r.RoomId} >
               <Col> { room.floor}-{r.RoomName}</Col>
-              <Col> <BootstrapSwitchButton checked={room.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
+              <Col> <BootstrapSwitchButton  checked={room.status} onstyle="success" size="xs" onChange={(e)=>{}}/></Col>
             </Row>
           </ul>
         })}  
-        </>
+        </div>
         );
       })}
   </Dropdown.Menu>
@@ -103,9 +103,9 @@ function NavBarDropDown() {
   <Dropdown.Menu>
   {machine!== undefined && machine.map((machine, index) => {
         return (
-        <>
-        {machine.rooms.map((r,index)=>{
-          return <div key={index}>
+        <div key={index}>
+        {machine.rooms.map((r,indx)=>{
+          return <div key={indx}>
           {r.machines.map(m=>{
             return <ul key={m.MachineId}  onClick={(e)=>{e.stopPropagation();}}>
               <Row >
@@ -116,7 +116,7 @@ function NavBarDropDown() {
           })}
           </div>
         })}
-        </>
+        </div>
         );
       })}
   </Dropdown.Menu>

@@ -33,15 +33,7 @@ function AddMachineButton(props) {
         })
         setNames([...newnames])
 
-        let newArr = macArr.map((item, i) => {
-            if (index === i) {
-              return { ...item, [names]: names };
-            } else {
-              return item;
-            }
-          });
-          setRoomc(newArr)
-
+       
       }
     function onClick(){
        var setRoom= props.onClick
