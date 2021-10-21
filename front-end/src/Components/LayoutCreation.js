@@ -42,7 +42,7 @@ function LayoutCreation() {
             <Form onSubmit={formSave}>
             <Row>
                 <Col xs={2}>
-                <Button name='Add Floor' onClick={setFloor} onC={setFloorArray} save={setIsSave} floorNumber={floor}></Button>
+                <Button name='Add Floor' key={floorArray.length} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} save={setIsSave} floorNumber={floor}></Button>
 
                 </Col>
                
