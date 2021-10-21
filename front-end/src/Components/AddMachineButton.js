@@ -8,7 +8,6 @@ import axios from 'axios'
 function AddMachineButton(props) {
     const [names,setNames] = useState([])
     const [machines,setMachines] = useState([])
-    var setRoomc= props.onC
     useEffect(()=>{
         const data2 =async ()=>await axios.get('http://127.0.0.1:8000/api/readcsv')
         .then(res=>{
@@ -29,9 +28,6 @@ function AddMachineButton(props) {
           return name.MACHINE_ID !== value
         })
         setNames([...newnames])
-        setRoomc(oldArray=>oldArray.filter(x=>{
-
-        }))
       }
     function onClick(){
        var setRoom= props.onClick

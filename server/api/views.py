@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 def data(request):
     if request.method=='POST':
         data=JSONParser().parse(request)['data']
-        
+        machineids = []
         for x in data:
             if 'RoomName' in x:
                 
@@ -33,7 +33,7 @@ def data(request):
                 floorId=roomArray[0].split('Floor')[1]
                 roomId=roomArray[1]
                 modelRoom=Rooms(RoomId=x,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
-                modelRoom.save()
+                # modelRoom.save()
             elif 'MachineAssignDevice' in x:
                 print(x)
                 MachineAssignDeviceArray=x.split('MachineAssignDevice')
@@ -46,15 +46,25 @@ def data(request):
                 print('machineId  '+machineId)
                 machineType=data['Floor'+floorId+'Room'+roomId+'MachineType'+machineId]
                 print(machineType)
+                machineids.append(data[x])
                 modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),floor=Floors.objects.get(FloorId=floorId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
-                modelMachine.save()
+                # modelMachine.save()
             elif 'FloorName' in x:
                 print(x)
                 floorId=x.split('FloorName')[1]
                 model=Floors(FloorName=data[x],FloorId=floorId)
-                model.save()
+                # model.save()
             else:
                 print("In else "+x)
+        print(machineids)  
+        data = pd.read_csv(BASE_DIR/'machines.csv')
+        count_row = data.shape[0]
+        for x in range(count_row):
+            data.loc[x,'ASSIGNED'] = False
+        for x in range(count_row):
+            if data.loc[x,'MACHINE_ID'] in machineids:
+                data.loc[x,'ASSIGNED'] = True   
+        data.to_csv(BASE_DIR/'machines.csv',index=False)           
         return JsonResponse('success',safe=False)
 
 
