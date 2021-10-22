@@ -11,7 +11,7 @@ function Button(props) {
        var setIsSave= props.save
       setFloor(prevFloor=>prevFloor+1)
      setFloorc(function (oldArray) { 
-       return [...oldArray,<FloorLayout key={props.counter} floorNumber={props.floorNumber}></FloorLayout>];
+       return [...oldArray,<FloorLayout key={props.counter} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber}></FloorLayout>];
       });
      setIsSave(true)
     }

@@ -35,6 +35,22 @@ function LayoutCreation() {
     const [floor, setFloor] = useState(1);
     const [isSave, setIsSave] = useState(false);
     const [floorArray, setFloorArray] = useState([]);
+    const [names,setNames] = useState([])
+    const [machines,setMachines] = useState([])
+
+
+
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/api/readcsv')
+        .then(res=>{
+            const x =JSON.parse(res.data)
+            console.log(x)
+            setNames(x);
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+    },[])
   
     return (
         <>
@@ -42,7 +58,7 @@ function LayoutCreation() {
             <Form onSubmit={formSave}>
             <Row>
                 <Col xs={2}>
-                <Button name='Add Floor' key={floorArray.length} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} save={setIsSave} floorNumber={floor}></Button>
+                <Button name='Add Floor' key={floorArray.length} names={names} setMachines={setMachines} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} save={setIsSave} floorNumber={floor}></Button>
 
                 </Col>
                
