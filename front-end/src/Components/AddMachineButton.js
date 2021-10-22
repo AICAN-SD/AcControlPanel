@@ -6,26 +6,15 @@ import axios from 'axios'
 
 
 function AddMachineButton(props) {
-    const [names,setNames] = useState([])
-    const [machines,setMachines] = useState([])
     useEffect(()=>{
-        const data2 =async ()=>await axios.get('http://127.0.0.1:8000/api/readcsv')
-        .then(res=>{
-            const x =JSON.parse(res.data)
-            console.log(x)
-            setNames(x);
-        })
-        .catch(e=>{
-            console.log(e)
-        })
-        data2()
+       
     },[])
     function clickHandler(e,index){
         e.preventDefault()
         const value = e.target.value
         console.log(e)
         console.log(value+" "+e.target.name)
-        setMachines(prev=>{
+        props.setMachines(prev=>{
             let i=0;
             for(let j=0;j<prev.length;j++){
                 if(prev[j] === value){
@@ -47,7 +36,7 @@ function AddMachineButton(props) {
        var setRoom= props.onClick
        var setRoomc= props.onC
        setRoom(prevRoom=>prevRoom+1);
-       setRoomc((oldArray) => [...oldArray, <MachineCard key={props.counter} counter={props.counter} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={props.machineNumber} names={names} clickHandler={clickHandler}></MachineCard>]);
+       setRoomc((oldArray) => [...oldArray, <MachineCard key={props.counter} setMachines={props.setMachines} counter={props.counter} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={props.machineNumber} names={props.names} clickHandler={clickHandler}></MachineCard>]);
     }
     return (
 

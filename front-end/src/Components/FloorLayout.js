@@ -14,7 +14,7 @@ function FloorLayout(props) {
             <div className="rectangle">
             <Row>
                 <Col xs={2}>
-                <AddRoomButton name='Add Room' key={roomArray.length} counter={roomArray.length} onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
+                <AddRoomButton name='Add Room' setMachines={props.setMachines} names={props.names} key={roomArray.length} counter={roomArray.length} onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
 
                 </Col>
                 <Col xs={10}>
