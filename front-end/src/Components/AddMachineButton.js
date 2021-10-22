@@ -23,20 +23,12 @@ function AddMachineButton(props) {
         data2()
     },[])
     function clickHandler(e,index){
+        e.preventDefault()
         const value = e.target.value
         console.log(e)
-
         console.log(value+" "+e.target.name)
-        // setMachines(machines.filter(()=>true))
-        // if(machines.indexOf(value)!== -1){
-        //     alert(`${value} exits`)
-        // }
-        // else{
-        //     setMachines([...machines,value])
-        // }
         setMachines(prev=>{
             let i=0;
-            console.log(prev)
             for(let j=0;j<prev.length;j++){
                 if(prev[j] === value){
                     alert(`${value} exits`);
@@ -51,18 +43,6 @@ function AddMachineButton(props) {
                 else{
                     return [...prev]
                 }
-            // prev.map(x=>{
-            //     if(x === value){
-            //         alert(`${value} exits`);
-            //         i=1;
-            //     }
-            // })
-            // if(i === 0){
-            // return [...prev,value]
-            // }
-            // else{
-            //     return [...prev]
-            // }
         })
       }
     function onClick(){
