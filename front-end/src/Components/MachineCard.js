@@ -28,7 +28,7 @@ function MachineCard(props) {
           <p className="form-control">Assign Device</p>
           </Col>
           <Col xs={8}>
-          <Form.Select onChange={props.clickHandler} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
+          <Form.Select onChange={(e)=>props.clickHandler(e,props.counter)} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
           <option></option>
           {props.names.map(name=>{
             return <option key={name.ID} value={name.MACHINE_ID}>{name.MACHINE_ID}</option>

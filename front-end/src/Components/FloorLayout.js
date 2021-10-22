@@ -14,11 +14,11 @@ function FloorLayout(props) {
             <div className="rectangle">
             <Row>
                 <Col xs={2}>
-                <AddRoomButton name='Add Room' onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
+                <AddRoomButton name='Add Room' key={roomArray.length} counter={roomArray.length} onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
 
                 </Col>
                 <Col xs={10}>
-                <input name={'FloorName'+props.floorNumber} className="ac form-control" placeholder="Floor Name" required />
+                <input name={'FloorName'+props.floorNumber} key={roomArray.length}  className="ac form-control" placeholder="Floor Name" required />
                 </Col>
             </Row>
         

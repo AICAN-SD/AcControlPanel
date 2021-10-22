@@ -10,7 +10,9 @@ function Button(props) {
        var setFloorc= props.onC
        var setIsSave= props.save
       setFloor(prevFloor=>prevFloor+1)
-     setFloorc(oldArray => [...oldArray,<FloorLayout floorNumber={props.floorNumber}></FloorLayout>]);
+     setFloorc(function (oldArray) { 
+       return [...oldArray,<FloorLayout key={props.counter} floorNumber={props.floorNumber}></FloorLayout>];
+      });
      setIsSave(true)
     }
     return (
