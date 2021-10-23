@@ -9,23 +9,42 @@ function AddMachineButton(props) {
     useEffect(()=>{
        
     },[])
-    function clickHandler(e,index){
+    function clickHandler(e){
         e.preventDefault()
         const value = e.target.value
-        console.log(e)
         console.log(value+" "+e.target.name)
         props.setMachines(prev=>{
             let i=0;
             for(let j=0;j<prev.length;j++){
-                if(prev[j] === value){
-                    alert(`${value} exits`);
-                    i=1;
+                if(prev[j].value === value){
+                    if(prev[j].name !== e.target.name){
+                    alert(`${value} exists`);
                     e.target.value=""
+                    }
+                    i=1;
                     break;
                 }  
             }
+            if(i === 1){
+                for(let j=0;j<prev.length;j++){
+                    if(prev[j].name === e.target.name){
+                        prev.splice(j,1)
+                        break;
+                    }  
+                } 
+            }
+            else if(i===0){
+                for(let j=0;j<prev.length;j++){
+                    if(prev[j].name === e.target.name){
+                            prev[j].value = value
+                            i=1;
+                        break;
+                    }  
+                }
+            }
+            console.log(prev)
             if(i === 0){
-                return [...prev,value]
+                return [...prev,{name:e.target.name,value:value}]
                 }
                 else{
                     return [...prev]
