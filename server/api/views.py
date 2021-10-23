@@ -151,8 +151,7 @@ def MachineToggle(request,id):
     
     if machine.status == True:
         machine.status=False
-        machine.startTime='00:00'
-        machine.endTime='00:00'
+        machine.endTime=str(time.hour)+':'+str(time.minute)
         appendToCsv(indvData=machine,read=1)
         
     else:
@@ -463,8 +462,14 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
             print(')))))))))))')
             print(indvData)
             listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME', 'OFF_TIME','HRS', 'STATUS']]
-            print(listtt)
-
+            index=listtt.index.tolist()[0]
+            df.loc[index,'STATUS']='DONE'
+            df.loc[index,'OFF_TIME']=indvData.endTime
+            tdeltaH=datetime.strptime(str(indvData.endTime),'%H:%M').hour-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').hour
+            tdeltaM=datetime.strptime(str(indvData.endTime),'%H:%M').minute-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').minute
+            df.loc[index,'HRS']=tdeltaH+(tdeltaM/60)
+            print(indvData.endTime)
+            
                 
 
 
