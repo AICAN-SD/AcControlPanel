@@ -138,7 +138,7 @@ def MachineSchedule(request):
         for machineid in machines:
             machine = Machines.objects.filter(MachineId=machineid)
             m_serialized = MachineSerializer(machine,many=True)
-            machineObjects = machineObjects + m_serialized
+            machineObjects = machineObjects + m_serialized.data
         data['machineObjects'] = machineObjects
         profile = Profiles(type=3,data=data)
         profile.save()
@@ -148,6 +148,7 @@ def MachineToggle(request,id):
     nowTime=datetime.now().strftime('%H:%M')
     time=datetime.strptime(str(nowTime),'%H:%M')
     machine = Machines.objects.get(MachineId = id)
+
     
     if machine.status == True:
         machine.status=False
@@ -155,9 +156,35 @@ def MachineToggle(request,id):
         appendToCsv(indvData=machine,read=1)
         
     else:
+        obj=Profiles.objects.all()
+        count=0
+        prof=0
+        for ob in obj:
+            if(ob.status==True):
+                count=count+1
+                prof=ob
+        
         machine.status = True
         machine.startTime=str(time.hour)+':'+str(time.minute)
-        machine.endTime='00:00'
+        if(prof!=0):
+            print(prof.data)
+            if(prof.type==1 or prof.type==2):
+                for var in prof.data['selectedMachines']:
+                    if(var['MachineId']==id):
+                        print('yes in Floor or Room profile')
+                        for timeSchd in prof.data['timeSchedule']:
+                            if(timeSchd['start']<=str(time.hour)+':'+str(time.minute) and timeSchd['end']>=str(time.hour)+':'+str(time.minute)):
+                                machine.endTime=timeSchd['end']
+            elif(prof.type==3):
+                for var in prof.data['machineObjects']:
+                    if(var['MachineId']==id):
+                        print('yes in mac profile')
+                        for timeSchd in prof.data['timeSchedule']:
+                            if(timeSchd['start']<=str(time.hour)+':'+str(time.minute) and timeSchd['end']>=str(time.hour)+':'+str(time.minute)):
+                                machine.endTime=timeSchd['end'] 
+
+                
+        
         appendToCsv(indvData=machine)
     machine.save()  
     finalData=AllData()       
@@ -462,13 +489,14 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
             print(')))))))))))')
             print(indvData)
             listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME', 'OFF_TIME','HRS', 'STATUS']]
-            index=listtt.index.tolist()[0]
-            df.loc[index,'STATUS']='DONE'
-            df.loc[index,'OFF_TIME']=indvData.endTime
-            tdeltaH=datetime.strptime(str(indvData.endTime),'%H:%M').hour-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').hour
-            tdeltaM=datetime.strptime(str(indvData.endTime),'%H:%M').minute-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').minute
-            df.loc[index,'HRS']=tdeltaH+(tdeltaM/60)
-            print(indvData.endTime)
+            if len(listtt.index.tolist())>0:
+                index=listtt.index.tolist()[0]
+                df.loc[index,'STATUS']='DONE'
+                df.loc[index,'OFF_TIME']=indvData.endTime
+                tdeltaH=datetime.strptime(str(indvData.endTime),'%H:%M').hour-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').hour
+                tdeltaM=datetime.strptime(str(indvData.endTime),'%H:%M').minute-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').minute
+                df.loc[index,'HRS']=tdeltaH+(tdeltaM/60)
+                print(indvData.endTime)
             
                 
 
