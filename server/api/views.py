@@ -26,6 +26,7 @@ def data(request):
     if request.method=='POST':
         data=JSONParser().parse(request)['data']
         machineids = []
+        print(data)
         for x in data:
             if 'RoomName' in x:
                 
@@ -33,7 +34,7 @@ def data(request):
                 floorId=roomArray[0].split('Floor')[1]
                 roomId=roomArray[1]
                 modelRoom=Rooms(RoomId=x,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
-                # modelRoom.save()
+                modelRoom.save()
             elif 'MachineAssignDevice' in x:
                 print(x)
                 MachineAssignDeviceArray=x.split('MachineAssignDevice')
@@ -48,12 +49,12 @@ def data(request):
                 print(machineType)
                 machineids.append(data[x])
                 modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),floor=Floors.objects.get(FloorId=floorId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
-                # modelMachine.save()
+                modelMachine.save()
             elif 'FloorName' in x:
                 print(x)
                 floorId=x.split('FloorName')[1]
                 model=Floors(FloorName=data[x],FloorId=floorId)
-                # model.save()
+                model.save()
             else:
                 print("In else "+x)
         print(machineids)  
@@ -93,7 +94,7 @@ def Room(request):
 # Machines api to get data for control panel
 def Machine(request):
     if request.method == 'GET':
-        finalData=AllData()
+        finalData=  AllData()
         return JsonResponse(finalData,safe=False)
 
 @csrf_exempt
@@ -152,14 +153,13 @@ def MachineToggle(request,id):
         machine.status=False
         machine.startTime='00:00'
         machine.endTime='00:00'
-        appendToCsv()
+        appendToCsv(indvData=machine,read=1)
         
     else:
-        appendToCsv(indvData=machine)
-
         machine.status = True
         machine.startTime=str(time.hour)+':'+str(time.minute)
         machine.endTime='00:00'
+        appendToCsv(indvData=machine)
     machine.save()  
     finalData=AllData()       
     return JsonResponse(finalData,safe=False)
@@ -423,7 +423,7 @@ def readCsv(request,id=0):
         data.to_csv(BASE_DIR/'machines.csv',index=False)       
         return JsonResponse({'message':"Done"},safe=False)  
 
-def appendToCsv(data=0,indvData=0,from_multiData=0):
+def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
 
     nowTime=datetime.now().strftime('%H:%M')
     df = pd.read_csv(BASE_DIR/'sample.csv')
@@ -440,7 +440,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0):
                 df=df.drop(x)
     else:
         print('cccccccc')
-        if(indvData!=0):
+        if(indvData!=0 and read==0):
             for rowIndex in range(count_row):
                 if(str(df.loc[rowIndex,'STATUS'])=='ONGOING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):
                     tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[rowIndex,'ON_TIME']),'%H:%M').hour
@@ -459,8 +459,13 @@ def appendToCsv(data=0,indvData=0,from_multiData=0):
                                 pass
                                 
 
-        else:
-            pass
+        elif(read):
+            print(')))))))))))')
+            print(indvData)
+            listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME', 'OFF_TIME','HRS', 'STATUS']]
+            print(listtt)
+
+                
 
 
 
@@ -504,7 +509,8 @@ def appendToCsv(data=0,indvData=0,from_multiData=0):
                         #Already Done Before Selection
                         pass 
 
-    elif(indvData):
+    elif(indvData and read==0):
+        print(indvData.endTime)
         if(datetime.strptime(indvData.endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') or str(datetime.strptime(indvData.endTime, '%H:%M').hour)+':'+str(datetime.strptime(indvData.endTime, '%H:%M').minute)=='0:0'):
             if(datetime.strptime(indvData.startTime, '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
                 status='ONGOING'
