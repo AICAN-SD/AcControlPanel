@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
    path('api/data',views.data),
-   path('api/factory/',views.factory),
+   path('api/factory',views.factory),
    path('api/floortoggle/<str:id>',views.floorToggle),
    path('api/roomtoggle/<str:id>',views.roomToggle),
    path('api/devices/',views.devices),

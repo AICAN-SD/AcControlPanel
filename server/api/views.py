@@ -18,6 +18,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+@csrf_exempt
 def factory(request):
     if request.method == 'GET':
         machines = Machines.objects.all()
@@ -29,16 +30,32 @@ def factory(request):
             profile.status = False
             profile.save()    
         return JsonResponse('success',safe=False)
+    if request.method == 'POST':
+        machines = Machines.objects.all()
+        profiles = Profiles.objects.all()
+        for machine in machines:
+            machine.status=True
+            machine.save()
+        for profile in profiles:
+            profile.status = True
+            profile.save() 
+        return JsonResponse('success',safe=False)    
 
 def floorToggle(request,id):
     if request.method == 'GET':
         Machines.objects.filter(floor = Floors.objects.get(FloorId = id)).update(status = False)
         return JsonResponse('success',safe=False)
+    if request.method == 'POST':
+        Machines.objects.filter(floor = Floors.objects.get(FloorId = id)).update(status = True)
+        return JsonResponse('success',safe=False)    
 
 def roomToggle(request,id):
     if request.method == 'GET':
         Machines.objects.filter(room = Rooms.objects.get(RoomId = id)).update(status = False)
-        return JsonResponse('success',safe=False)    
+        return JsonResponse('success',safe=False) 
+    if request.method == 'POST':
+        Machines.objects.filter(room = Rooms.objects.get(RoomId = id)).update(status = True)
+        return JsonResponse('success',safe=False)        
 
 @csrf_exempt
 def data(request):
