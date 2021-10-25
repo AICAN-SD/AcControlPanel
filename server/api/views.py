@@ -1,3 +1,4 @@
+from os import stat
 from django.db.models import indexes
 from django.http import response
 from django.views.decorators.csrf import csrf_exempt
@@ -17,9 +18,27 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
- 
+def factory(request):
+    if request.method == 'GET':
+        machines = Machines.objects.all()
+        profiles = Profiles.objects.all()
+        for machine in machines:
+            machine.status=False
+            machine.save()
+        for profile in profiles:
+            profile.status = False
+            profile.save()    
+        return JsonResponse('success',safe=False)
 
+def floorToggle(request,id):
+    if request.method == 'GET':
+        Machines.objects.filter(floor = Floors.objects.get(FloorId = id)).update(status = False)
+        return JsonResponse('success',safe=False)
 
+def roomToggle(request,id):
+    if request.method == 'GET':
+        Machines.objects.filter(room = Rooms.objects.get(RoomId = id)).update(status = False)
+        return JsonResponse('success',safe=False)    
 
 @csrf_exempt
 def data(request):
