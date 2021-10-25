@@ -463,11 +463,6 @@ def AllData():
         }  
     return finalData
 
-def Csvv(request):
-    data=pd.read_csv(BASE_DIR/'sample.csv')
-    print(data)
-    return JsonResponse(data.to_json(),safe=False)
-
 @csrf_exempt
 def readCsv(request,id=0):
     data = pd.read_csv(BASE_DIR/'machines.csv')
