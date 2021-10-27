@@ -24,14 +24,14 @@ function dropdown(){
         </div>
         <ul >
           <li>
-            <a href="ControlPanel">
+            <a href="/ControlPanel">
               <i className="bx bx-shield-quarter" />
               <span className="links_name">Control Panel</span>
             </a>
             <span className="tooltip">Control Panel</span>
           </li>
           <li>
-            <a href="www.df.com">
+            <a href="/Dashboard">
               <i className="bx bx-grid-alt" />
               <span className="links_name">Dashboard</span>
             </a>
