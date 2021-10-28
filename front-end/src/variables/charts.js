@@ -73,6 +73,7 @@ const dailySalesChart = {
 // // // Email Subscriptions
 // #############################
 
+
 const emailsSubscriptionChart = {
   data: {
     labels: [
@@ -89,20 +90,18 @@ const emailsSubscriptionChart = {
       "Nov",
       "Dec",
     ],
-    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]],
+    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
+    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
+    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
+  ],
   },
   options: {
-    axisX: {
-      showGrid: false,
-    },
-    low: 0,
-    high: 1000,
-    chartPadding: {
-      top: 0,
-      right: 5,
-      bottom: 0,
-      left: 0,
-    },
+    stackBars: true,
+    axisY: {
+      labelInterpolationFnc: function(value) {
+        return (value / 1000) + 'k';
+      }
+    }
   },
   responsiveOptions: [
     [
@@ -148,6 +147,7 @@ const completedTasksChart = {
       tension: 0,
     }),
     low: 0,
+    showArea:true,
     high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
     chartPadding: {
       top: 0,

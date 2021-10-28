@@ -31,7 +31,7 @@ function dropdown(){
             <span className="tooltip">Control Panel</span>
           </li>
           <li>
-            <a href="/Dashboard">
+            <a href="/">
               <i className="bx bx-grid-alt" />
               <span className="links_name">Dashboard</span>
             </a>

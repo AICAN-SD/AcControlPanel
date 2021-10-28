@@ -8,28 +8,58 @@ import GridItem from "../Components/Grid/GridItem.js";
 import GridContainer from "../Components/Grid/GridContainer.js";
 import CardHeader from "../Components/Card/CardHeader.js";
 import "../assets/css/material-dashboard-react.css"
-import {Col,Row} from 'react-bootstrap'
-
+import {Col,Row} from 'react-bootstrap';
+import $ from 'jquery';
+import { useState,useEffect } from 'react';
+import axios from 'axios';
+import { Accordion } from 'react-bootstrap';
 import {
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart,
 } from "../variables/charts.js";
+import { faTheaterMasks } from '@fortawesome/free-solid-svg-icons';
 
 function Dashboard() {
+	const [data,setData]=useState([])
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
+      console.log(response.data.Data);
+      setData(response.data.Data)
+    });
+  }, []);
+
+
+	function onExpandRow(e) {
+	   
+
+	
+			e.stopPropagation();
+			var $target = $(e.target);
+    console.log($target.closest("tr").next().find("td").attr('colspan'))
+
+			if ( $target.closest("tr").next().find("td").attr('colspan') > 1 ) {
+			
+
+				$target.closest("tr").next().find("td").slideToggle("3000");
+			}                    
+	
+	};
+	
     return (
         <div>
       <GridContainer>
-         <GridItem xs={12} sm={12} md={8}>
+         <GridItem xs={12} sm={12} md={9}>
            <div style={{paddingTop:'15px'}}>
            <Row>
              <Col xs={12} sm={12} md={3}>
 			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF3333'}}>
 				<div class="widget-content-wrapper">
-					<div class="widget-content-left">
-						<div class="widget-heading text-second">Room II</div>
+					<div class="widget-content-left" style={{color:'white'}}>
+						<div class="widget-heading text-second" >Room II</div>
 						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-						<div class="widget-numbers fsize-1 text-muted"><span>(kWh)</span></div>
+						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
 					</div>
 					<div class="widget-content-right">
 					</div>
@@ -37,12 +67,12 @@ function Dashboard() {
 			</div>
              </Col>
              <Col xs={12} sm={12} md={3}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF9933'}}>
+			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF9933',color:'white'}}>
 				<div class="widget-content-wrapper">
 					<div class="widget-content-left">
 						<div class="widget-heading text-second">Room II</div>
 						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-						<div class="widget-numbers fsize-1 text-muted"><span>(kWh)</span></div>
+						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
 					</div>
 					<div class="widget-content-right">
 					</div>
@@ -50,12 +80,12 @@ function Dashboard() {
 			</div>
              </Col>
              <Col xs={12} sm={12} md={3}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062'}}>
+			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062',color:'white'}}>
 				<div class="widget-content-wrapper">
 					<div class="widget-content-left">
 						<div class="widget-heading text-second">Room II</div>
 						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-						<div class="widget-numbers fsize-1 text-muted"><span>(kWh)</span></div>
+						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
 					</div>
 					<div class="widget-content-right">
 					</div>
@@ -63,12 +93,12 @@ function Dashboard() {
 			</div>
              </Col>
              <Col xs={12} sm={12} md={3}>
-              <div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062'}}>
+              <div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062',color:'white'}}>
                 <div class="widget-content-wrapper">
                   <div class="widget-content-left">
                     <div class="widget-heading text-second">Room II</div>
                     <div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-                    <div class="widget-numbers fsize-1 text-muted"><span>(kWh)</span></div>
+                    <div class="widget-numbers fsize-1"><span>(kWh)</span></div>
                   </div>
                   <div class="widget-content-right">
                   </div>
@@ -105,9 +135,17 @@ function Dashboard() {
              </Row>
              </div>
 		</GridItem>
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={3}>
+		
           <div style={{marginTop:'30px'}}>
-            <CardHeader color="success">
+            <CardHeader color="danger">
+			<GridContainer>
+         <GridItem xs={12} sm={12} md={6} style={{
+  margin: '45px 0px 0px 0',
+  width: '100%',
+  padding: '10px',
+  textAlign:'center'
+}}>
               <ChartistGraph
                 className="ct-chart"
                 data={dailySalesChart.data}
@@ -115,9 +153,25 @@ function Dashboard() {
                 options={dailySalesChart.options}
                 listener={dailySalesChart.animation}
               />
+			    </GridItem>
+				<GridItem xs={12} sm={12} md={6}>
+				<div style={{
+  margin: '45px 0px 0px 0',
+  width: '100%',
+  padding: '10px',
+  textAlign:'center'
+}}>
+	<Row>
+                           <Col xs={12} sm={12} md={12}> <i class="fas fa-caret-up">&nbsp;5.42 %</i></Col>
+						   <Col xs={12} sm={12} md={12}>Increase in Cost</Col>
+							</Row>
+							</div>
+				</GridItem>
+		  </GridContainer>
             </CardHeader>
            
           </div>
+		
         </GridItem>
         
       </GridContainer>
@@ -157,6 +211,8 @@ function Dashboard() {
 					<div class="main-card mb-3 card ">
 						<div class="card-header bg-heavy-rain text-muted">Device Wise Cost and Power Usage
 						</div>
+
+						
 						<div class="table-responsive">
 							<table class="align-middle mb-0 table table-borderless table-striped table-hover bg-light">
 								<thead>
@@ -168,55 +224,86 @@ function Dashboard() {
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<th class="text-center text-muted">Conference Room</th>
-										<td>
+								{data.map((floor, index) => {
+        return (
+          <>
+           
+              {floor.rooms !== undefined &&
+                floor.rooms.map((room, indx) => {
+                  return (
+                    <>
+                      <tr onClick={(e)=>onExpandRow(e)}>
+										<th class="text-center text-muted">{room.roomName}</th>
+										<th>
 											<div class="widget-content p-0">
 
 												<div class="mb progress">
 													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
 														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: '67%;'}}>1,640 kWh
+														aria-valuemax="100" style={{width: '100%'}}>1,640 kWh
 
 													</div>
 												</div>
 											</div>
-										</td>
+										</th>
 										<th class="text-center text-muted">1,640</th>
 										<th class="text-center text-muted">₹ 1043</th>
 									</tr>
+									<tr >
+										<td colSpan="4" class="ck" style={{display:'none'}}>
+										<div class="table-responsive">
+							<table class="align-middle mb-0 table table-borderless table-striped table-hover bg-light">
+								
+									   <tbody>
+                          {room.machines !== undefined &&
+                            room.machines.map((machine, indxx) => {
+                              return (
+                                <>
+                              
+								      
+								
 									<tr>
-										<th class="text-center text-muted">Room I</th>
-										<td>
+										<th class="text-center text-muted">{machine.MachineName}</th>
+										<th>
 											<div class="widget-content p-0">
 
 												<div class="mb progress">
 													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
 														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: '61%;'}}>1,512 kWh
-													</div>
-												</div>
-											</div>
-										</td>
-										<th class="text-center text-muted">1,512</th>
-										<th class="text-center text-muted"> ₹ 932</th>
-									</tr>
-									<tr>
-										<th class="text-center text-muted">Room II</th>
-										<td>
-											<div class="widget-content p-0">
+														aria-valuemax="100" style={{width: '67%'}}>1,640 kWh
 
-												<div class="mb progress">
-													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
-														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: '55%'}}>1,479 kWh
 													</div>
 												</div>
 											</div>
-										</td>
-										<th class="text-center text-muted">1,479</th>
-										<th class="text-center text-muted">₹ 883</th>
+										</th>
+										<th class="text-center text-muted">1,640</th>
+										<th class="text-center text-muted">₹ 1043</th>
 									</tr>
+									
+							
+                                </>
+                              );
+                            })}
+							</tbody>
+							</table>
+							</div>
+										
+									   
+									   </td>
+								
+			
+								   </tr>
+                      
+                    </>
+                  );
+                })}
+        
+          </>
+        );
+      })}
+									
+									
+
 								</tbody>
 							</table>
 						</div>

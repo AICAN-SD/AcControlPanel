@@ -15,17 +15,17 @@ function BaseScreen() {
     <SideBar></SideBar>
     <NavBar></NavBar>
      
-    <Container className="Container">
+    <div className='jumbotron' style={{padding:'2% 1% 0 6%'}}>
     <Router>
     <Switch>
       <Route path='/Schedules' exact component={ScheduleProfiles}/>
       <Route path='/LayoutCreation' exact component={LayoutCreation}/>
       <Route path='/ControlPanel' exact component={ControlPanel}/>
       <Route path='/CreateMachine' exact component={CreateMachine}/>
-      <Route path='/Dashboard' exact component={Dashboard}/>
+      <Route path='/' exact component={Dashboard}/>
       </Switch>
       </Router>
-      </Container>
+      </div>
   </>
   );
 }
