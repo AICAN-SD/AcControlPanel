@@ -11,11 +11,12 @@ import '../css/Screens.css'
 
 function BaseScreen() {
   return (
-    <>
+    <div>
     <SideBar></SideBar>
     <NavBar></NavBar>
      
-    <div className='jumbotron' style={{padding:'2% 1% 0 6%'}}>
+     <div style={{backgroundColor:'#e3f2fd'}}>
+    <div  style={{padding:'0% 1% 0 6%' }}>
     <Router>
     <Switch>
       <Route path='/Schedules' exact component={ScheduleProfiles}/>
@@ -26,7 +27,8 @@ function BaseScreen() {
       </Switch>
       </Router>
       </div>
-  </>
+      </div>
+  </div>
   );
 }
 

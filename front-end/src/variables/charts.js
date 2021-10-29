@@ -136,59 +136,191 @@ const emailsSubscriptionChart = {
 // ##############################
 // // // Completed Tasks
 // #############################
+const chartData = {
+  type: 'bar',
+  options: {
+      chart: {
+          id: 'bar-chart',
+          stacked: true,
+          toolbar: {
+              show: true
+          },
+          zoom: {
+              enabled: true
+          }
+      },
+      responsive: [
+          {
+              breakpoint: 480,
+              options: {
+                  legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0
+                  }
+              }
+          }
+      ],
+      plotOptions: {
+          bar: {
+              horizontal: false,
+              columnWidth: '50%'
+          }
+      },
+      xaxis: {
+          type: 'category',
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      legend: {
+          show: true,
+          fontSize: '14px',
+          fontFamily: `'Roboto', sans-serif`,
+          position: 'bottom',
+          offsetX: 20,
+          labels: {
+              useSeriesColors: false
+          },
+          markers: {
+              width: 16,
+              height: 16,
+              radius: 5
+          },
+          itemMargin: {
+              horizontal: 15,
+              vertical: 8
+          }
+      },
+      fill: {
+          type: 'solid'
+      },
+      dataLabels: {
+          enabled: false
+      },
+      grid: {
+          show: true
+      },
+      colors: [ 'rgba(144, 202, 249, 0.85)','rgba(30, 136, 229, 0.85)','rgba(103, 58, 183, 0.85)','rgba(237, 231, 246, 0.85)'],
+
+  },
+  series: [
+      {
+          name: 'Investment',
+          data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+      },
+      {
+          name: 'Loss',
+          data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
+      },
+      {
+          name: 'Profit',
+          data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
+      },
+      {
+          name: 'Maintenance',
+          data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+      }
+  ]
+}
 
 const completedTasksChart = {
-  data: {
-    labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-    series: [[230, 750, 450, 300, 280, 240, 200, 190]],
-  },
+          
+  series: [{
+    name: "STOCK ABC",
+    data: ['0','25','20','78','45','100']
+  }],
   options: {
-    lineSmooth: Chartist.Interpolation.cardinal({
-      tension: 0,
-    }),
-    low: 0,
-    showArea:true,
-    high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-    chartPadding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    },
-  },
-  animation: {
-    draw: function (data) {
-      if (data.type === "line" || data.type === "area") {
-        data.element.animate({
-          d: {
-            begin: 600,
-            dur: 700,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint,
-          },
-        });
-      } else if (data.type === "point") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
-            from: 0,
-            to: 1,
-            easing: "ease",
-          },
-        });
+
+    chart: {
+      type: 'area',
+      zoom: {
+        enabled: false
       }
     },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: 'straight'
+    },
+    
+    title: {
+      text: 'Usage Estimate',
+      align: 'left'
+    },
+    subtitle: {
+      text: 'Price Movements',
+      align: 'left'
+    },
+    labels: ['1','2','3','4','5','6'],
+    xaxis: {
+      type: 'datetime',
+    },
+    yaxis: {
+      opposite: true
+    },
+    legend: {
+      horizontalAlign: 'left'
+    }
   },
+  
+
+
+};
+const TotalOrderMonthLineCharData = {
+  type: 'line',
+  height: 90,
+  options: {
+      chart: {
+          sparkline: {
+              enabled: true
+          }
+      },
+      dataLabels: {
+          enabled: false
+      },
+      colors: ['#fff'],
+      fill: {
+          type: 'solid',
+          opacity: 1
+      },
+      stroke: {
+          curve: 'smooth',
+          width: 3
+      },
+      yaxis: {
+          min: 0,
+          max: 100
+      },
+      tooltip: {
+          theme: 'dark',
+          fixed: {
+              enabled: false
+          },
+          x: {
+              show: false
+          },
+          y: {
+              title: {
+                  formatter: (seriesName) => 'Total Order'
+              }
+          },
+          marker: {
+              show: false
+          }
+      }
+  },
+  series: [
+      {
+          name: 'series1',
+          data: [45, 66, 41, 89, 25, 44, 9, 54]
+      }
+  ]
 };
 
 module.exports = {
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart,
+  chartData,
+  TotalOrderMonthLineCharData,
 };

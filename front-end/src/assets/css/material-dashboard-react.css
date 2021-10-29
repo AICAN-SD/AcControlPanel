@@ -62,7 +62,7 @@ html * {
   -moz-osx-font-smoothing: grayscale;
 }
 body {
-  background-color: #eeeeee;
+
   color: #3c4858;
   margin: 0;
   font-family: Roboto, Helvetica, Arial, sans-serif;
@@ -111,10 +111,6 @@ h6 {
   font-weight: 500;
 }
 
-body {
-  background-color: #eeeeee;
-  color: #3c4858;
-}
 
 blockquote p {
   font-style: italic;

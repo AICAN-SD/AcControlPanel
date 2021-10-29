@@ -10,7 +10,7 @@ import {
 
 const cardHeaderStyle = {
   cardHeader: {
-    padding: "0.75rem 1.25rem",
+    padding: "0.75rem 0",
     marginBottom: "0",
     borderBottom: "none",
     background: "transparent",

@@ -37,6 +37,7 @@ CardHeader.propTypes = {
     "success",
     "danger",
     "info",
+    "white",
     "primary",
     "rose",
   ]),
