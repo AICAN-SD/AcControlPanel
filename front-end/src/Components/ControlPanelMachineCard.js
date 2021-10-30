@@ -7,18 +7,18 @@ import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 function ControlPanelMachineCard(props) {
   console.log(props.machineData)
     return (
-    <Col xs={3}>
+    <Col xs={12} sm={6} md={3}>
       <div className="ControlPanelMachineCard">
         <Row>
        
-          <Col xs={9}>
+          <Col xs={12} sm={6} md={9}>
             <h1 className="MachineName">
               <strong>{props.machineData.MachineName}</strong>
             </h1>
             <h4 className="num">{props.machineData.MachineType}</h4>
             
             </Col>
-          <Col xs={3}>
+          <Col xs={12} sm={6} md={3}>
           <BootstrapSwitchButton onChange={()=>{props.MachineToggle(props.machineData.MachineId)}} checked={props.machineData.status} size="sm" />
             </Col>
         </Row>

@@ -13,6 +13,46 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
+ .buttonwrapper {
+  list-style: none;
+  padding: 5px;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  width: auto;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.13);
+}
+
+.buttonwrapper li {
+  display: block;
+  float: left;
+  margin-left: 35px;
+  height: 35px;
+  width: 80px;
+}
+
+.buttonwrapper li:first-child {
+  margin-left: 0;
+}
+
+.buttonwrapper label {
+  display: block;
+  color: #FFFFFF;
+  font-family: Nunito Sans Light;
+  opacity: 1;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+  padding: 8px 10px;
+  margin-bottom: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.buttonwrapper li.active label {
+  background-color: #182142;
+  border-radius: 50px;
+}
 .ct-grid {
   stroke: rgba(255, 255, 255, 0.2);
   stroke-width: 1px;

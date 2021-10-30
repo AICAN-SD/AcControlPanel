@@ -26,8 +26,6 @@ function Dashboard() {
 
 	const [data,setData]=useState([]);
   const [isLoading, setLoading] = useState(true);
-
- 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
       console.log(response.data.Data);
@@ -55,10 +53,41 @@ function Dashboard() {
 			}                    
 	
 	};
+
+	   
+	function onCLICK(e){
+		console.log(e.target.id)
+	var todayElem = document.getElementById('today');
+	var monthElem = document.getElementById('month');
+	var yearElem = document.getElementById('year');
+		if(e.target.id==='l1'){
+			
+		monthElem.classList.remove("active");
+		yearElem.classList.remove("active");
+		todayElem.classList.add("active");
+
+		}else if(e.target.id==='l2'){
+			monthElem.classList.add("active");
+			yearElem.classList.remove("active");
+			todayElem.classList.remove("active");
+
+		}else{
+			monthElem.classList.remove("active");
+			yearElem.classList.add("active");
+			todayElem.classList.remove("active");
+
+		}
+	}
+
+
+
 	
     return (
         <div >
-      <GridContainer>
+        <div style={{backgroundColor:'black'}} >
+			<ul class="buttonwrapper"><li id="today" onClick={(e)=>onCLICK(e)} class=""><label id="l1">TODAY</label></li><li id="month" class="" onClick={(e)=>onCLICK(e)}><label id="l2">MONTH</label></li><li id="year"  onClick={(e)=>onCLICK(e)} class="active"><label id="l3">YEAR</label></li></ul>
+			</div>
+ <GridContainer>
          <GridItem xs={12} sm={12} md={9}>
            <div style={{paddingTop:'15px'}}>
            <Row>
