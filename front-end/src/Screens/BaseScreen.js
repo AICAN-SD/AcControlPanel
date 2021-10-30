@@ -8,14 +8,26 @@ import SideBar from "../Components/SideBar";
 import { Container } from "react-bootstrap";
 import NavBar from "../Components/NavBar";
 import '../css/Screens.css'
+import { useState,useEffect } from 'react';
+
 
 function BaseScreen() {
+  const { innerWidth: width, innerHeight: height } = window;
+  const [heightScreen, setHeightScreen] = useState(0);
+  
+  useEffect(() => {
+    setHeightScreen(height-87)
+
+  
+    
+   
+  }, []);
   return (
     <div>
     <SideBar></SideBar>
     <NavBar></NavBar>
      
-     <div style={{backgroundColor:'#e3f2fd'}}>
+     <div style={{backgroundColor:'#e3f2fd',minHeight:heightScreen}}>
     <div  style={{padding:'0% 1% 0 6%' }}>
     <Router>
     <Switch>

@@ -16,58 +16,83 @@ var delays2 = 80,
 // #############################
 
 const dailySalesChart = {
-  data: {
-    labels: [
-      "Jan",
-      "Feb",
-    ],
-    series: [[542, 443]],
-  },
+  type: 'bar',
+  height: '100%',
   options: {
     
-    axisX: {
-      showGrid: false,
-    },
-    low: 0,
-    seriesBarDistance: 48,
-    width: '150px',
-    high: 1000,
-    chartPadding: {
-      top: 0,
-      right: 5,
-      bottom: 0,
-      left: 0,
-    },
-  },
-  responsiveOptions: [
-    [
-      "screen and (width:100px)",
-      {
-        seriesBarDistance: 5,
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
+      chart: {
+          id: 'bar-chart',
+          stacked: false,
+          toolbar: {
+              show: false
           },
-        },
+          zoom: {
+              enabled: true
+          },
+          
       },
-    ],
-  ],
-  animation: {
-    draw: function (data) {
-      if (data.type === "bar") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays2,
-            dur: durations2,
-            from: 0,
-            to: 1,
-            easing: "ease",
+      responsive: [
+          {
+              breakpoint: 480,
+              options: {
+                  legend: {
+                      position: 'bottom',
+                      offsetX: -10,
+                      offsetY: 0
+                  },
+                  
+              }
+          }
+      ],
+      plotOptions: {
+          bar: {
+              horizontal: false,
+              columnWidth: '30%',
+          }
+      },
+      xaxis: {
+          type: 'category',
+          categories: ['Jan', 'Feb']
+      },
+      legend: {
+          show: true,
+          fontSize: '14px',
+          fontFamily: `'Roboto', sans-serif`,
+          position: 'bottom',
+          offsetX: 20,
+          labels: {
+              useSeriesColors: false
           },
-        });
-      }
-    },
+          markers: {
+              width: 6,
+              height: 6,
+              radius: 5
+          },
+          itemMargin: {
+              horizontal: 5,
+              vertical: 8
+          }
+      },
+      fill: {
+          type: 'solid'
+      },
+      dataLabels: {
+      
+          enabled: false
+      },
+      grid: {
+          show: false
+      },
+      colors: ['rgba(103, 58, 183, 0.85)'],
+
   },
-};
+  series: [
+      {
+          name: 'Investment',
+          data: [35, 125]
+      },
+  ]
+}
 
 // ##############################
 // // // Email Subscriptions
@@ -101,7 +126,10 @@ const emailsSubscriptionChart = {
       labelInterpolationFnc: function(value) {
         return (value / 1000) + 'k';
       }
-    }
+    },
+    toolbar: {
+      show: false
+  },
   },
   responsiveOptions: [
     [
@@ -143,7 +171,7 @@ const chartData = {
           id: 'bar-chart',
           stacked: true,
           toolbar: {
-              show: true
+              show: false
           },
           zoom: {
               enabled: true
@@ -232,6 +260,9 @@ const completedTasksChart = {
 
     chart: {
       type: 'area',
+      toolbar: {
+        show: false
+    },
       zoom: {
         enabled: false
       }

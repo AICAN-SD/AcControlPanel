@@ -483,7 +483,7 @@ def readCsv(request,id=0):
 def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
 
     nowTime=datetime.now().strftime('%H:%M')
-    df = pd.read_csv(BASE_DIR/'sample.csv')
+    df = pd.read_csv(BASE_DIR/'TO_DATA.csv')
     count_row = df.shape[0]
     if(from_multiData): 
         for x in range(count_row):
@@ -507,13 +507,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
                     df.loc[rowIndex,'STATUS']='DONE'
                     df.loc[rowIndex,'OFF_TIME']=nowTime
                 elif(str(df.loc[rowIndex,'STATUS'])=='PENDING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):
-                    obj=Profiles.objects.all()
-                    count=0
-                    for ob in obj:
-                        if(ob.status==True):
-                            count=count+1
-                            for timeSchedule in ob.data['timeSchedule']:
-                                pass
+                    pass
                                 
 
         elif(read):
@@ -534,10 +528,10 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
 
 
 
-    df.to_csv(BASE_DIR/'sample.csv',index=False)
+    df.to_csv(BASE_DIR/'TO_DATA.csv',index=False)
 
     # append to csv
-    f = open(BASE_DIR/'sample.csv', 'a',encoding='UTF8', newline='')
+    f = open(BASE_DIR/'TO_DATA.csv', 'a',encoding='UTF8', newline='')
     writer = csv.writer(f)
     if(data):
         if(data.type!=3):

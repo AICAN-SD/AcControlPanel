@@ -127,39 +127,30 @@ function Dashboard() {
 		</GridItem>
         <GridItem xs={12} sm={12} md={3}>
 		
-          <div style={{marginTop:'30px'}}>
-            <CardHeader color="danger">
-			<GridContainer>
-         <GridItem xs={12} sm={12} md={6} style={{
-  margin: '45px 0px 0px 0',
-  width: '100%',
-  padding: '10px',
-  textAlign:'center'
-}}>
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Bar"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-			    </GridItem>
-				<GridItem xs={12} sm={12} md={6}>
-				<div style={{
-            margin: '45px 0px 0px 0',
+          <div style={{marginTop:'20px',backgroundColor:'white' ,width:'100%',height:'92%'}}>
+			  <Row  style={{height:'100%',minHeight:'250px'}}>
+          <Col xs={6} sm={6} md={6}>
+                  <Chart {...dailySalesChart} />
+
+          </Col>
+          <Col xs={6} sm={6} md={6} >
+		  <div style={{
+            margin: '50% 0px 0 0',
             width: '100%',
             padding: '10px',
             textAlign:'center'
           }}>
-	            <Row>
+	            <Row xs={6} sm={6} md={6}>
                 <Col xs={12} sm={12} md={12}> <i class="fas fa-caret-up">&nbsp;5.42 %</i></Col>
 						   <Col xs={12} sm={12} md={12}>Increase in Cost</Col>
 							</Row>
 							</div>
-				</GridItem>
-		  </GridContainer>
-            </CardHeader>
-           
+
+          </Col>
+		  </Row>
+
+
+
           </div>
 		
         </GridItem>
