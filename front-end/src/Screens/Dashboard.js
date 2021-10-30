@@ -84,7 +84,7 @@ function Dashboard() {
 	
     return (
         <div >
-        <div style={{backgroundColor:'black'}} >
+        <div >
 			<ul class="buttonwrapper"><li id="today" onClick={(e)=>onCLICK(e)} class=""><label id="l1">TODAY</label></li><li id="month" class="" onClick={(e)=>onCLICK(e)}><label id="l2">MONTH</label></li><li id="year"  onClick={(e)=>onCLICK(e)} class="active"><label id="l3">YEAR</label></li></ul>
 			</div>
  <GridContainer>

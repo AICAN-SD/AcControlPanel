@@ -14,13 +14,14 @@
 
  */
  .buttonwrapper {
+  background-color:rgba(160, 210, 253, 0.85);
   list-style: none;
   padding: 5px;
+  margin-top: 1%;
   display: -ms-inline-flexbox;
   display: inline-flex;
   width: auto;
-  border-radius: 50px;
-  background-color: rgba(255, 255, 255, 0.13);
+  border-radius: 5px;
 }
 
 .buttonwrapper li {
@@ -50,8 +51,8 @@
 }
 
 .buttonwrapper li.active label {
-  background-color: #182142;
-  border-radius: 50px;
+  background-color: rgba(30, 136, 229, 0.85);
+  border-radius: 5px;
 }
 .ct-grid {
   stroke: rgba(255, 255, 255, 0.2);
