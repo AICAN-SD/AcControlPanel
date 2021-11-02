@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const OrderCard = ({ isLoading }) => {
+const OrderCard = ({ isLoading ,option,series}) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -87,7 +87,7 @@ const OrderCard = ({ isLoading }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={9}>
-                                   <Chart {...TotalOrderMonthLineCharData} /> 
+                                   <Chart height='95px' series={TotalOrderMonthLineCharData.seriesTotalOrderMonthLineCharData(series)} options={TotalOrderMonthLineCharData.optionTotalOrderMonthLineCharData(option)} type= 'line' /> 
                                 </Grid>
                             </Grid>
                         </Grid>

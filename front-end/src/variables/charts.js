@@ -15,10 +15,9 @@ var delays2 = 80,
 // // // Daily Sales
 // #############################
 
-const dailySalesChart = {
-  type: 'bar',
-  height: '100%',
-  options: {
+const IncreaseInCostChart = {
+  optionIncInCost: function(category){
+  return {
     
       chart: {
           id: 'bar-chart',
@@ -52,7 +51,7 @@ const dailySalesChart = {
       },
       xaxis: {
           type: 'category',
-          categories: ['Jan', 'Feb']
+          categories:category
       },
       legend: {
           show: true,
@@ -85,13 +84,21 @@ const dailySalesChart = {
       },
       colors: ['rgba(103, 58, 183, 0.85)'],
 
-  },
-  series: [
+  }
+  
+},
+  seriesIncInCost: function(data){
+  return  [
       {
           name: 'Investment',
-          data: [35, 125]
+          data: data
       },
   ]
+
+  
+  
+}
+
 }
 
 // ##############################
@@ -164,9 +171,9 @@ const emailsSubscriptionChart = {
 // ##############################
 // // // Completed Tasks
 // #############################
-const chartData = {
-  type: 'bar',
-  options: {
+var HourlyPowerByDevice = {
+  optionHourlyPowerByDevice: function(category){
+    return {
       chart: {
           id: 'bar-chart',
           stacked: true,
@@ -197,7 +204,7 @@ const chartData = {
       },
       xaxis: {
           type: 'category',
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          categories: category
       },
       legend: {
           show: true,
@@ -229,34 +236,37 @@ const chartData = {
       },
       colors: [ 'rgba(144, 202, 249, 0.85)','rgba(30, 136, 229, 0.85)','rgba(103, 58, 183, 0.85)','rgba(237, 231, 246, 0.85)'],
 
+  }
+    
   },
-  series: [
+  seriesHourlyPowerByDevice: function(data){
+    return  [
       {
           name: 'Investment',
-          data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+          data: data.data1
       },
       {
           name: 'Loss',
-          data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
+          data: data.data2
       },
       {
           name: 'Profit',
-          data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
+          data: data.data3
       },
       {
           name: 'Maintenance',
-          data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+          data: data.data4
       }
   ]
+    
+  }
+  
+  
+  
 }
 
-const completedTasksChart = {
-          
-  series: [{
-    name: "STOCK ABC",
-    data: ['0','25','20','78','45','100']
-  }],
-  options: {
+const UssageEstimateChart = {
+  optionUssageEstimateChart: function(category){return {
 
     chart: {
       type: 'area',
@@ -282,7 +292,7 @@ const completedTasksChart = {
       text: 'Price Movements',
       align: 'left'
     },
-    labels: ['1','2','3','4','5','6'],
+    labels: category,
     xaxis: {
       type: 'datetime',
     },
@@ -292,66 +302,68 @@ const completedTasksChart = {
     legend: {
       horizontalAlign: 'left'
     }
-  },
+  } },
+  seriesUssageEstimateChart: function(data){return [{
+    name: "STOCK ABC",
+    data: data
+  }]}
   
 
 
 };
 const TotalOrderMonthLineCharData = {
-  type: 'line',
-  height: 90,
-  options: {
-      chart: {
-          sparkline: {
-              enabled: true
-          }
-      },
-      dataLabels: {
-          enabled: false
-      },
-      colors: ['#fff'],
-      fill: {
-          type: 'solid',
-          opacity: 1
-      },
-      stroke: {
-          curve: 'smooth',
-          width: 3
-      },
-      yaxis: {
-          min: 0,
-          max: 100
-      },
-      tooltip: {
-          theme: 'dark',
-          fixed: {
-              enabled: false
-          },
-          x: {
-              show: false
-          },
-          y: {
-              title: {
-                  formatter: (seriesName) => 'Total Order'
-              }
-          },
-          marker: {
-              show: false
-          }
-      }
-  },
-  series: [
-      {
-          name: 'series1',
-          data: [45, 66, 41, 89, 25, 44, 9, 54]
-      }
-  ]
+  optionTotalOrderMonthLineCharData: function(category){return {
+    chart: {
+        sparkline: {
+            enabled: true
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    colors: ['#fff'],
+    fill: {
+        type: 'solid',
+        opacity: 1
+    },
+    stroke: {
+        curve: 'smooth',
+        width: 3
+    },
+    yaxis: {
+        min: 0,
+        max: 100
+    },
+    tooltip: {
+        theme: 'dark',
+        fixed: {
+            enabled: false
+        },
+        x: {
+            show: false
+        },
+        y: {
+            title: {
+                formatter: (seriesName) => 'Total Order'
+            }
+        },
+        marker: {
+            show: false
+        }
+    }
+}},
+  seriesTotalOrderMonthLineCharData: function(data){return [
+    {
+        name: 'series1',
+        data: data
+    }
+]}
 };
 
 module.exports = {
-  dailySalesChart,
+  IncreaseInCostChart,
   emailsSubscriptionChart,
-  completedTasksChart,
-  chartData,
+  UssageEstimateChart,
+  HourlyPowerByDevice,
   TotalOrderMonthLineCharData,
 };
