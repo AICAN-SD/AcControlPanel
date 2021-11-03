@@ -1,7 +1,5 @@
 import React from 'react'
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
-// @material-ui/core
+
 
 import GridItem from "../Components/Grid/GridItem.js";
 import GridContainer from "../Components/Grid/GridContainer.js";
@@ -15,24 +13,21 @@ import { useState,useEffect } from 'react';
 import axios from 'axios';
 import {
 	IncreaseInCostChart,
-  emailsSubscriptionChart,
   UssageEstimateChart,HourlyPowerByDevice
 } from "../variables/charts.js";
-// third-party
-import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 function Dashboard() { 
 
 	const [data,setData]=useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState({});
-  const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState([]);
-  const [optHourlyPowerByDevice, setOptHourlyPowerByDevice] = useState({});
-  const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState([]);
-  const [optUssageEstimateChart, setOptUssageEstimateChart] = useState({});
-  const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState([]);
-  const [seriesLineChart, setSeriesLineChart] = useState([]);
+  const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
+  const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
+  const [optHourlyPowerByDevice, setOptHourlyPowerByDevice] = useState(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
+  const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState(HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0],data3:[0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data4:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}));
+  const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['1','2','3','4','5','6']));
+  const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
+  const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
       console.log(response.data.Data);
@@ -42,12 +37,9 @@ function Dashboard() {
     });
 
 	//For year Inital
-	setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['2020','2021']))
-	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([35,169]))
-	setOptHourlyPowerByDevice( HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
+	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
 	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75],data2:[35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
     
-	setOptUssageEstimateChart( UssageEstimateChart.optionUssageEstimateChart(['1','2','3','4','5','6']))
 	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100']))
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
    
@@ -60,7 +52,6 @@ function Dashboard() {
 	
 			e.stopPropagation();
 			var $target = $(e.target);
-    console.log($target.closest("tr").next().find("td").attr('colspan'))
 
 			if ( $target.closest("tr").next().find("td").attr('colspan') > 1 ) {
 			
