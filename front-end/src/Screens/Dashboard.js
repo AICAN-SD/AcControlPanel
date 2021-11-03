@@ -34,7 +34,7 @@ function Dashboard() {
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState([]);
   const [seriesLineChart, setSeriesLineChart] = useState([]);
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
+    axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
       console.log(response.data.Data);
       setData(response.data.Data)
       setLoading(false);
