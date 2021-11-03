@@ -5,8 +5,8 @@ import GridItem from "../Components/Grid/GridItem.js";
 import GridContainer from "../Components/Grid/GridContainer.js";
 import CardHeader from "../Components/Card/CardHeader.js";
 import "../assets/css/material-dashboard-react.css"
-import EarningCard from '../Components/EarningCard.js';
-import OrderCard from '../Components/OrderCard.js';
+import TotalPowerCard from '../Components/TotalPowerCard.js';
+import TotalPowerCostCard from '../Components/TotalPowerCostCard.js';
 import {Col,Row} from 'react-bootstrap';
 import $ from 'jquery';
 import { useState,useEffect } from 'react';
@@ -20,6 +20,7 @@ import Chart from 'react-apexcharts';
 function Dashboard() { 
 
 	const [data,setData]=useState([]);
+	const [dataappendRoomName,setDataappendRoomName]=useState({});
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
@@ -27,18 +28,31 @@ function Dashboard() {
   const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState(HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0],data3:[0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data4:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}));
   const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['1','2','3','4','5','6']));
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
+  var appendRoomName={}
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
-      console.log(response.data.Data);
-      setData(response.data.Data)
+      var data=response.data.Data;
+	  
+      setData(data)
       setLoading(false);
+	  for (var x in data){
+		console.log(x)
+
+		  for(var y in data[x].rooms){
+			  console.log(data[x].rooms[y])
+             appendRoomName[data[x].rooms[y].roomName] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175];
+
+		  }
+
+	  }
+	  setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+      setDataappendRoomName(appendRoomName)
 
     });
 
 	//For year Inital
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75],data2:[35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
     
 	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100']))
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
@@ -71,6 +85,7 @@ function Dashboard() {
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Yesterday','Today']))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
 
+	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
 	
 	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[135, 15, 95, 55, 35, 20, 35, 10, 65, 45, 45, 5],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
 
@@ -88,8 +103,15 @@ function Dashboard() {
 			
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Jan','Feb']))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([45,899]))
+	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice([
+		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+]))
 
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[5, 55, 25, 95, 35, 20, 35, 90, 65, 25, 145, 5],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
+
+	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35]}))
 
 	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['10','45','80','28','45','90']))
 
@@ -104,7 +126,11 @@ function Dashboard() {
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['2020','2021']))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([35,169]))
 
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75],data2:[35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
+	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
+
+	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(dataappendRoomName))
+
+
 
 	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100']))
 
@@ -182,12 +208,12 @@ function Dashboard() {
                 </div>
               </div>
              </Col>
-             <Col xs={12} sm={12} md={6}>
-             <EarningCard isLoading={isLoading} />
+             <Col xs={12} sm={12} md={6} >
+             <TotalPowerCard isLoading={isLoading} />
 
              </Col>
              <Col xs={12} sm={12} md={6}>
-             <OrderCard isLoading={isLoading} series={seriesLineChart} ></OrderCard>
+             <TotalPowerCostCard isLoading={isLoading} series={seriesLineChart}/>
              </Col>
            
              </Row>

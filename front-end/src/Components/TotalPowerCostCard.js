@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const OrderCard = ({ isLoading ,option,series}) => {
+const TotalPowerCostCard = ({ isLoading ,option,series}) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -82,7 +82,7 @@ const OrderCard = ({ isLoading ,option,series}) => {
                                         </Grid>
                                        
                                         <Grid item xs={12}>
-                                            <Typography >Total Order</Typography>
+                                            <Typography >Total Cost</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -97,8 +97,8 @@ const OrderCard = ({ isLoading ,option,series}) => {
     );
 };
 
-OrderCard.propTypes = {
+TotalPowerCostCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default OrderCard;
+export default TotalPowerCostCard;

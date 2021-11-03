@@ -1,13 +1,4 @@
-// ##############################
-// // // javascript library for creating charts
-// #############################
-var Chartist = require("chartist");
 
-// ##############################
-// // // variables used to create animation on charts
-// #############################
-var delays = 80,
-  durations = 500;
 var delays2 = 80,
   durations2 = 500;
 
@@ -106,67 +97,6 @@ const IncreaseInCostChart = {
 // #############################
 
 
-const emailsSubscriptionChart = {
-  data: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-  ],
-  },
-  options: {
-    stackBars: true,
-    axisY: {
-      labelInterpolationFnc: function(value) {
-        return (value / 1000) + 'k';
-      }
-    },
-    toolbar: {
-      show: false
-  },
-  },
-  responsiveOptions: [
-    [
-      "screen and (max-width: 640px)",
-      {
-        seriesBarDistance: 5,
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
-          },
-        },
-      },
-    ],
-  ],
-  animation: {
-    draw: function (data) {
-      if (data.type === "bar") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays2,
-            dur: durations2,
-            from: 0,
-            to: 1,
-            easing: "ease",
-          },
-        });
-      }
-    },
-  },
-};
 
 // ##############################
 // // // Completed Tasks
@@ -183,6 +113,10 @@ var HourlyPowerByDevice = {
           zoom: {
               enabled: true
           }
+      },
+      title: {
+        text: 'Power Used by Rooms',
+        align: 'left'
       },
       responsive: [
           {
@@ -240,24 +174,14 @@ var HourlyPowerByDevice = {
     
   },
   seriesHourlyPowerByDevice: function(data){
-    return  [
-      {
-          name: 'Investment',
-          data: data.data1
-      },
-      {
-          name: 'Loss',
-          data: data.data2
-      },
-      {
-          name: 'Profit',
-          data: data.data3
-      },
-      {
-          name: 'Maintenance',
-          data: data.data4
-      }
-  ]
+    var array=[]
+    Object.entries(data).forEach(([key, value]) => {
+      array.push( {
+        name: key,
+        data: value
+    })
+    });
+    return  array;
     
   }
   
@@ -286,10 +210,6 @@ const UssageEstimateChart = {
     
     title: {
       text: 'Usage Estimate',
-      align: 'left'
-    },
-    subtitle: {
-      text: 'Price Movements',
       align: 'left'
     },
     labels: category,
@@ -362,7 +282,6 @@ const TotalOrderMonthLineCharData = {
 
 module.exports = {
   IncreaseInCostChart,
-  emailsSubscriptionChart,
   UssageEstimateChart,
   HourlyPowerByDevice,
   TotalOrderMonthLineCharData,

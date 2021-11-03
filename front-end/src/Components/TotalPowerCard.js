@@ -47,18 +47,8 @@ const useStyles = makeStyles(() => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const EarningCard = ({ isLoading }) => {
+const TotalPowerCard = ({ isLoading }) => {
     const classes = useStyles();
-
-    const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
 
     return (
         <React.Fragment>
@@ -69,13 +59,13 @@ const EarningCard = ({ isLoading }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>$500.00</Typography>
+                                    <Typography className={classes.cardHeading}>500.00 kWh</Typography>
                                 </Grid>
                                 
                             </Grid>
                         </Grid>
                         <Grid item sx={{ mb: 1.25 }}>
-                            <Typography >Total Earning</Typography>
+                            <Typography >Total Power</Typography>
                         </Grid>
                     </Grid>
                 </MainCard>
@@ -84,8 +74,8 @@ const EarningCard = ({ isLoading }) => {
     );
 };
 
-EarningCard.propTypes = {
+TotalPowerCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default TotalPowerCard;
