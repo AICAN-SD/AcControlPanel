@@ -11,6 +11,7 @@ function NavBar1() {
               <span className="las la-bars" />
             </label>
             Dashboard
+            
           </h2>
         
         </header>
