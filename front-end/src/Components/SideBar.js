@@ -68,27 +68,7 @@ function dropdown(){
             <span className="tooltip">CreateMachine</span>
           </li>
           </>}
-          <li>
-            <a href="www.df.com">
-              <i className="bx bxs-save" />
-              <span className="links_name">Save Profile</span>
-            </a>
-            <span className="tooltip">Save Profile</span>
-          </li>
-          <li>
-            <a href="www.df.com">
-              <i className="bx bx-trash" />
-              <span className="links_name">Delete Profile</span>
-            </a>
-            <span className="tooltip">Delete Profile</span>
-          </li>
-          <li>
-            <a href="www.df.com">
-              <i className="bx bxs-pencil" />
-              <span className="links_name">Edit Profile</span>
-            </a>
-            <span className="tooltip">Edit Profile</span>
-          </li>
+         
         </ul>
       </div>
         </div>

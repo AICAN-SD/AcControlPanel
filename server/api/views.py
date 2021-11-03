@@ -440,7 +440,6 @@ def AllData():
                 "floor":floor.FloorName,
                 }
         rooms=Rooms.objects.filter(floor=floor)
-        rooms_serializer = RoomSerializer(rooms,many=True)
         datay=[]
         for room in rooms:
             machines=Machines.objects.filter(room=room)

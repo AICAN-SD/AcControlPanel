@@ -5,7 +5,6 @@ import ControlPanel from "../Components/ControlPanel";
 import CreateMachine from "./CreateMachine";
 import Dashboard from "./Dashboard";
 import SideBar from "../Components/SideBar";
-import { Container } from "react-bootstrap";
 import NavBar from "../Components/NavBar";
 import '../css/Screens.css'
 import { useState,useEffect } from 'react';
@@ -17,10 +16,6 @@ function BaseScreen() {
   
   useEffect(() => {
     setHeightScreen(height-87)
-
-  
-    
-   
   }, []);
   return (
     <div>

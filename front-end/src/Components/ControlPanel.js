@@ -15,7 +15,7 @@ function ControlPanel() {
   const [machineProfile,setMachineProfile]=useState([])
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
+    axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
       console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
