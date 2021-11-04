@@ -118,18 +118,7 @@ var HourlyPowerByDevice = {
         text: 'Power Used by Rooms',
         align: 'left'
       },
-      responsive: [
-          {
-              breakpoint: 480,
-              options: {
-                  legend: {
-                      position: 'bottom',
-                      offsetX: -10,
-                      offsetY: 0
-                  }
-              }
-          }
-      ],
+      
       plotOptions: {
           bar: {
               horizontal: false,

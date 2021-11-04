@@ -25,7 +25,7 @@ function Dashboard() {
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
   const [optHourlyPowerByDevice, setOptHourlyPowerByDevice] = useState(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
-  const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState(HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0],data3:[0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data4:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}));
+  const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState([]);
   const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
   var appendRoomName={}
@@ -46,7 +46,7 @@ function Dashboard() {
 		  }
 
 	  }
-	  setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+	  setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
       setDataappendRoomName(appendRoomName)
 
     });
