@@ -26,7 +26,7 @@ function Dashboard() {
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
   const [optHourlyPowerByDevice, setOptHourlyPowerByDevice] = useState(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
   const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState(HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data2:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0],data3:[0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],data4:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}));
-  const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['1','2','3','4','5','6']));
+  const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
   var appendRoomName={}
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
@@ -54,28 +54,11 @@ function Dashboard() {
 	//For year Inital
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
     
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100']))
+	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','90','25','20','78','45','100']))
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
    
   }, []);
-
-
-	function onExpandRow(e) {
-	   
-
-	
-			e.stopPropagation();
-			var $target = $(e.target);
-
-			if ( $target.closest("tr").next().find("td").attr('colspan') > 1 ) {
-			
-
-				$target.closest("tr").next().find("td").slideToggle("3000");
-			}                    
-	
-	};
-
-	   
+   
 	function onCLICK(e){
 		console.log(e.target.id)
 	var todayElem = document.getElementById('today');
@@ -89,8 +72,10 @@ function Dashboard() {
 	
 	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[135, 15, 95, 55, 35, 20, 35, 10, 65, 45, 45, 5],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
 
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['100','25','20','78','45','10']))
-
+	setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
+	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45']))
+	
+	
 	setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
 
 
@@ -110,10 +95,19 @@ function Dashboard() {
 		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
 ]))
 
+setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart([
+	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
+	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'
+]));
+
+setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45','150','34','50','45','20','58','65','70','84','90','25','20','78','45','100','200']))
+
+
 
 	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35]}))
 
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['10','45','80','28','45','90']))
 
 	setSeriesLineChart([95, 26, 11, 49, 75, 94, 29, 54])
 
@@ -131,8 +125,9 @@ function Dashboard() {
 	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(dataappendRoomName))
 
 
+	setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
 
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100']))
+	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','90','25','20','78','45','100']))
 
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
 
@@ -302,7 +297,7 @@ function Dashboard() {
                 floor.rooms.map((room, indx) => {
                   return (
                     <>
-                      <tr onClick={(e)=>onExpandRow(e)}>
+                      <tr data-toggle="collapse" id={'row'+indx} data-target={'.row'+indx}>
 										<th class="text-center text-muted">{room.roomName}</th>
 										<th>
 											<div class="widget-content p-0">
@@ -319,20 +314,15 @@ function Dashboard() {
 										<th class="text-center text-muted">1,640</th>
 										<th class="text-center text-muted">₹ 1043</th>
 									</tr>
-									<tr >
-										<td colSpan="4" class="ck" style={{display:'none'}}>
-										<div class="table-responsive">
-							<table class="align-middle mb-0 table table-borderless table-striped table-hover bg-light">
-								
-									   <tbody>
+									
                           {room.machines !== undefined &&
                             room.machines.map((machine, indxx) => {
                               return (
-                                <>
+                                
                               
 								      
 								
-									<tr>
+									<tr class={`collapse row${indx}`}>
 										<th class="text-center text-muted">{machine.MachineName}</th>
 										<th>
 											<div class="widget-content p-0">
@@ -351,18 +341,14 @@ function Dashboard() {
 									</tr>
 									
 							
-                                </>
+                            
                               );
                             })}
-							</tbody>
-							</table>
-							</div>
+							
 										
 									   
-									   </td>
+									  
 								
-			
-								   </tr>
                       
                     </>
                   );
@@ -376,8 +362,6 @@ function Dashboard() {
 
 								</tbody>
 							</table>
-						</div>
-						<div class="d-block text-center card-footer bg-heavy-rain">
 						</div>
 					</div>
 				</div>

@@ -190,7 +190,8 @@ var HourlyPowerByDevice = {
 }
 
 const UssageEstimateChart = {
-  optionUssageEstimateChart: function(category){return {
+  optionUssageEstimateChart: function(category){
+      return {
 
     chart: {
       type: 'area',
@@ -212,19 +213,16 @@ const UssageEstimateChart = {
       text: 'Usage Estimate',
       align: 'left'
     },
-    labels: category,
     xaxis: {
-      type: 'datetime',
-    },
-    yaxis: {
-      opposite: true
+        type: 'category',
+        categories: category
     },
     legend: {
       horizontalAlign: 'left'
     }
   } },
   seriesUssageEstimateChart: function(data){return [{
-    name: "STOCK ABC",
+    name: "kwh",
     data: data
   }]}
   
