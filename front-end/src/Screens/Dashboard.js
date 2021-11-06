@@ -297,7 +297,8 @@ setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0'
                 floor.rooms.map((room, indx) => {
                   return (
                     <>
-                      <tr data-toggle="collapse" id={'row'+indx} data-target={'.row'+indx}>
+					
+                      <tr  key={`${index}`+`${indx}`} data-toggle="collapse" id={'row'+index+indx} data-target={'.row'+index+indx}>
 										<th class="text-center text-muted">{room.roomName}</th>
 										<th>
 											<div class="widget-content p-0">
@@ -322,7 +323,7 @@ setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0'
                               
 								      
 								
-									<tr class={`collapse row${indx}`}>
+									<tr key={`${index}`+`${indxx}`}  class={`collapse row${index}${indx}`}>
 										<th class="text-center text-muted">{machine.MachineName}</th>
 										<th>
 											<div class="widget-content p-0">
