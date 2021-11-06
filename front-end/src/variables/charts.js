@@ -1,11 +1,3 @@
-
-var delays2 = 80,
-  durations2 = 500;
-
-// ##############################
-// // // Daily Sales
-// #############################
-
 const IncreaseInCostChart = {
   optionIncInCost: function(category){
   return {
@@ -92,15 +84,6 @@ const IncreaseInCostChart = {
 
 }
 
-// ##############################
-// // // Email Subscriptions
-// #############################
-
-
-
-// ##############################
-// // // Completed Tasks
-// #############################
 var HourlyPowerByDevice = {
   optionHourlyPowerByDevice: function(category){
     return {
