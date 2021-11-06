@@ -8,12 +8,14 @@ function Button(props) {
     function onClick(){
        var setFloor= props.onClick
        var setFloorc= props.onC
-       var setIsSave= props.save
+       var setisSaveButVisible= props.setisSaveButVisible
       setFloor(prevFloor=>prevFloor+1)
      setFloorc(function (oldArray) { 
-       return [...oldArray,<FloorLayout key={props.counter} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber}></FloorLayout>];
+       return [...oldArray,<FloorLayout devices={props.devices} floorData={props.floorData} key={props.counter} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber}></FloorLayout>];
       });
-     setIsSave(true)
+
+      //to show save button
+      setisSaveButVisible(true)
     }
     return (
       <button type="button" className="btn1" onClick={onClick}>

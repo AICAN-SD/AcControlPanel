@@ -4,52 +4,108 @@ import { useEffect, useState } from 'react';
 import { Form, Row ,Col} from 'react-bootstrap';
 import '../css/AddFloorButton.css';
 import axios from 'axios'
+import FloorLayout from './FloorLayout'
+import RoomLayout from './RoomLayout';
+
 
 function formSave(e){
+    e.preventDefault()
     var dictionary={}
  var data=e.target
 
- for(var x in data){
-    var floorId;
-    var obj=data[x]
-    if(obj instanceof HTMLInputElement || obj instanceof HTMLSelectElement){
-        dictionary[data[x].name]=data[x].value;
-     
+        for(var x in data){
+            var floorId;
+            var obj=data[x]
+            if(obj instanceof HTMLInputElement || obj instanceof HTMLSelectElement){
+                dictionary[data[x].name]=data[x].value;
+            
+                }
         }
- }
- 
-if(dictionary!=={}){
+        
+        if(dictionary!=={}){
 
-axios.post('http://127.0.0.1:8000/api/data',{data:dictionary,headers: {
-    'Content-Type' : 'application/json; charset=UTF-8',
-    'Accept': 'Token',
-    "Access-Control-Allow-Origin": "*",
-}
-})
-  .then(function (response) {
-    console.log(response);
-  });
-}
+            axios.post('http://127.0.0.1:8000/api/data',{data:dictionary,headers: {
+            'Content-Type' : 'application/json; charset=UTF-8',
+            'Accept': 'Token',
+            "Access-Control-Allow-Origin": "*",
+        }
+        })
+        .then(function (response) {
+            console.log(response);
+
+        });
+        
+        window.location.href ='/ControlPanel'
+        }
 }
 function LayoutCreation() {
     const [floor, setFloor] = useState(1);
-    const [isSave, setIsSave] = useState(false);
+    const [isSaveButVisible, setisSaveButVisible] = useState(false);
     const [floorArray, setFloorArray] = useState([]);
     const [names,setNames] = useState([])
     const [machines,setMachines] = useState([])
 
+    const [data, setData] = useState([]);
 
+    const [room, setRoom] = useState(1);
+    const [roomArray, setRoomArray] = useState([]);
+
+    const [devices,setDevices] = useState([])
+
+  
+   
 
     useEffect(()=>{
-        axios.get('http://127.0.0.1:8000/api/readcsv')
+
+
+        var nms=[]
+        var macType=[]
+       
+
+        async function  apiCalls() {
+            await axios.get('http://127.0.0.1:8000/api/readcsv')
         .then(res=>{
             const x =JSON.parse(res.data)
             console.log(x)
             setNames(x);
+            nms=x;
+        })
+        .catch(e=>{
+            console.log(e)
+        });
+
+        await axios.get('http://127.0.0.1:8000/api/devices/')
+        .then(res=>{
+          console.log(res.data)
+            setDevices(res.data)
+            macType=res.data
         })
         .catch(e=>{
             console.log(e)
         })
+
+        await axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
+            console.log(response.data);
+            setData(response.data.Data);
+            
+                response.data.Data.forEach(function (floor, i) {
+                    console.log(floor);
+                    setisSaveButVisible(true)
+                   
+
+                    setFloor(prevFloor=>prevFloor+1)
+                setFloorArray((oldArray)=> { 
+                  return ([...oldArray,<FloorLayout devices={macType} floorData={null} setRoom={setRoom} setRoomArray={setRoomArray} room={room} roomArray={roomArray} floorData={floor} key={i} setMachines={setMachines} names={nms} floorNumber={i+1}></FloorLayout>])
+                 });
+          });
+        });
+             
+        }
+        
+       
+
+        apiCalls()
+    
     },[])
   
     return (
@@ -58,7 +114,7 @@ function LayoutCreation() {
             <Form onSubmit={formSave}>
             <Row>
                 <Col xs={2}>
-                <Button name='Add Floor' key={floorArray.length} names={names} setMachines={setMachines} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} save={setIsSave} floorNumber={floor}></Button>
+                <Button name='Add Floor' devices={devices} key={floorArray.length} names={names} setMachines={setMachines} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} setisSaveButVisible={setisSaveButVisible} floorNumber={floor}></Button>
 
                 </Col>
                
@@ -67,7 +123,10 @@ function LayoutCreation() {
            {floorArray}
            </Row>
         <div id='saveDiv'>
-           { isSave && <button id='saveBut' type='submit' style={{float:'right'}} className='btn btn-default' >Save</button>}
+           { isSaveButVisible && <button id='saveBut'type='submit'  href='/ControlPanel' style={{float:'right'}} className='btn btn-default' >
+              <i className="bx bx-grid-alt" />
+              <span className="links_name">Save</span>
+            </button>}
         </div>
         </Form>
         </div>

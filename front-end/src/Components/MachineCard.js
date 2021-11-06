@@ -4,17 +4,19 @@ import '../css/MachineCard.css'
 import axios from 'axios'
 
 function MachineCard(props) {
-  const [devices,setDevices] = useState([])
+  const [isMachineData,setIsMachineData] = useState(false)
+  const [oldVal,setOldVal] = useState()
 
   useEffect(()=>{
-    const data =async ()=>await axios.get('http://127.0.0.1:8000/api/devices/')
-    .then(res=>{
-        setDevices(res.data)
-    })
-    .catch(e=>{
-        console.log(e)
-    })
-    data()
+
+    if(props.machineData!==null){
+      console.log(props.names)
+      console.log(props.machineData)
+      props.setMachines(prev=> [...prev,{name:props.machineData.Machine_Id,value:props.machineData.MachineName}])
+
+      setIsMachineData(true)
+    }
+    
 },[])
 
 
@@ -28,10 +30,10 @@ function MachineCard(props) {
           <p className="form-control">Assign Device</p>
           </Col>
           <Col xs={8}>
-          <Form.Select onChange={(e)=>props.clickHandler(e,props.counter)} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
+          <Form.Select onFocus={(e)=>{setOldVal(e.target.value)}} onChange={(e)=>{props.clickHandler(e,isMachineData,oldVal)}} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
           <option></option>
           {props.names.map(name=>{
-            return <option key={name.ID} value={name.MACHINE_ID}>{name.MACHINE_ID}</option>
+            return <option key={name.ID} selected={isMachineData?(props.machineData.MachineName===name.MACHINE_ID?true:null):null} value={name.MACHINE_ID}>{name.MACHINE_ID}</option>
           })}
         </Form.Select>
           </Col>
@@ -42,10 +44,10 @@ function MachineCard(props) {
           <p className="form-control">Machine Type</p>
           </Col>
           <Col xs={8}>
-          <Form.Select aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineType'+props.machineNumber} required>
+          <Form.Select aria-label="Default select example"  name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineType'+props.machineNumber} required>
           <option></option>
-          {devices.map(device=>{
-            return  <option key={device.deviceId} value={device.name}>{device.name}</option>
+          {props.devices.map(device=>{
+            return  <option key={device.deviceId} selected={isMachineData?(props.machineData.MachineType===device.name?true:null):null} value={device.name}>{device.name}</option>
           })}
         </Form.Select>
           </Col>
