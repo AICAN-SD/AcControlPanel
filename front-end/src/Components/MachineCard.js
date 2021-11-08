@@ -6,14 +6,11 @@ import axios from 'axios'
 function MachineCard(props) {
   const [isMachineData,setIsMachineData] = useState(false)
   const [oldVal,setOldVal] = useState()
+  const [oldName,setOldName] = useState()
 
   useEffect(()=>{
 
     if(props.machineData!==null){
-      console.log(props.names)
-      console.log(props.machineData)
-      props.setMachines(prev=> [...prev,{name:props.machineData.Machine_Id,value:props.machineData.MachineName}])
-
       setIsMachineData(true)
     }
     
@@ -30,7 +27,7 @@ function MachineCard(props) {
           <p className="form-control">Assign Device</p>
           </Col>
           <Col xs={8}>
-          <Form.Select onFocus={(e)=>{setOldVal(e.target.value)}} onChange={(e)=>{props.clickHandler(e,isMachineData,oldVal)}} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
+          <Form.Select onFocus={(e)=>{setOldVal(e.target.value);setOldName(e.target.name);}} onChange={(e)=>{props.clickHandler(e,isMachineData,oldVal,oldName)}} aria-label="Default select example" name={'Floor'+props.floorNumber+'Room'+props.roomNumber+'MachineAssignDevice'+props.machineNumber} required>
           <option></option>
           {props.names.map(name=>{
             return <option key={name.ID} selected={isMachineData?(props.machineData.MachineName===name.MACHINE_ID?true:null):null} value={name.MACHINE_ID}>{name.MACHINE_ID}</option>

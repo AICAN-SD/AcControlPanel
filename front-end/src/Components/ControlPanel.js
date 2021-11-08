@@ -16,7 +16,6 @@ function ControlPanel() {
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
-      console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)
@@ -27,7 +26,6 @@ function ControlPanel() {
   function submitHandler(e,id){
     if(e){
     axios.get(`http://127.0.0.1:8000/api/profile/${id}`).then((response) => {
-      console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)
@@ -37,7 +35,6 @@ function ControlPanel() {
     })
   }else{
     axios.get('http://127.0.0.1:8000/api/profile/').then((response) => {
-      console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)

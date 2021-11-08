@@ -5,7 +5,6 @@ import SwitchButton from './SwitchButton'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanelMachineCard(props) {
-  console.log(props.machineData)
     return (
     <Col xs={12} sm={6} md={3}>
       <div className="ControlPanelMachineCard">

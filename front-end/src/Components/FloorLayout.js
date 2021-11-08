@@ -14,9 +14,8 @@ function FloorLayout(props) {
     const [roomArray, setRoomArray] = useState([]);
     useEffect(()=>{
 
-        if(props.floorData!==null){
+        if(props.floorData!==null && props.floorData!==undefined){
             setIsFloorData(true)
- 
             props.floorData.rooms.forEach(function (room, i) {
 
             setRoom(prevRoom=>prevRoom+1);
@@ -24,6 +23,7 @@ function FloorLayout(props) {
            
         });
         }
+       
     },[])
   
     return (

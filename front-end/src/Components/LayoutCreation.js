@@ -31,7 +31,6 @@ function formSave(e){
         }
         })
         .then(function (response) {
-            console.log(response);
 
         });
         
@@ -76,7 +75,6 @@ function LayoutCreation() {
 
         await axios.get('http://127.0.0.1:8000/api/devices/')
         .then(res=>{
-          console.log(res.data)
             setDevices(res.data)
             macType=res.data
         })
@@ -85,11 +83,9 @@ function LayoutCreation() {
         })
 
         await axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
-            console.log(response.data);
             setData(response.data.Data);
             
                 response.data.Data.forEach(function (floor, i) {
-                    console.log(floor);
                     setisSaveButVisible(true)
                    
 

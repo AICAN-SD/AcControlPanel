@@ -13,66 +13,72 @@ function RoomLayout(props) {
     const [machineArray, setMachineArray] = useState([]);
     useEffect(()=>{
 
-        console.log(props.roomData)
         if(props.roomData!==null){
 
             setIsRoomData(true)
  
             props.roomData.machines.forEach(function (machine, i) {
 
+                props.setMachines(prev=> {
+                    return [...prev,{name:machine.MachineId,value:machine.MachineName}]
+                  })
                 setMachine(prevRoom=>prevRoom+1);
                 setMachineArray((oldArray) => [...oldArray, <MachineCard devices={props.devices} machineData={machine} key={i} setMachines={props.setMachines} counter={i+1} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={i+1} names={props.names} clickHandler={clickHandler} ></MachineCard>]);
               });
         }
     },[])
-    function clickHandler(e,bool,oldval){
+    function clickHandler(e,bool,oldval,oldName){
         e.preventDefault()
-        console.log(oldval)
-     
+        var reNamed=e.target.name.split('AssignDevice')
+        var reNamedString=reNamed[0]+reNamed[1]
         const value = e.target.value
-        console.log(value+" "+e.target.name)
         props.setMachines(prev=>{
             let i=0;
-            for(let j=0;j<prev.length;j++){
+
+        if(value!==''){
+            for(var j=0;j<prev.length;j++){
                 if(prev[j].value === value){
-                    if(prev[j].name !== e.target.name){
+                    if(prev[j].name !== reNamedString){
                     alert(`${value} exists`);
-                    if(!bool){
-                        e.target.value=''
-                    }else{
+                    
                         e.target.value=oldval
 
-                    }
+                    
                     }
                     i=1;
                     break;
-                }  
+                }
             }
-            if(i === 1){
+            if(i===0){
                 for(let j=0;j<prev.length;j++){
-                    if(prev[j].name === e.target.name){
-                        prev.splice(j,1)
-                        break;
-                    }  
-                } 
-            }
-            else if(i===0){
-                for(let j=0;j<prev.length;j++){
-                    if(prev[j].name === e.target.name){
+                    if(prev[j].name === reNamedString){
                             prev[j].value = value
                             i=1;
                         break;
+                    }else if(prev[j].name===reNamedString){
+
+                        prev.splice(j,1)
+    
                     }  
                 }
             }
-            console.log(prev)
-            if(i === 0){
-                return [...prev,{name:e.target.name,value:value}]
+        }else{
+            for(let j=0;j<prev.length;j++){
+                
+                if(prev[j].name === reNamedString){
+                    prev.splice(j,1)
+                    break;
+                }  
+            }
+        }
+            if(i === 0 && value!==''){
+                return [...prev,{name:reNamedString,value:value}]
                 }
                 else{
                     return [...prev]
                 }
         })
+        e.target.blur();
       }
   
     return (

@@ -22,7 +22,6 @@ function RoomSchedule({rooms}) {
       timeSchedule:list,
       selectedRooms:items
     }
-    console.log(schedule)
     axios.post('http://127.0.0.1:8000/api/RoomSchedule/',{data:schedule,headers: {
     'Content-Type' : 'application/json; charset=UTF-8',
     'Accept': 'Token',

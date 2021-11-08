@@ -14,19 +14,6 @@ function NavBarDropDown() {
   const [room,setRoom]=useState([])
   const [machine,setMachine]=useState([])
     useEffect(() => {
-      //   axios.get("http://127.0.0.1:8000/api/floors").then((response) => {
-      //     setFloor(response.data)
-      //   });
-      //   axios.get("http://127.0.0.1:8000/api/rooms").then((response) => {
-      //     // console.log(response.data);
-      //     setRoom(response.data)
-      //  ////   setRoomProfile(response.data.roomProfiles)
-      //   });
-      //   axios.get("http://127.0.0.1:8000/api/machines").then((response) => {
-      //     // console.log(response.data.Data);
-      //     setMachine(response.data.Data)
-      // //    setMachineProfile(response.data.machineProfiles)
-      //   });
       }, []);
     return (
         <div>

@@ -56,7 +56,6 @@ function ControlPanelDropDown(props) {
 
   <Dropdown.Menu>
   {props.roomProfile!== undefined && props.roomProfile.map((room, index) => {
-    console.log(room)
         return (
         <>
       

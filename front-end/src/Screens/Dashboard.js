@@ -37,10 +37,8 @@ function Dashboard() {
       setData(data)
       setLoading(false);
 	  for (var x in data){
-		console.log(x)
 
 		  for(var y in data[x].rooms){
-			  console.log(data[x].rooms[y])
              appendRoomName[data[x].rooms[y].roomName] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175];
 
 		  }
@@ -60,7 +58,6 @@ function Dashboard() {
   }, []);
    
 	function onCLICK(e){
-		console.log(e.target.id)
 	var todayElem = document.getElementById('today');
 	var monthElem = document.getElementById('month');
 	var yearElem = document.getElementById('year');
