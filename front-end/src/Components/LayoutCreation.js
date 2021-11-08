@@ -31,10 +31,10 @@ function formSave(e){
         }
         })
         .then(function (response) {
-
+            window.location.href ='/ControlPanel'
         });
         
-        window.location.href ='/ControlPanel'
+      
         }
 }
 function LayoutCreation() {
