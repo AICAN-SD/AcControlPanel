@@ -1,8 +1,7 @@
-import React, { Component,useEffect,useState } from 'react'
-import '../css/AddFloorButton.css'
-import '../css/FloorLayout.css'
+import React from 'react'
+import '../../css/AddFloorButton.css'
+import '../../css/FloorLayout.css'
 import MachineCard from './MachineCard'
-import axios from 'axios'
 
 
 function AddMachineButton(props) {

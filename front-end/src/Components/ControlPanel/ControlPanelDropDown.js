@@ -1,8 +1,5 @@
 import React from 'react'
 import { Row,Dropdown,Col } from "react-bootstrap";
-
-
-import SwitchButton from "./SwitchButton";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanelDropDown(props) {

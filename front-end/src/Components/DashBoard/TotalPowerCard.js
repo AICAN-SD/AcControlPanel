@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Avatar, Grid, Menu, MenuItem, Typography } from '@material-ui/core';
 
 // project imports
-import MainCard from './Card/MainCard';
+import MainCard from '../Card/MainCard';
 
 
 // style constant

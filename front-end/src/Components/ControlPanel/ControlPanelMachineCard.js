@@ -1,7 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import '../css/ControlPanelMachineCard.css'
-import SwitchButton from './SwitchButton'
+import '../../css/ControlPanelMachineCard.css'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function ControlPanelMachineCard(props) {

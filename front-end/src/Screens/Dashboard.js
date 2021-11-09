@@ -5,10 +5,9 @@ import GridItem from "../Components/Grid/GridItem.js";
 import GridContainer from "../Components/Grid/GridContainer.js";
 import CardHeader from "../Components/Card/CardHeader.js";
 import "../assets/css/material-dashboard-react.css"
-import TotalPowerCard from '../Components/TotalPowerCard.js';
-import TotalPowerCostCard from '../Components/TotalPowerCostCard.js';
+import TotalPowerCard from '../Components/DashBoard/TotalPowerCard.js';
+import TotalPowerCostCard from '../Components/DashBoard/TotalPowerCostCard';
 import {Col,Row} from 'react-bootstrap';
-import $ from 'jquery';
 import { useState,useEffect } from 'react';
 import axios from 'axios';
 import {

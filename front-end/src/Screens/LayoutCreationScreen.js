@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import LayoutCreation from '../Components/LayoutCreation'
+import LayoutCreation from '../Components/LayoutCreation/LayoutCreation'
 import '../css/Screens.css'
 
 function LayoutCreationScreen() {

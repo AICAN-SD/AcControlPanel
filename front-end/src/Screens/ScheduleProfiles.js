@@ -1,9 +1,9 @@
 import React, { useState,useEffect} from "react";
 import axios from "axios";
 import {Tabs,Tab} from "react-bootstrap"
-import FloorProfiles  from "../Components/FloorProfiles";
-import RoomProfiles from "../Components/RoomProfiles";
-import MachineProfiles from "../Components/MachineProfiles";
+import FloorProfiles  from "../Components/ScheduleProfile/FloorProfiles";
+import RoomProfiles from "../Components/ScheduleProfile/RoomProfiles";
+import MachineProfiles from "../Components/ScheduleProfile/MachineProfiles";
 import '../css/profile.css';
 
 function ScheduleProfiles() {

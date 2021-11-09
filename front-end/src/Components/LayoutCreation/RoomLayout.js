@@ -1,9 +1,9 @@
 import React from 'react'
-import '../css/FloorLayout.css'
+import '../../css/FloorLayout.css'
 import { useEffect, useState } from 'react';
 import { Row ,Col} from 'react-bootstrap';
 import AddMachineButton from './AddMachineButton'
-import '../css/MachineCard.css'
+import '../../css/MachineCard.css'
 import MachineCard from './MachineCard'
 
 

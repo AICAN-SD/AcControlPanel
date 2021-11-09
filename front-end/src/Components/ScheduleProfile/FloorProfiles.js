@@ -2,8 +2,8 @@ import React,{Profiler, useState} from 'react'
 import {Button ,Row,Col} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons'
-import FloorSchedule from "../Components/FloorSchedule";
 import EditFloorSchedule from './EditFloorSchedule';
+import FloorSchedule from './FloorSchedule';
 
 function FloorProfiles({profiles,floors,onDelete}) {
     const [form,setForm] = useState(false)

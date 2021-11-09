@@ -1,11 +1,11 @@
 import ScheduleProfiles from "./ScheduleProfiles";
 import LayoutCreation from "./LayoutCreationScreen"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import ControlPanel from "../Components/ControlPanel";
+import ControlPanel from "../Components/ControlPanel/ControlPanel";
 import CreateMachine from "./CreateMachine";
 import Dashboard from "./Dashboard";
-import SideBar from "../Components/SideBar";
-import NavBar from "../Components/NavBar";
+import SideBar from '../Components/BaseScreen/SideBar'
+import NavBar from "../Components/BaseScreen/NavBar";
 import '../css/Screens.css'
 import { useState,useEffect } from 'react';
 

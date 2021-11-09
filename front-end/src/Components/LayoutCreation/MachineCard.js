@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { Col,Dropdown,Form, Row} from 'react-bootstrap'
-import '../css/MachineCard.css'
-import axios from 'axios'
+import '../../css/MachineCard.css'
 
 function MachineCard(props) {
   const [isMachineData,setIsMachineData] = useState(false)

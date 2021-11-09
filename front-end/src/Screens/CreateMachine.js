@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {Button ,Row,Col} from "react-bootstrap";
-import NewMachine from '../Components/NewMachine';
-import EditMachine from '../Components/EditMachine';
+import NewMachine from '../Components/CreateMachine/NewMachine';
+import EditMachine from '../Components/CreateMachine/EditMachine';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";

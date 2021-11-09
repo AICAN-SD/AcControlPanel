@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import '../css/AddFloorButton.css'
-import '../css/FloorLayout.css'
+import React from 'react'
+import '../../css/AddFloorButton.css'
+import '../../css/FloorLayout.css'
 import FloorLayout from './FloorLayout'
 
 

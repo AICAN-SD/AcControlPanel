@@ -1,11 +1,6 @@
 import React from 'react'
-import axios from 'axios';
 import { useEffect, useState } from "react";
-
 import { Row,Dropdown,Col } from "react-bootstrap";
-
-
-import SwitchButton from "./SwitchButton";
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 function NavBarDropDown() {

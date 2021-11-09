@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { Form, Button,Row,Col } from "react-bootstrap";
 import TimeField from "react-simple-timefield";
 import axios from "axios";
-import '../css/Schedule.css'
+import '../../css/Schedule.css'
 
 function EditRoomSchedule({rooms,rid}) {
     const [startTime, setStartTime] = useState("00:00");

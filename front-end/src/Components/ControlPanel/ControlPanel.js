@@ -1,13 +1,17 @@
 import React from "react";
-import "../css/FloorLayout.css";
-import '../css/ControlPanel.css'
+import "../../css/FloorLayout.css";
+import '../../css/ControlPanel.css'
 import { useEffect, useState } from "react";
-import ControlPanelMachineCard from "./ControlPanelMachineCard";
-import { Row,Dropdown,Col } from "react-bootstrap";
+import ControlPanelMachineCard from "../ControlPanel/ControlPanelMachineCard";
+import { Row } from "react-bootstrap";
 import axios from "axios";
-import ControlPanelDropDown from "./ControlPanelDropDown";
+import ControlPanelDropDown from "../ControlPanel/ControlPanelDropDown";
+
+
+
 
 function ControlPanel() {
+
   const [data, setData] = useState([]);
     
   const [floorProfile,setFloorProfile]=useState([])

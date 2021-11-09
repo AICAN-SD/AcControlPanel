@@ -1,17 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-
 // material-ui
 import { makeStyles } from '@material-ui/styles';
-import { Avatar, Grid, Menu, MenuItem, Typography } from '@material-ui/core';
+import {Grid,Typography } from '@material-ui/core';
 import Chart from 'react-apexcharts';
-import {
-    TotalOrderMonthLineCharData
-  } from "../variables/charts.js";
-
-
-// project imports
-import OrderMainCard from './Card/OrderMainCard';
+import { TotalOrderMonthLineCharData } from '../../variables/charts.js';
+import OrderMainCard from '../Card/OrderMainCard';
 
 
 // style constant

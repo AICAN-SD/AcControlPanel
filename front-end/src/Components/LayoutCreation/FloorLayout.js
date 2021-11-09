@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import { Row ,Col} from 'react-bootstrap';
 import AddRoomButton from './AddRoomButton';
-import '../css/MachineCard.css'
+import '../../css/MachineCard.css'
 import RoomLayout from './RoomLayout'
 
 

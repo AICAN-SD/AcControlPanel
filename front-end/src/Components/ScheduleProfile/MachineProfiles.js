@@ -3,7 +3,7 @@ import { Button ,Row,Col} from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit,faTrash } from '@fortawesome/free-solid-svg-icons'
 import MachineSchedule from './MachineSchedule';
-import EditMachineSchedule from './EditMachineSchedule'
+import EditMachineSchedule from './EditMachineSchedule';
 
 function MachineProfiles({profiles,machines,onDelete}){
     const [form,setForm] = useState(false)

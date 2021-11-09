@@ -1,6 +1,5 @@
 import React,{useState} from 'react'
-import '../css/SideBar.css';
-import {Accordion} from "react-bootstrap"
+import '../../css/SideBar.css';
 
 function SideBar1() {
 const [drop,setDrop] = useState(false)

@@ -1,5 +1,5 @@
 import React from 'react'
-import ControlPanel from '../Components/ControlPanel'
+import ControlPanel from '../Components/ControlPanel/ControlPanel'
 
 function ControlPanelScreeen() {
     return (
