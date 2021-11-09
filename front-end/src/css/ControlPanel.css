@@ -2,6 +2,7 @@
   width:max-content
 }
 .chooseProfile{
+    padding: 10px 20px 0 20px;
     float: right;
 }
 .chooseProfileBut{
@@ -30,5 +31,8 @@
 .switch-off{
     background-color: #48465f !important;
     color: white;
+}
+#MainDiv{
+    padding: 20px 0;
 }
 

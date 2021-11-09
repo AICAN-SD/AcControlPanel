@@ -7,9 +7,6 @@ import { Row } from "react-bootstrap";
 import axios from "axios";
 import ControlPanelDropDown from "../ControlPanel/ControlPanelDropDown";
 
-
-
-
 function ControlPanel() {
 
   const [data, setData] = useState([]);
@@ -62,7 +59,7 @@ function ControlPanel() {
     })
   }
   return (
-    <div>
+    <div id='MainDiv' >
       <ControlPanelDropDown floorProfile={floorProfile} roomProfile={roomProfile} machineProfile={machineProfile} submitHandler={submitHandler}></ControlPanelDropDown>
    
       {data.map((floor, index) => {
