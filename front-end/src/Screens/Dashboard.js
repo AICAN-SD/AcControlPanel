@@ -18,8 +18,8 @@ import Chart from 'react-apexcharts';
 
 function Dashboard() { 
 
-	const [data,setData]=useState([]);
-	const [dataappendRoomName,setDataappendRoomName]=useState({});
+  const [data,setData]=useState([]);
+  const [dataappendRoomName,setDataappendRoomName]=useState({});
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
