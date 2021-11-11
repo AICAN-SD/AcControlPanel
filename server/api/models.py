@@ -60,6 +60,24 @@ class WorkingHoursMachines(models.Model):
 
     def __str__(self):
         return str(self.id)
+        
+class PowerConsMachine(models.Model):
+    id= models.AutoField(primary_key=True,unique=True)
+    Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
+    PC_Machine =models.CharField(max_length=200) 
+    Date_Field=models.DateField()
+
+    def __str__(self):
+        return self.PC_Machine
+
+class CostPowerConsMachine(models.Model):
+    id= models.AutoField(primary_key=True,unique=True)
+    Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
+    CostPC_Machine =models.CharField(max_length=200) 
+    Date_Field=models.DateField()
+
+    def __str__(self):
+        return self.CostPC_Machine
 
 class WorkingHoursRooms(models.Model):
     id= models.AutoField(primary_key=True,unique=True)

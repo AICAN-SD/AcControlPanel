@@ -2,10 +2,11 @@ from os import stat
 from django.db.models import indexes
 from django.http import response
 from django.views.decorators.csrf import csrf_exempt
+from numpy import power
 from rest_framework.fields import DateField
 from rest_framework.parsers import JSONParser
 from django.http.response import HttpResponse, JsonResponse
-from .models import Floors,Rooms,Machines,Profiles,Devices, WorkingHoursMachines
+from .models import Floors, PowerConsMachine,Rooms,Machines,Profiles,Devices, WorkingHoursMachines ,CostPowerConsMachine
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer,DeviceSerializer
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime,date,timedelta
@@ -585,31 +586,46 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
     return True
 
 def working_hours_machine(request):
+    print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
+    
+    
     for m in Machines.objects.all():
         w=timedelta(seconds=0,minutes=0,hours=0)
         df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
-        df['ON_TIME']=pd.to_timedelta(df['ON_TIME']+':00')
-        df['OFF_TIME']=pd.to_timedelta(df['OFF_TIME']+':00')
+        print('###############')
         a=df.loc[df['ID']==m.MachineName].reset_index(drop=True)
         for i in range(0,a.shape[0]):
             if(a.loc[i,'STATUS']=='DONE'):
-                t=a.loc[i,'OFF_TIME']-a.loc[i,'ON_TIME']
+                t=(datetime.strptime(str(a.loc[i,'OFF_TIME']),'%d-%m-%Y %H:%M'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M'))
+
             else:
-                t=pd.to_timedelta(str(datetime.now().strftime('%H:%M:%S')))-a.loc[i,'ON_TIME']
+                print(pd.to_datetime(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')))
+
+                t=pd.to_datetime(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M'))
 
             w=w+t
         whm=WorkingHoursMachines.objects.filter(Date_Field=date.today(),Machine_Name=m)
+        pcm=PowerConsMachine.objects.filter(Date_Field=date.today(),Machine_Name=m)
+        costpcm=CostPowerConsMachine.objects.filter(Date_Field=date.today(),Machine_Name=m)
+        device=Devices.objects.filter(name=m.MachineType)[0]
         print(whm)
-        if whm.exists():
-            print('###############')
-
+        powerRating=(device.powerRating)*(w.total_seconds())/(1000*3600)
+        costPowerRating=(powerRating)*(float(str(device.costperunit)))
+        if whm.exists() and pcm.exists():
+            costpcm.update(CostPC_Machine=str(costPowerRating))
+            pcm.update(PC_Machine=str(powerRating))
             whm.update(WH_Machine=w)
         else:
             x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=date.today())
+            y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=date.today())
+            z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=date.today())
             print('_______________________')
             print(w)
             print('_______________________')
             x.save()
+            y.save()
+            z.save()
+        
     return HttpResponse('printed and saved')
 
 
