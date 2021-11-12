@@ -22,6 +22,6 @@ urlpatterns = [
    path('api/deleteProf/<str:id>',views.deleteProf),
    path('api/machine/<str:id>',views.MachineToggle),
    path('api/readcsv',views.readCsv),
-   path('api/dashboard',views.dashboard),
+   path('api/dashboard/',views.dashboard),
    path('api/working_hours_machine',views.working_hours_machine),
 ]

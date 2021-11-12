@@ -98,7 +98,7 @@ var HourlyPowerByDevice = {
           }
       },
       title: {
-        text: 'Power Used by Floors',
+        text: 'Power Used by Floors (kWh)',
         align: 'left'
       },
       

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Floors,Rooms,Machines,Profiles,Devices, WorkingHoursMachines,WorkingHoursFloors,WorkingHoursRooms,PowerConsMachine,CostPowerConsMachine
+from .models import Floors,Rooms,Machines,Profiles,Devices, WorkingHoursMachines,WorkingHoursFloors,WorkingHoursRooms,PowerConsMachines,CostPowerConsMachines
 
 # Register your models here.
 admin.site.register(Floors)
@@ -8,5 +8,5 @@ admin.site.register(Machines)
 admin.site.register(Profiles)
 admin.site.register(Devices)
 admin.site.register(WorkingHoursMachines)
-admin.site.register(PowerConsMachine)
-admin.site.register(CostPowerConsMachine)
+admin.site.register(PowerConsMachines)
+admin.site.register(CostPowerConsMachines)

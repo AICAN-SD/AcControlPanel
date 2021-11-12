@@ -19,6 +19,7 @@ import Chart from 'react-apexcharts';
 function Dashboard() { 
 
   const [data,setData]=useState([]);
+  const [weekPowerFloors,setWeekPowerFloors]=useState({});
   const [dataappendRoomName,setDataappendRoomName]=useState({});
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
@@ -29,9 +30,11 @@ function Dashboard() {
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
   var appendRoomName={}
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
+
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
-		
+		console.log(response.data.weekPowerFloors)
+		setWeekPowerFloors(response.data.weekPowerFloors)
 	})
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
@@ -62,17 +65,19 @@ function Dashboard() {
 	var monthElem = document.getElementById('month');
 	var yearElem = document.getElementById('year');
 	if(e.target.id==='l1'){
+		//Weekly data
+
 		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Last Week','This Week']))
 	    setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
 
 	    setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
 	
-		for (var x in data){
+		// for (var x in data){
 
-			appendRoomName[data[x].floor] = [135, 15, 95, 55, 35, 20, 35];
+		// 	appendRoomName[data[x].floor] = [135, 15, 95, 55, 35, 20, 35];
 
-		}
-		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+		// }
+		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(weekPowerFloors))
 
 		setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
 		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34']))
