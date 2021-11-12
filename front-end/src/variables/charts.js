@@ -98,7 +98,7 @@ var HourlyPowerByDevice = {
           }
       },
       title: {
-        text: 'Power Used by Rooms',
+        text: 'Power Used by Floors',
         align: 'left'
       },
       

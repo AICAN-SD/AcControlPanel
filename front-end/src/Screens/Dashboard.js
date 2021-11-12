@@ -41,10 +41,7 @@ function Dashboard() {
       setLoading(false);
 	  for (var x in Data){
 
-		  for(var y in Data[x].rooms){
-             appendRoomName[Data[x].rooms[y].roomName] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175];
-
-		  }
+             appendRoomName[Data[x].floor] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175]; 
 
 	  }
 	  setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
@@ -61,27 +58,24 @@ function Dashboard() {
   }, []);
    
 	function onCLICK(e){
-	var todayElem = document.getElementById('today');
+	var weekElem = document.getElementById('week');
 	var monthElem = document.getElementById('month');
 	var yearElem = document.getElementById('year');
 	if(e.target.id==='l1'){
-		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Yesterday','Today']))
+		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Last Week','This Week']))
 	    setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
 
-	    setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
+	    setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
 	
 		for (var x in data){
 
-			for(var y in data[x].rooms){
-			appendRoomName[data[x].rooms[y].roomName] = [135, 15, 95, 55, 35, 20, 35, 10, 65, 45, 45, 5];
-
-			}
+			appendRoomName[data[x].floor] = [135, 15, 95, 55, 35, 20, 35];
 
 		}
 		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
 
-		setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
-		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45']))
+		setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
+		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34']))
 		
 		
 		setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
@@ -89,7 +83,7 @@ function Dashboard() {
 
 			monthElem.classList.remove("active");
 			yearElem.classList.remove("active");
-			todayElem.classList.add("active");
+			weekElem.classList.add("active");
 
 
 		}else if(e.target.id==='l2'){
@@ -116,10 +110,9 @@ setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0'
 
 for (var x in data){
 
-	for(var y in data[x].rooms){
-	   appendRoomName[data[x].rooms[y].roomName] = [5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35];
+	   appendRoomName[data[x].floor] = [5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35];
 
-	}
+	
 
 }
 setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
@@ -131,7 +124,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appen
     
 			monthElem.classList.add("active");
 			yearElem.classList.remove("active");
-			todayElem.classList.remove("active");
+			weekElem.classList.remove("active");
 
 		}else{
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['2020','2021']))
@@ -151,7 +144,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appen
 
 			monthElem.classList.remove("active");
 			yearElem.classList.add("active");
-			todayElem.classList.remove("active");
+			weekElem.classList.remove("active");
 
 		}
 	}
@@ -162,7 +155,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appen
     return (
         <div >
         <div >
-			<ul class="buttonwrapper"><li id="today" onClick={(e)=>onCLICK(e)} class=""><label id="l1">TODAY</label></li><li id="month" class="" onClick={(e)=>onCLICK(e)}><label id="l2">MONTH</label></li><li id="year"  onClick={(e)=>onCLICK(e)} class="active"><label id="l3">YEAR</label></li></ul>
+			<ul class="buttonwrapper"><li id="week" onClick={(e)=>onCLICK(e)} class=""><label id="l1">WEEK</label></li><li id="month" class="" onClick={(e)=>onCLICK(e)}><label id="l2">MONTH</label></li><li id="year"  onClick={(e)=>onCLICK(e)} class="active"><label id="l3">YEAR</label></li></ul>
 			</div>
  <GridContainer>
          <GridItem xs={12} sm={12} md={9}>
