@@ -30,15 +30,19 @@ function Dashboard() {
   var appendRoomName={}
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
-      var data=response.data.Data;
-	  
-      setData(data)
-      setLoading(false);
-	  for (var x in data){
+    axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
+		
+	})
 
-		  for(var y in data[x].rooms){
-             appendRoomName[data[x].rooms[y].roomName] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175];
+    axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
+      var Data=response.data.Data;
+	  
+      setData(Data)
+      setLoading(false);
+	  for (var x in Data){
+
+		  for(var y in Data[x].rooms){
+             appendRoomName[Data[x].rooms[y].roomName] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175];
 
 		  }
 
@@ -60,27 +64,36 @@ function Dashboard() {
 	var todayElem = document.getElementById('today');
 	var monthElem = document.getElementById('month');
 	var yearElem = document.getElementById('year');
-		if(e.target.id==='l1'){
-			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Yesterday','Today']))
-	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
+	if(e.target.id==='l1'){
+		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Yesterday','Today']))
+	    setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
 
-	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
+	    setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
 	
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[135, 15, 95, 55, 35, 20, 35, 10, 65, 45, 45, 5],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]}))
+		for (var x in data){
 
-	setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45']))
-	
-	
-	setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
+			for(var y in data[x].rooms){
+			appendRoomName[data[x].rooms[y].roomName] = [135, 15, 95, 55, 35, 20, 35, 10, 65, 45, 45, 5];
+
+			}
+
+		}
+		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+
+		setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['2am','4am','6am','8am','10am','12pm','2pm','4pm','6pm','8pm','10pm','12am']))
+		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45']))
+		
+		
+		setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
 
 
-		monthElem.classList.remove("active");
-		yearElem.classList.remove("active");
-		todayElem.classList.add("active");
+			monthElem.classList.remove("active");
+			yearElem.classList.remove("active");
+			todayElem.classList.add("active");
 
 
 		}else if(e.target.id==='l2'){
+			
 			
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Jan','Feb']))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([45,899]))
@@ -101,8 +114,16 @@ setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart([
 setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45','150','34','50','45','20','58','65','70','84','90','25','20','78','45','100','200']))
 
 
+for (var x in data){
 
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice({data1:[5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data2:[55, 15, 35, 25, 65, 40, 80, 25, 15, 85, 25, 75,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data3:[35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35],data4:[0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35]}))
+	for(var y in data[x].rooms){
+	   appendRoomName[data[x].rooms[y].roomName] = [5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35];
+
+	}
+
+}
+setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+
 
 
 	setSeriesLineChart([95, 26, 11, 49, 75, 94, 29, 54])

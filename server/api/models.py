@@ -59,7 +59,7 @@ class WorkingHoursMachines(models.Model):
     Date_Field=models.DateField()
 
     def __str__(self):
-        return str(self.id)
+        return str(str(self.Date_Field)+' '+str(self.Machine_Name))
         
 class PowerConsMachine(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
@@ -68,7 +68,7 @@ class PowerConsMachine(models.Model):
     Date_Field=models.DateField()
 
     def __str__(self):
-        return self.PC_Machine
+        return str(str(self.Date_Field)+' '+str(self.Machine_Name))
 
 class CostPowerConsMachine(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
@@ -77,7 +77,7 @@ class CostPowerConsMachine(models.Model):
     Date_Field=models.DateField()
 
     def __str__(self):
-        return self.CostPC_Machine
+        return str(str(self.Date_Field)+' '+str(self.Machine_Name))
 
 class WorkingHoursRooms(models.Model):
     id= models.AutoField(primary_key=True,unique=True)

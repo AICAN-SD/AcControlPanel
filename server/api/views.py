@@ -1,3 +1,4 @@
+from codecs import register
 from os import stat
 from django.db.models import indexes
 from django.http import response
@@ -585,43 +586,335 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
     f.close()
     return True
 
+def dashboard(request):
+    return JsonResponse({'message':"Done"},safe=False) 
+
 def working_hours_machine(request):
-    print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
+    # print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
     
     
     for m in Machines.objects.all():
+        device=Devices.objects.filter(name=m.MachineType)[0]
         w=timedelta(seconds=0,minutes=0,hours=0)
         df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
-        print('###############')
         a=df.loc[df['ID']==m.MachineName].reset_index(drop=True)
         for i in range(0,a.shape[0]):
+            onTime=datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')
+            nowTime=datetime.now().strftime('%d-%m-%Y %H:%M')
+            nowTime=datetime.strptime(str(nowTime),'%d-%m-%Y %H:%M')
             if(a.loc[i,'STATUS']=='DONE'):
-                t=(datetime.strptime(str(a.loc[i,'OFF_TIME']),'%d-%m-%Y %H:%M'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M'))
+                offTime=datetime.strptime(str(a.loc[i,'OFF_TIME']),'%d-%m-%Y %H:%M')
+                d0 = date(offTime.year,offTime.month,offTime.day)
+                d1 = date(onTime.year, onTime.month, onTime.day)
+
+                delta = d0 - d1
+                print('{{{{{{{')
+                print(delta.days)
+                if delta.days==0:
+                    t=(offTime)-(onTime)
+                elif(delta.days>0):
+                    for numberDay in range(0,delta.days+1):
+                        if numberDay==0:
+                            DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
+                            print(DATE)
+                            todayTime=datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay)-onTime
+                            whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            pcm=PowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            costpcm=CostPowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            powerRating=(device.powerRating)*(todayTime.total_seconds())/(1000*3600)
+                            costPowerRating=(powerRating)*(float(str(device.costperunit)))
+                            if whm.exists() and pcm.exists() and costpcm.exists():
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=todayTime)
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
+                                whm.update(WH_Machine=todayTime)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                y.save()
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()==False):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                pcm.update(PC_Machine=str(powerRating))
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()     
+                                whm.update(WH_Machine=todayTime)  
+                            elif(whm.exists() and pcm.exists() and costpcm.exists()==False):
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                z.save()
+
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()):
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=todayTime)
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                x.save()
+
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                y.save()
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                whm.update(WH_Machine=todayTime)
+                            else:
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()
+                                z.save()
+        
+                            
+                        elif(numberDay==delta.days):
+                            print('$$$$$$$$$')
+
+                            t=datetime.strptime(str(offTime.day)+':'+str(offTime.month)+':'+str(offTime.year)+' '+str(offTime.hour)+':'+str(offTime.minute)+':'+str(offTime.second),'%d:%m:%Y %H:%M:%S')-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
+                        else:
+                            print('###############')
+
+                            oneDay=(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
+                            DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
+                            print(DATE)
+                            print('###############')
+
+                            whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            pcm=PowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            costpcm=CostPowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            powerRating=(device.powerRating)*(oneDay.total_seconds())/(1000*3600)
+                            costPowerRating=(powerRating)*(float(str(device.costperunit)))
+                            if whm.exists() and pcm.exists() and costpcm.exists():
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=oneDay)
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
+                                whm.update(WH_Machine=oneDay)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                y.save()
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()==False):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                pcm.update(PC_Machine=str(powerRating))
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()     
+                                whm.update(WH_Machine=oneDay)  
+                            elif(whm.exists() and pcm.exists() and costpcm.exists()==False):
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                z.save()
+
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()):
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=oneDay)
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                x.save()
+
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                y.save()
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                whm.update(WH_Machine=oneDay)
+                            else:
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()
+                                z.save()
+        
+                    
 
             else:
-                print(pd.to_datetime(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')))
+                # print(nowTime-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')))
+                d0 = date(onTime.year, onTime.month, onTime.day)
+                d1 = date(datetime.now().year, datetime.now().month, datetime.now().day)
 
-                t=pd.to_datetime(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M'))
+                delta = d1 - d0
+                if delta.days==0:
+                    t=nowTime-(onTime)
+                elif(delta.days>0):
+                    for numberDay in range(0,delta.days+1):
+                        if numberDay==0:
+                            DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
+                            print(DATE)
+                            todayTime=datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay)-onTime
+                            whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            pcm=PowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            costpcm=CostPowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            powerRating=(device.powerRating)*(todayTime.total_seconds())/(1000*3600)
+                            costPowerRating=(powerRating)*(float(str(device.costperunit)))
+                            if whm.exists() and pcm.exists() and costpcm.exists():
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=todayTime)
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
+                                whm.update(WH_Machine=todayTime)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                y.save()
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()==False):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                pcm.update(PC_Machine=str(powerRating))
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()     
+                                whm.update(WH_Machine=todayTime)  
+                            elif(whm.exists() and pcm.exists() and costpcm.exists()==False):
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                z.save()
+
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()):
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=todayTime)
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                x.save()
+
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                y.save()
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                whm.update(WH_Machine=todayTime)
+                            else:
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()
+                                z.save()
+        
+                            
+                        elif(numberDay==delta.days):
+                            t=datetime.strptime(str(nowTime.day)+':'+str(nowTime.month)+':'+str(nowTime.year)+' '+str(nowTime.hour)+':'+str(nowTime.minute)+':'+str(nowTime.second),'%d:%m:%Y %H:%M:%S')-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
+                        else:
+
+                            oneDay=(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
+                            DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
+                            print(DATE)
+
+                            whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            pcm=PowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            costpcm=CostPowerConsMachine.objects.filter(Date_Field=DATE,Machine_Name=m)
+                            powerRating=(device.powerRating)*(oneDay.total_seconds())/(1000*3600)
+                            costPowerRating=(powerRating)*(float(str(device.costperunit)))
+                            if whm.exists() and pcm.exists() and costpcm.exists():
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=oneDay)
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
+                                whm.update(WH_Machine=oneDay)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                y.save()
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()==False):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                pcm.update(PC_Machine=str(powerRating))
+                                z.save()
+                            elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()     
+                                whm.update(WH_Machine=oneDay)  
+                            elif(whm.exists() and pcm.exists() and costpcm.exists()==False):
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                pcm.update(PC_Machine=str(powerRating))
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                z.save()
+
+                            elif(whm.exists()==False and pcm.exists() and costpcm.exists()):
+                                pcm.update(PC_Machine=str(powerRating))
+                                whm.update(WH_Machine=oneDay)
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                x.save()
+
+                            elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                y.save()
+                                costpcm.update(CostPC_Machine=str(costPowerRating))
+                                whm.update(WH_Machine=oneDay)
+                            else:
+                                x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
+                                y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=DATE)
+                                z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
+                                x.save()
+                                y.save()
+                                z.save()
+        
+                            
 
             w=w+t
         whm=WorkingHoursMachines.objects.filter(Date_Field=date.today(),Machine_Name=m)
         pcm=PowerConsMachine.objects.filter(Date_Field=date.today(),Machine_Name=m)
         costpcm=CostPowerConsMachine.objects.filter(Date_Field=date.today(),Machine_Name=m)
-        device=Devices.objects.filter(name=m.MachineType)[0]
-        print(whm)
         powerRating=(device.powerRating)*(w.total_seconds())/(1000*3600)
         costPowerRating=(powerRating)*(float(str(device.costperunit)))
-        if whm.exists() and pcm.exists():
+        if whm.exists() and pcm.exists() and costpcm.exists():
             costpcm.update(CostPC_Machine=str(costPowerRating))
             pcm.update(PC_Machine=str(powerRating))
+            whm.update(WH_Machine=w)
+        elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
+            whm.update(WH_Machine=w)
+            y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=date.today())
+            z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=date.today())
+            y.save()
+            z.save()
+        elif(whm.exists()==False and pcm.exists() and costpcm.exists()==False):
+            x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=date.today())
+            z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=date.today())
+            x.save()
+            pcm.update(PC_Machine=str(powerRating))
+            z.save()
+        elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
+            x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=date.today())
+            y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=date.today())
+            x.save()
+            y.save()     
+            whm.update(WH_Machine=w)  
+        elif(whm.exists() and pcm.exists() and costpcm.exists()==False):
+            costpcm.update(CostPC_Machine=str(costPowerRating))
+            pcm.update(PC_Machine=str(powerRating))
+            z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=date.today())
+            z.save()
+
+        elif(whm.exists()==False and pcm.exists() and costpcm.exists()):
+            pcm.update(PC_Machine=str(powerRating))
+            whm.update(WH_Machine=w)
+            x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=date.today())
+            x.save()
+
+        elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
+            y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=date.today())
+            y.save()
+            costpcm.update(CostPC_Machine=str(costPowerRating))
             whm.update(WH_Machine=w)
         else:
             x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=date.today())
             y=PowerConsMachine(Machine_Name=m,PC_Machine=str(powerRating),Date_Field=date.today())
             z=CostPowerConsMachine(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=date.today())
-            print('_______________________')
-            print(w)
-            print('_______________________')
             x.save()
             y.save()
             z.save()
