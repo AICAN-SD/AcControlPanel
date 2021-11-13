@@ -20,6 +20,8 @@ function Dashboard() {
 
   const [data,setData]=useState([]);
   const [weekPowerFloors,setWeekPowerFloors]=useState({});
+  const [monthPowerFloors,setMonthPowerFloors]=useState({});
+  const [monthDates,setMonthDates]=useState([]);
   const [dataappendRoomName,setDataappendRoomName]=useState({});
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
@@ -35,6 +37,8 @@ function Dashboard() {
     axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
 		console.log(response.data.weekPowerFloors)
 		setWeekPowerFloors(response.data.weekPowerFloors)
+		setMonthPowerFloors(response.data.monthPowerFloors)
+		setMonthDates(response.data.monthDates)
 	})
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
@@ -96,31 +100,15 @@ function Dashboard() {
 			
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Jan','Feb']))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([45,899]))
-	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice([
-		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-		'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-]))
+	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(monthDates))
 
-setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart([
-	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday',
-	'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'
-]));
+setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(monthDates));
 
 setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45','150','34','50','45','20','58','65','70','84','90','25','20','78','45','100','200']))
 
 
-for (var x in data){
 
-	   appendRoomName[data[x].floor] = [5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35,5, 55, 25, 95, 35, 20, 35];
-
-	
-
-}
-setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
+setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(monthPowerFloors))
 
 
 

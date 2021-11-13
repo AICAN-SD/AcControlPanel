@@ -125,5 +125,23 @@ class WorkingHoursFloors(models.Model):
 
     def __str__(self):
         return str(self.Floor_Name)
+class PowerUsedArrayWeekFloors(models.Model):
+    id= models.AutoField(primary_key=True,unique=True)
+    startWeekDate=models.DateField()
+    jsonData = models.JSONField(null=True, blank=True)
+    def __unicode__(self):
+        return "{0} {1} {2} {3}".format(
+            self, self.id,self.startWeekDate, self.jsonData)
+    def __str__(self):
+        return str(self.startWeekDate)
+class PowerUsedArrayMonthFloors(models.Model):
+    id= models.AutoField(primary_key=True,unique=True)
+    startMonthDate=models.DateField()
+    jsonData = models.JSONField(null=True, blank=True)
+    def __unicode__(self):
+        return "{0} {1} {2} {3}".format(
+            self, self.id,self.startMonthDate, self.jsonData)
+    def __str__(self):
+        return str(self.startMonthDate)
 
 
