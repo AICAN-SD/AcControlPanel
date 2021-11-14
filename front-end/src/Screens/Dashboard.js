@@ -29,6 +29,8 @@ function Dashboard() {
   const [totalCostWeek,setTotalCostWeek]=useState([]);
   const [TotalCostMonth,setTotalCostMonth]=useState([]);
   const [totalCostYear,setTotalCostYear]=useState([]);
+  const [addedMonthLabel,setAddedMonthLabel]=useState([]);
+  const [addedYearLabel,setAddedYearLabel]=useState([]);
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
@@ -39,6 +41,7 @@ function Dashboard() {
   var appendRoomNameYear={}
   var ussageYearConst=[]
   var costYearConst=[]
+  var AddedYearLabel=[]
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
 
   useEffect(() => {
@@ -65,7 +68,12 @@ function Dashboard() {
 		costYearConst=response.data.totalCostYear
 		setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(costYearConst))
 
-
+        
+		AddedYearLabel=response.data.addedYearLabel
+		
+        setAddedMonthLabel(AddedYearLabel)
+		setAddedMonthLabel(response.data.addedMonthLabel)
+		
 	})
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
@@ -118,7 +126,7 @@ function Dashboard() {
 		}else if(e.target.id==='l2'){
 			
 			
-			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Jan','Feb']))
+			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(addedMonthLabel))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(TotalCostMonth))
 	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(monthDates))
 

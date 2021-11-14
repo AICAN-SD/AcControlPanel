@@ -613,19 +613,29 @@ def dashboard(request):
     prevMonthFirstDate = prevMonthLastDate.replace(day=1)
     startYearDate=date(year=today.year,month=1,day=1)
     prevYearDate=date(year=today.year-1,month=1,day=1)
-    week=PowerUsedArrayWeekFloors.objects.get(startWeekDate=startWeekDate)
+    week=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=startWeekDate)
     print(startWeekDate)
     print(lastWeekDate)
     prevWeek=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=lastWeekDate)
 
-    month=PowerUsedArrayMonthFloors.objects.get(startMonthDate=startMonthDate)
-    prevMonth=PowerUsedArrayMonthFloors.objects.get(startMonthDate=prevMonthFirstDate)
-    year=PowerUsedArrayYearFloors.objects.get(startYearDate=startYearDate)
-    prevYear=PowerUsedArrayYearFloors.objects.get(startYearDate=prevYearDate)
+    month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=startMonthDate)
+    prevMonth=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=prevMonthFirstDate)
+    year=PowerUsedArrayYearFloors.objects.filter(startYearDate=startYearDate)
+    prevYear=PowerUsedArrayYearFloors.objects.filter(startYearDate=prevYearDate)
     
-    weekJson=week.jsonData
-    monthJson=month.jsonData
-    yearJson=year.jsonData
+    if week.exists():
+        weekJson=week[0].jsonData
+    else:
+        weekJson=[]
+
+    if month.exists():
+        monthJson=month[0].jsonData
+    else:
+        monthJson=[]
+    if year.exists():
+        yearJson=year[0].jsonData
+    else:
+        yearJson=[]
     addedWeek=[0,0,0,0,0,0,0]
     addedYear=[0,0,0,0,0,0,0,0,0,0,0,0]
     totalCostYear=[]
@@ -633,6 +643,7 @@ def dashboard(request):
     totalCostWeek=[]
     addedMonth=[]
     addedMonthLabel=[]
+    addedYearLabel=[]
     for length in range(0,monthDays):
         addedMonth.append(0)
 
@@ -658,27 +669,50 @@ def dashboard(request):
     print(addedMonth)
     print(addedYear)
     print('}}}}}}}}}}')
-    print(year.totalPowerCostFacYear)
-    print(prevYear.totalPowerCostFacYear)
 
-    # addedMonthLabel.append(prevMonthFirstDate.month)
+    addedMonthLabel.append(prevMonthFirstDate.strftime("%b"))
+    addedMonthLabel.append(startMonthDate.strftime("%b"))
 
-    totalCostYear.append(float(prevYear.totalPowerCostFacYear))
-    totalCostYear.append(float(year.totalPowerCostFacYear))
 
+    if prevYear.exists():
+       totalCostYear.append(float(prevYear[0].totalPowerCostFacYear))
+    else:
+        totalCostYear.append(0)
+
+    addedYearLabel.append(prevYearDate.year)
+    addedYearLabel.append(startYearDate.year)
+
+    if year.exists():
+        totalCostYear.append(float(year[0].totalPowerCostFacYear))
+    else:
+        totalCostYear.append(0)
     
-    totalCostMonth.append(float(prevMonth.totalPowerCostFacMonth))
-    totalCostMonth.append(float(month.totalPowerCostFacMonth))
+
+    if prevMonth.exists():
+       totalCostMonth.append(float(prevMonth[0].totalPowerCostFacMonth))
+    else:
+        totalCostMonth.append(0)
+    
+    if month.exists():
+        totalCostMonth.append(float(month[0].totalPowerCostFacMonth))
+    else:
+        totalCostMonth.append(0)
+    
  
     if prevWeek.exists():
         totalCostWeek.append(float(prevWeek[0].totalPowerCostFacWeek))
     else:
         totalCostWeek.append(0)
-    totalCostWeek.append(float(week.totalPowerCostFacWeek))
+
+    if week.exists():
+        totalCostWeek.append(float(week[0].totalPowerCostFacWeek))
+    else:
+        totalCostWeek.append(0)
+    
     
 
 
-    print(totalCostWeek)
+    print(addedYearLabel)
 
     
 
@@ -688,7 +722,11 @@ def dashboard(request):
    
 
     
-    return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,'monthDates':days_cur_month(),'yearPowerFloors':year.jsonData,'ussageWeek':addedWeek,'ussageMonth':addedMonth,'ussageYear':addedYear,'totalCostYear':totalCostYear,'totalCostMonth':totalCostMonth,'totalCostWeek':totalCostWeek},safe=False) 
+    return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,
+    'monthDates':days_cur_month(),'yearPowerFloors':year[0].jsonData,'ussageWeek':addedWeek,
+    'ussageMonth':addedMonth,'ussageYear':addedYear,'totalCostYear':totalCostYear,
+    'totalCostMonth':totalCostMonth,'totalCostWeek':totalCostWeek,'addedMonthLabel':addedMonthLabel,
+    'addedYearLabel':addedYearLabel},safe=False) 
 
 def working_hours_machine(request):
     # print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
