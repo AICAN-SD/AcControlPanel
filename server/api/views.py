@@ -632,6 +632,7 @@ def dashboard(request):
     totalCostMonth=[]
     totalCostWeek=[]
     addedMonth=[]
+    addedMonthLabel=[]
     for length in range(0,monthDays):
         addedMonth.append(0)
 
@@ -659,6 +660,8 @@ def dashboard(request):
     print('}}}}}}}}}}')
     print(year.totalPowerCostFacYear)
     print(prevYear.totalPowerCostFacYear)
+
+    # addedMonthLabel.append(prevMonthFirstDate.month)
 
     totalCostYear.append(float(prevYear.totalPowerCostFacYear))
     totalCostYear.append(float(year.totalPowerCostFacYear))
@@ -1125,44 +1128,56 @@ def working_hours_machine(request):
     return HttpResponse('printed and saved')
 
 def calculateWeek():
+    # today-timedelta(days=today.weekday(), weeks=1)
+    for addDay in range(0,2):
+        if(addDay == 0):  # this week
+            today = date.today()
+            todayWeekDay=today.weekday()
+            dateField = today - timedelta(days=todayWeekDay)
+        else:    # last week
+            today = date.today()-timedelta(days=date.today().weekday(), weeks=addDay)
+            print('$$$$$$$$$$$$$$$')
+            print(today)
+            print('$$$$$$$$$$$$$$$')
+            todayWeekDay=6
+            dateField = today
 
-    a={}
-    b={}
-    c={}
-    totalPowerWeekFAC=0
-    totalPowerCostWeekFAC=0
-    today = date.today()
-    todayWeekDay=today.weekday()
-    for floor in Floors.objects.all():
-        a[floor.FloorName]=0
-        c[floor.FloorName]=0
-        b[floor.FloorName]=[]
-    dateField = today - timedelta(days=todayWeekDay)
-
-    for day in range(0,todayWeekDay+1):
-        lastDate = today - timedelta(days=todayWeekDay-day)
-        for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
-            name=str(x.Machine_Name.floor.FloorName)
-
-            a[name]=a[name]+float(x.PC_Machine)
-            c[name]=c[name]+round(float(x.PC_Machine),2)
-            totalPowerWeekFAC=totalPowerWeekFAC+round(float(x.PC_Machine),2)
-            totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x.CostPC_Machine),2)
+        a={}
+        b={}
+        c={}
+        totalPowerWeekFAC=0
+        totalPowerCostWeekFAC=0
+        
         for floor in Floors.objects.all():
-            b[floor.FloorName].append(a[floor.FloorName])
             a[floor.FloorName]=0
-    
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(totalPowerWeekFAC)
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    s1=json.dumps(b)
-    s2=json.dumps(c)
-    f=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
-    if f.exists():
-        f.update(jsonData=json.loads(s1),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
-    else:
-        mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
-        mo.save()
+            c[floor.FloorName]=0
+            b[floor.FloorName]=[]
+        
+
+        for day in range(0,todayWeekDay+1):
+            lastDate = today - timedelta(days=todayWeekDay-day)
+            for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
+                name=str(x.Machine_Name.floor.FloorName)
+
+                a[name]=a[name]+float(x.PC_Machine)
+                c[name]=c[name]+round(float(x.PC_Machine),2)
+                totalPowerWeekFAC=totalPowerWeekFAC+round(float(x.PC_Machine),2)
+                totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x.CostPC_Machine),2)
+            for floor in Floors.objects.all():
+                b[floor.FloorName].append(a[floor.FloorName])
+                a[floor.FloorName]=0
+        
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(totalPowerWeekFAC)
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        s1=json.dumps(b)
+        s2=json.dumps(c)
+        f=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
+        if f.exists():
+            f.update(jsonData=json.loads(s1),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
+        else:
+            mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
+            mo.save()
     print('OOOOOOOOOOOOOOOOOOOOOOOOO')
 
 
