@@ -1,3 +1,4 @@
+import calendar
 from codecs import register
 from os import stat
 from django.db.models import indexes
@@ -7,7 +8,9 @@ from numpy import floor, power
 from rest_framework.fields import DateField
 from rest_framework.parsers import JSONParser
 from django.http.response import HttpResponse, JsonResponse
-from .models import Floors, PowerConsMachines,Rooms,Machines,Profiles,Devices, WorkingHoursMachines ,CostPowerConsMachines, WorkingHoursRooms,PowerUsedArrayWeekFloors,PowerUsedArrayMonthFloors
+from .models import (Floors, PowerConsMachines,Rooms,Machines,Profiles,Devices, 
+                   WorkingHoursMachines ,CostPowerConsMachines, WorkingHoursRooms,
+                   PowerUsedArrayWeekFloors,PowerUsedArrayMonthFloors,PowerUsedArrayYearFloors)
 from .serializers import FloorSerializer, ProfileSerializer,RoomSerializer,MachineSerializer,DeviceSerializer
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime,date,timedelta
@@ -602,8 +605,10 @@ def dashboard(request):
     monthDays=monthrange(date.today().year, date.today().month)[1]
     startWeekDate=today-timedelta(days=todayWeekDay)
     startMonthDate=today-timedelta(days=today.day-1)
+    startYearDate=date(year=today.year,month=1,day=1)
     week=PowerUsedArrayWeekFloors.objects.get(startWeekDate=startWeekDate)
     month=PowerUsedArrayMonthFloors.objects.get(startMonthDate=startMonthDate)
+    year=PowerUsedArrayYearFloors.objects.get(startYearDate=startYearDate)
     
     weekJson=week.jsonData
     monthJson=month.jsonData
@@ -616,12 +621,15 @@ def dashboard(request):
             for l in range (0,monthDays-len(monthJson[x])):
                 monthJson[x].append(0)
     print('}}}}}}}}}}')
-    print(monthJson)
+    
+
+    
+        
             
    
 
     
-    return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,'monthDates':days_cur_month()},safe=False) 
+    return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,'monthDates':days_cur_month(),'yearPowerFloors':year.jsonData},safe=False) 
 
 def working_hours_machine(request):
     # print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
@@ -1052,12 +1060,12 @@ def working_hours_machine(request):
                 x.save()
                 y.save()
                 z.save()
-    print(a.shape[0])
     print(date.today())
     print(date(date.today().year,date.today().month,date.today().day))
     
     calculateWeek()
     calculateMonth()
+    calculateYear()
     return HttpResponse('printed and saved')
 
 def calculateWeek():
@@ -1090,51 +1098,79 @@ def calculateWeek():
     
 
 def calculateMonth():
-    a={}
-    b={}
-    today = date.today()
-    todayDay=today.day
-    for floor in Floors.objects.all():
-        a[floor.FloorName]=0
-        b[floor.FloorName]=[]
+    for year in range(1,-1,-1):  #for prev data to insert
+        zz=[]
+        for x in range(1,13):
+            # print(calendar.monthrange(date.today().year, x))
+            # print(str(date(date.today().year,x,calendar.monthrange(date.today().year, x)[0])))
+            arr=WorkingHoursMachines.objects.filter(Date_Field__range=[str(date(date.today().year-year,x,1)), str(date(date.today().year-year,x,calendar.monthrange(date.today().year-year, x)[1]))])
+            if arr.exists():
+                zz.append(date(date.today().year-year,x,1))
+        print(len(zz))
+        
+        for z in range(0,len(zz)):
+            print(zz[z])
+            a={}
+            c={}
+            b={}
+            if(zz[z].month==date.today().month ):
+                today = date(date.today().year-year,date.today().month,date.today().day)
+            else:
+                today = date(date.today().year-year,zz[z].month,calendar.monthrange(date.today().year-year, zz[z].month)[1])
+            todayDay=today.day
+            for floor in Floors.objects.all():
+                a[floor.FloorName]=0
+                c[floor.FloorName]=0
+                b[floor.FloorName]=[]
+            dateField=today-timedelta(days=todayDay-1)
+            for day in range(0,todayDay):
+                lastDate = today - timedelta(days=todayDay-(day+1))
+                for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
+                    name=str(x.Machine_Name.floor.FloorName)
+
+                    a[name]=a[name]+float(x.PC_Machine)
+                    c[name]=c[name]+round(float(x.PC_Machine),2)
+
+                for floor in Floors.objects.all():
+                    b[floor.FloorName].append(a[floor.FloorName])
+                    a[floor.FloorName]=0
+                
+        
+            s1=json.dumps(b)
+            s2=json.dumps(c)
+            f=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=dateField)
+            if f.exists():
+                f.update(jsonData=json.loads(s1),totalPowerMonth=json.loads(s2))
+            else:
+                mo=PowerUsedArrayMonthFloors(startMonthDate=dateField,totalPowerMonth=json.loads(s2),jsonData=json.loads(s1))
+                mo.save()
+            
     print('OOOOOOOOOOOOOOOOOOOOOOOOO')
-    print(b)
-    print(todayDay)
-    dateField=today-timedelta(days=todayDay-1)
-    for day in range(0,todayDay):
-        lastDate = today - timedelta(days=todayDay-(day+1))
-        for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
-            name=str(x.Machine_Name.floor.FloorName)
 
-            a[name]=a[name]+float(x.PC_Machine)
-        print('------------------')
-        print(a)
-        print(lastDate)
-        print('------------------')
-
+def calculateYear():
+    for year in range(1,-1,-1):  #for prev data to insert
+        b={}
+        c={}
         for floor in Floors.objects.all():
-            b[floor.FloorName].append(a[floor.FloorName])
-            a[floor.FloorName]=0
-        print('***********')
-        print(b)
-        print('**********')
-    print(b)
-    s1=json.dumps(b)
-    f=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=dateField)
-    if f.exists():
-        f.update(jsonData=json.loads(s1))
-    else:
-        mo=PowerUsedArrayMonthFloors(startMonthDate=dateField,jsonData=json.loads(s1))
-        mo.save()
-    print('Saved json to db')
-    print(monthrange(date.today().year, date.today().month)[1])
-
-
-
-        
-
-        
-
+            b[floor.FloorName]=[0,0,0,0,0,0,0,0,0,0,0,0]
+            c[floor.FloorName]=0
+        for x in range (0,date.today().month):
+            start_day_of_prev_month=date(year=date.today().year-year,month=x+1,day=1)
+            month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=start_day_of_prev_month)
+            if month.exists():
+                    for floor in month[0].totalPowerMonth:
+                        
+                        b[floor][x]=("%.2f"% round(float(month[0].totalPowerMonth[floor]),2))
+                        c[floor]=c[floor]+round(float(month[0].totalPowerMonth[floor]),2)
+        s1=json.dumps(b)
+        s2=json.dumps(c)
+        yearArray=PowerUsedArrayYearFloors.objects.filter(startYearDate=date(year=date.today().year-year,month=1,day=1))
+        if yearArray.exists():
+            yearArray.update(jsonData=json.loads(s1),totalPowerYear=json.loads(s2))
+        else:
+            a=PowerUsedArrayYearFloors(jsonData=json.loads(s1),totalPowerYear=json.loads(s2),startYearDate=date(year=date.today().year-year,month=1,day=1))
+            a.save()
+    print('Saved to db year')
 
 
 

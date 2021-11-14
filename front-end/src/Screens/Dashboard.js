@@ -21,6 +21,7 @@ function Dashboard() {
   const [data,setData]=useState([]);
   const [weekPowerFloors,setWeekPowerFloors]=useState({});
   const [monthPowerFloors,setMonthPowerFloors]=useState({});
+  const [yearPowerFloors,setYearPowerFloors]=useState({});
   const [monthDates,setMonthDates]=useState([]);
   const [dataappendRoomName,setDataappendRoomName]=useState({});
   const [isLoading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ function Dashboard() {
   const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState([]);
   const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
-  var appendRoomName={}
+  var appendRoomNameYear={}
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
 
   useEffect(() => {
@@ -38,7 +39,12 @@ function Dashboard() {
 		console.log(response.data.weekPowerFloors)
 		setWeekPowerFloors(response.data.weekPowerFloors)
 		setMonthPowerFloors(response.data.monthPowerFloors)
+		setYearPowerFloors(response.data.yearPowerFloors)
+		appendRoomNameYear=response.data.yearPowerFloors
+		console.log(appendRoomNameYear)
 		setMonthDates(response.data.monthDates)
+		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomNameYear))
+
 	})
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
@@ -46,15 +52,10 @@ function Dashboard() {
 	  
       setData(Data)
       setLoading(false);
-	  for (var x in Data){
-
-             appendRoomName[Data[x].floor] = [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 175]; 
-
-	  }
-	  setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomName))
-      setDataappendRoomName(appendRoomName)
+	  
 
     });
+
 
 	//For year Inital
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
@@ -125,7 +126,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
 
-	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(dataappendRoomName))
+	setSeriesHourlyPowerByDevice( HourlyPowerByDevice.seriesHourlyPowerByDevice(yearPowerFloors))
 
 
 	setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))

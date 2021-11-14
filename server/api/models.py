@@ -136,12 +136,23 @@ class PowerUsedArrayWeekFloors(models.Model):
         return str(self.startWeekDate)
 class PowerUsedArrayMonthFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    startMonthDate=models.DateField()
+    startMonthDate=models.DateField() 
+    totalPowerMonth = models.JSONField(null=True, blank=True)
     jsonData = models.JSONField(null=True, blank=True)
     def __unicode__(self):
-        return "{0} {1} {2} {3}".format(
-            self, self.id,self.startMonthDate, self.jsonData)
+        return "{0} {1} {2} {3} {4}".format(
+            self, self.id,self.startMonthDate,self.totalPowerMonth, self.jsonData)
     def __str__(self):
         return str(self.startMonthDate)
+class PowerUsedArrayYearFloors(models.Model):
+    id= models.AutoField(primary_key=True,unique=True)
+    startYearDate=models.DateField() 
+    totalPowerYear = models.JSONField(null=True, blank=True)
+    jsonData = models.JSONField(null=True, blank=True)
+    def __unicode__(self):
+        return "{0} {1} {2} {3} {4}".format(
+            self, self.id,self.startYearDate,self.totalPowerYear,self.jsonData)
+    def __str__(self):
+        return str(self.startYearDate)
 
 
