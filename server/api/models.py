@@ -64,7 +64,8 @@ class WorkingHoursMachines(models.Model):
 class PowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
-    PC_Machine =models.CharField(max_length=200) 
+    PC_Machine =models.CharField(max_length=200)
+    CostPC_Machine =models.CharField(max_length=200)  
     Date_Field=models.DateField()
     def __str__(self):
         return str(str(self.Date_Field)+' '+str(self.Machine_Name))
@@ -128,30 +129,39 @@ class WorkingHoursFloors(models.Model):
 class PowerUsedArrayWeekFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     startWeekDate=models.DateField()
+    totalPowerWeek = models.JSONField(null=True, blank=True)
+    totalPowerUsedFacWeek=models.CharField(max_length=200)
+    totalPowerCostFacWeek=models.CharField(max_length=200)
     jsonData = models.JSONField(null=True, blank=True)
     def __unicode__(self):
-        return "{0} {1} {2} {3}".format(
-            self, self.id,self.startWeekDate, self.jsonData)
+        return "{0} {1} {2} {3} {4} {5} {6}".format(
+            self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.totalPowerUsedFacWeek,self.totalPowerWeek)
     def __str__(self):
         return str(self.startWeekDate)
 class PowerUsedArrayMonthFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     startMonthDate=models.DateField() 
     totalPowerMonth = models.JSONField(null=True, blank=True)
+    totalPowerUsedFacMonth=models.CharField(max_length=200)
+    totalPowerCostFacMonth=models.CharField(max_length=200)
+
     jsonData = models.JSONField(null=True, blank=True)
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4}".format(
-            self, self.id,self.startMonthDate,self.totalPowerMonth, self.jsonData)
+        return "{0} {1} {2} {3} {4} {5} {6}".format(
+            self, self.id,self.startMonthDate,self.totalPowerMonth,self.totalPowerCostFacMonth,self.totalPowerUsedFacMonth, self.jsonData)
     def __str__(self):
         return str(self.startMonthDate)
 class PowerUsedArrayYearFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     startYearDate=models.DateField() 
     totalPowerYear = models.JSONField(null=True, blank=True)
+    totalPowerUsedFacYear=models.CharField(max_length=200)
+    totalPowerCostFacYear=models.CharField(max_length=200)
     jsonData = models.JSONField(null=True, blank=True)
+    
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4}".format(
-            self, self.id,self.startYearDate,self.totalPowerYear,self.jsonData)
+        return "{0} {1} {2} {3} {4} {5} {6}".format(
+            self, self.id,self.startYearDate,self.totalPowerYear,self.totalPowerCostFacYear,self.totalPowerUsedFacYear,self.jsonData)
     def __str__(self):
         return str(self.startYearDate)
 

@@ -23,7 +23,12 @@ function Dashboard() {
   const [monthPowerFloors,setMonthPowerFloors]=useState({});
   const [yearPowerFloors,setYearPowerFloors]=useState({});
   const [monthDates,setMonthDates]=useState([]);
-  const [dataappendRoomName,setDataappendRoomName]=useState({});
+  const [ussageWeek,setUssageWeek]=useState([]);
+  const [ussageMonth,setUssageMonth]=useState([]);
+  const [ussageYear,setUssageYear]=useState([]);
+  const [totalCostWeek,setTotalCostWeek]=useState([]);
+  const [TotalCostMonth,setTotalCostMonth]=useState([]);
+  const [totalCostYear,setTotalCostYear]=useState([]);
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState(IncreaseInCostChart.optionIncInCost(['2020','2021']));
   const [seriesIncreaseInCostChart, setSeriesIncreaseInCostChart] = useState(IncreaseInCostChart.seriesIncInCost([0,0]));
@@ -32,6 +37,8 @@ function Dashboard() {
   const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
   var appendRoomNameYear={}
+  var ussageYearConst=[]
+  var costYearConst=[]
   const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
 
   useEffect(() => {
@@ -44,6 +51,20 @@ function Dashboard() {
 		console.log(appendRoomNameYear)
 		setMonthDates(response.data.monthDates)
 		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomNameYear))
+		setUssageYear(response.data.ussageYear)
+		ussageYearConst=response.data.ussageYear
+		setTotalCostMonth(response.data.totalCostMonth)
+		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageYearConst))
+
+		setUssageMonth(response.data.ussageMonth)
+		setUssageWeek(response.data.ussageWeek)
+
+		setTotalCostYear(response.data.totalCostYear)
+		
+		setTotalCostWeek(response.data.totalCostWeek)
+		costYearConst=response.data.totalCostYear
+		setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(costYearConst))
+
 
 	})
 
@@ -58,9 +79,7 @@ function Dashboard() {
 
 
 	//For year Inital
-	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
     
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','90','25','20','78','45','100']))
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
    
   }, []);
@@ -73,7 +92,7 @@ function Dashboard() {
 		//Weekly data
 
 		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Last Week','This Week']))
-	    setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([135,19]))
+	    setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(totalCostWeek))
 
 	    setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
 	
@@ -85,7 +104,7 @@ function Dashboard() {
 		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(weekPowerFloors))
 
 		setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']))
-		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34']))
+		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageWeek))
 		
 		
 		setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
@@ -100,12 +119,12 @@ function Dashboard() {
 			
 			
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Jan','Feb']))
-	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([45,899]))
+	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(TotalCostMonth))
 	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(monthDates))
 
 setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(monthDates));
 
-setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','34','60','32','40','98','45','150','34','50','45','20','58','65','70','84','90','25','20','78','45','100','200']))
+setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageMonth))
 
 
 
@@ -122,7 +141,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 		}else{
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['2020','2021']))
-	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost([35,169]))
+	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(totalCostYear))
 
 	setOptHourlyPowerByDevice(HourlyPowerByDevice.optionHourlyPowerByDevice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']));
 
@@ -131,7 +150,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 	setOptUssageEstimateChart(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
 
-	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(['0','25','20','78','45','100','90','25','20','78','45','100']))
+	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageYear))
 
 	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
 

@@ -13,6 +13,9 @@ const IncreaseInCostChart = {
           },
           
       },
+      yaxis: {
+        decimalsInFloat: true,
+    },
       responsive: [
           {
               breakpoint: 480,
@@ -140,6 +143,9 @@ var HourlyPowerByDevice = {
       grid: {
           show: true
       },
+      yaxis: {
+        decimalsInFloat: true,
+    },
       colors: [ 'rgba(144, 202, 249, 0.85)','rgba(30, 136, 229, 0.85)','rgba(103, 58, 183, 0.85)',
       'rgba(237, 231, 246, 0.85)','#8EB0E9','#0063DA','#00ACF3', '#5FDEFD','#404756','#7978ED','#5CDCFE',
       '#3BECEB','#6BF7C5','#9394D4','#D1F5FF','#9DADBC','#00355A','#D2EAE6','#7CFAC3',
@@ -181,6 +187,9 @@ const UssageEstimateChart = {
     },
     dataLabels: {
       enabled: false
+    },
+    yaxis: {
+        decimalsInFloat: true,
     },
     stroke: {
       curve: 'straight'
