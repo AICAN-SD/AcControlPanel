@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const TotalPowerCard = ({ isLoading }) => {
+const TotalPowerCard = ({ isLoading ,totalPower}) => {
     const classes = useStyles();
 
     return (
@@ -59,7 +59,7 @@ const TotalPowerCard = ({ isLoading }) => {
                         <Grid item>
                             <Grid container alignItems="center">
                                 <Grid item>
-                                    <Typography className={classes.cardHeading}>500.00 kWh</Typography>
+                                    <Typography className={classes.cardHeading}>{totalPower} kWh</Typography>
                                 </Grid>
                                 
                             </Grid>

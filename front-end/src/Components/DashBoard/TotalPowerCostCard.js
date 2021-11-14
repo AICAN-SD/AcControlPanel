@@ -47,7 +47,7 @@ const useStyles = makeStyles(() => ({
 
 //===========================|| DASHBOARD DEFAULT - EARNING CARD ||===========================//
 
-const TotalPowerCostCard = ({ isLoading ,option,series}) => {
+const TotalPowerCostCard = ({ isLoading ,option,series,totalPowerCost}) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -71,7 +71,7 @@ const TotalPowerCostCard = ({ isLoading ,option,series}) => {
                                     <Grid container alignItems="center">
                                         <Grid item>
                                          
-                                                <Typography className={classes.cardHeading}>$108</Typography>
+                                                <Typography className={classes.cardHeading}>${totalPowerCost}</Typography>
                                             
                                         </Grid>
                                        
