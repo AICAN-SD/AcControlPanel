@@ -133,9 +133,11 @@ class PowerUsedArrayWeekFloors(models.Model):
     totalPowerUsedFacWeek=models.CharField(max_length=200)
     totalPowerCostFacWeek=models.CharField(max_length=200)
     jsonData = models.JSONField(null=True, blank=True)
+    jsonDataCost = models.JSONField(null=True, blank=True)
+
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4} {5} {6}".format(
-            self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.totalPowerUsedFacWeek,self.totalPowerWeek)
+        return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
+            self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.jsonDataCost,self.totalPowerUsedFacWeek,self.totalPowerWeek)
     def __str__(self):
         return str(self.startWeekDate)
 class PowerUsedArrayMonthFloors(models.Model):
@@ -144,11 +146,12 @@ class PowerUsedArrayMonthFloors(models.Model):
     totalPowerMonth = models.JSONField(null=True, blank=True)
     totalPowerUsedFacMonth=models.CharField(max_length=200)
     totalPowerCostFacMonth=models.CharField(max_length=200)
-
+    jsonDataCost = models.JSONField(null=True, blank=True)
     jsonData = models.JSONField(null=True, blank=True)
+
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4} {5} {6}".format(
-            self, self.id,self.startMonthDate,self.totalPowerMonth,self.totalPowerCostFacMonth,self.totalPowerUsedFacMonth, self.jsonData)
+        return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
+            self, self.id,self.startMonthDate,self.totalPowerMonth,self.jsonDataCost,self.totalPowerCostFacMonth,self.totalPowerUsedFacMonth, self.jsonData)
     def __str__(self):
         return str(self.startMonthDate)
 class PowerUsedArrayYearFloors(models.Model):
@@ -157,11 +160,12 @@ class PowerUsedArrayYearFloors(models.Model):
     totalPowerYear = models.JSONField(null=True, blank=True)
     totalPowerUsedFacYear=models.CharField(max_length=200)
     totalPowerCostFacYear=models.CharField(max_length=200)
+    jsonDataCost = models.JSONField(null=True, blank=True)
     jsonData = models.JSONField(null=True, blank=True)
-    
+
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4} {5} {6}".format(
-            self, self.id,self.startYearDate,self.totalPowerYear,self.totalPowerCostFacYear,self.totalPowerUsedFacYear,self.jsonData)
+        return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
+            self, self.id,self.startYearDate,self.totalPowerYear,self.jsonDataCost,self.totalPowerCostFacYear,self.totalPowerUsedFacYear,self.jsonData)
     def __str__(self):
         return str(self.startYearDate)
 

@@ -606,6 +606,9 @@ def dashboard(request):
     totalCostWeek=[]
     addedMonth=[]
     addedMonthLabel=[]
+    lineChartDataWeek=[]
+    lineChartDataMonth=[]
+    lineChartDataYear=[]
     addedYearLabel=[]
     totalPowerYear=0
     totalPowerMonth=0
@@ -647,11 +650,13 @@ def dashboard(request):
         weekJson=week[0].jsonData
         totalPowerWeek=round(float(week[0].totalPowerUsedFacWeek),2)
         totalPowerWeekCost=round(float(week[0].totalPowerCostFacWeek),2)
+        lineChartDataWeek=week[0].jsonDataCost
 
         totalCostWeek.append(float(week[0].totalPowerCostFacWeek))
     else:
         totalCostWeek.append(0)
         weekJson=[]
+    
 
     if prevMonth.exists():
        totalCostMonth.append(float(prevMonth[0].totalPowerCostFacMonth))
@@ -663,7 +668,7 @@ def dashboard(request):
         monthJson=month[0].jsonData
         totalPowerMonth=round(float(month[0].totalPowerUsedFacMonth),2)
         totalPowerMonthCost=round(float(month[0].totalPowerCostFacMonth),2)
-
+        lineChartDataMonth=month[0].jsonDataCost
         totalCostMonth.append(float(month[0].totalPowerCostFacMonth))
     else:
         monthJson=[]
@@ -678,11 +683,18 @@ def dashboard(request):
         yearJson=year[0].jsonData
         totalPowerYear=round(float(year[0].totalPowerUsedFacYear),2)
         totalPowerYearCost=round(float(year[0].totalPowerCostFacYear),2)
+        lineChartDataYear=year[0].jsonDataCost
+
 
         totalCostYear.append(float(year[0].totalPowerCostFacYear))
     else:
         yearJson=[]
         totalCostYear.append(0)
+    
+    incInCostWeek=round(float(100*(totalCostWeek[1] - totalCostWeek[0])/totalCostWeek[0]),2)
+    incInCostMonth=round(float(100*(totalCostMonth[1] - totalCostMonth[0])/totalCostMonth[0]),2)
+    incInCostYear=round(float(100*(totalCostYear[1] - totalCostYear[0])/totalCostYear[0]),2)
+
 
     for length in range(0,monthDays):
         addedMonth.append(0)
@@ -694,6 +706,15 @@ def dashboard(request):
                 weekJson[x].append(0)
         for l in range (0,len(weekJson[x])):
                 addedWeek[l]=addedWeek[l]+float(weekJson[x][l])
+    if len(lineChartDataWeek)<7:
+        for x in range(0,7-len(lineChartDataWeek)):
+            lineChartDataWeek.append(0)
+
+    if len(lineChartDataMonth)<monthDays:
+        for x in range(0,monthDays-len(lineChartDataMonth)):
+            lineChartDataMonth.append(0)
+
+
         
     for x in monthJson:
         if len(monthJson[x]) < monthDays:
@@ -730,7 +751,9 @@ def dashboard(request):
     
 
 
-    print(addedYearLabel)
+    print(lineChartDataYear)
+    print(lineChartDataMonth)
+    print(lineChartDataWeek)
 
     
 
@@ -746,10 +769,11 @@ def dashboard(request):
     'totalCostMonth':totalCostMonth,'totalCostWeek':totalCostWeek,'addedMonthLabel':addedMonthLabel,
     'addedYearLabel':addedYearLabel,'totalPowerYear':totalPowerYear,'totalPowerMonth':totalPowerMonth,
     'totalPowerWeek':totalPowerWeek,'totalPowerYearCost':totalPowerYearCost,'totalPowerMonthCost':totalPowerMonthCost,
-    'totalPowerWeekCost':totalPowerWeekCost},safe=False) 
+    'totalPowerWeekCost':totalPowerWeekCost,'lineChartDataWeek':lineChartDataWeek,'lineChartDataMonth':lineChartDataMonth,
+    'lineChartDataYear':lineChartDataYear,'incInCostWeek':incInCostWeek,'incInCostMonth':incInCostMonth,
+    'incInCostYear':incInCostYear},safe=False) 
 
 def working_hours_machine(request):
-    # print(datetime.now().strftime('%d-%m-%Y %H:%M:%S'))
     
     
     for m in Machines.objects.all():
@@ -757,29 +781,19 @@ def working_hours_machine(request):
         w=timedelta(seconds=0,minutes=0,hours=0)
         df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
         a=df.loc[df['ID']==m.MachineName].reset_index(drop=True)
-        print(a.shape[0])
         if a.shape[0]!=0:
             for i in range(0,a.shape[0]):
                 
 
                 onTime=datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')
                 if not 'prevTime' in locals():
-                    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
                     prevTime=date(onTime.year,onTime.month,onTime.day)
                 elif(prevTime != date(onTime.year,onTime.month,onTime.day)):
-                    print('in elif prevTime != onTime')
-                    print(w)
-                    print(DATE_FIELD)
                     whm=WorkingHoursMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
                     pcm=PowerConsMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
                     costpcm=CostPowerConsMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
                     powerRating="%.2f"% round((device.powerRating)*(w.total_seconds())/(1000*3600),2)
                     costPowerRating="%.2f"% round(float(powerRating)*(float(str(device.costperunit))),2)
-                    print('$$$$$$$$$')
-                    print((device.powerRating)*(w.total_seconds())/(1000*3600))
-                    print(powerRating)
-                    print(costPowerRating)
-                    print('$$$$$$$$$')
                     if whm.exists() and pcm.exists() and costpcm.exists():
                         costpcm.update(CostPC_Machine=str(costPowerRating))
                         pcm.update(PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating))
@@ -820,7 +834,6 @@ def working_hours_machine(request):
                         costpcm.update(CostPC_Machine=str(costPowerRating))
                         whm.update(WH_Machine=w)
                     else:
-                        print('ulalalal')
                         x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
                         y=PowerConsMachines(Machine_Name=m,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
@@ -832,25 +845,17 @@ def working_hours_machine(request):
                 nowTime=datetime.strptime(str(nowTime),'%d-%m-%Y %H:%M')
                 
                 if(a.loc[i,'STATUS']=='DONE'):
-                    print('{{{{{{{')
-
-                    print(a.loc[i,'ID'])
 
                     offTime=datetime.strptime(str(a.loc[i,'OFF_TIME']),'%d-%m-%Y %H:%M')
                     d0 = date(offTime.year,offTime.month,offTime.day)
                     d1 = date(onTime.year, onTime.month, onTime.day)
                     delta = d0 - d1
-                    print(onTime)
-                    print(offTime)
-                    print(delta.days)
-                    print('{{{{{{')
 
                     DATE_FIELD=(date(offTime.year,offTime.month,offTime.day))
 
                     if delta.days==0:
                         t=(offTime)-(onTime)
                         DATE_FIELD=(date(offTime.year,offTime.month,offTime.day))
-                        print(t)
                     elif(delta.days>0):
                         t=timedelta(seconds=0,minutes=0,hours=0)
                         for numberDay in range(0,delta.days+1):
@@ -861,9 +866,7 @@ def working_hours_machine(request):
                                 
 
                                 todayTime=datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')-onTime
-                                print('###############')
-                                print(todayTime)
-                                print('###############')
+                               
                                 whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 pcm=PowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 costpcm=CostPowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
@@ -923,12 +926,10 @@ def working_hours_machine(request):
                                 DATE_FIELD=(date(offTime.year,offTime.month,offTime.day))
 
                             else:
-                                print('###############')
 
                                 oneDay=(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
                                 DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
-                                print(DATE)
-                                print('###############')
+                               
 
                                 whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 pcm=PowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
@@ -983,7 +984,6 @@ def working_hours_machine(request):
                                     y.save()
                                     z.save()
                 else:
-                    # print(nowTime-(datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')))
                     d0 = date(onTime.year, onTime.month, onTime.day)
                     d1 = date(datetime.now().year, datetime.now().month, datetime.now().day)
                     DATE_FIELD=(date(datetime.now().year,datetime.now().month,datetime.now().day))
@@ -999,15 +999,13 @@ def working_hours_machine(request):
                                 DATE_FIELD=date(onTime.year, onTime.month, onTime.day)
 
                                 DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
-                                print(DATE)
+                               
                                 todayTime=datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay)-onTime
                                 whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 pcm=PowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 costpcm=CostPowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 powerRating=("%.2f"% round((device.powerRating)*(todayTime.total_seconds())/(1000*3600),2))
-                                print('?????????')
-                                print(powerRating)
-                                print('?????????')
+                               
                                 costPowerRating=("%.2f"% round(float(powerRating)*(float(str(device.costperunit))),2))
                                 if whm.exists() and pcm.exists() and costpcm.exists():
                                     costpcm.update(CostPC_Machine=str(costPowerRating))
@@ -1064,7 +1062,6 @@ def working_hours_machine(request):
 
                                 oneDay=(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'23:59:59','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))-(datetime.strptime(str(onTime.day)+':'+str(onTime.month)+':'+str(onTime.year)+' '+'00:00:00','%d:%m:%Y %H:%M:%S')+timedelta(days=numberDay))
                                 DATE=date(onTime.year, onTime.month, onTime.day)+timedelta(days=numberDay)
-                                print(DATE)
 
                                 whm=WorkingHoursMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
                                 pcm=PowerConsMachines.objects.filter(Date_Field=DATE,Machine_Name=m)
@@ -1120,10 +1117,7 @@ def working_hours_machine(request):
                                     z.save()
             
                                 
-                print(';;;;;;;;;;;')
-                print(t)
                 w=w+t
-                print(w)
             whm=WorkingHoursMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
             pcm=PowerConsMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
             costpcm=CostPowerConsMachines.objects.filter(Date_Field=DATE_FIELD,Machine_Name=m)
@@ -1170,15 +1164,12 @@ def working_hours_machine(request):
                 costpcm.update(CostPC_Machine=str(costPowerRating))
                 whm.update(WH_Machine=w)
             else:
-                print('ulalalal')
                 x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
                 y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                 z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                 x.save()
                 y.save()
                 z.save()
-    print(date.today())
-    print(date(date.today().year,date.today().month,date.today().day))
     
     calculateWeek()
     calculateMonth()
@@ -1187,21 +1178,21 @@ def working_hours_machine(request):
 
 def calculateWeek():
     # today-timedelta(days=today.weekday(), weeks=1)
-    for addDay in range(0,2):
+    for addDay in range(0,3):
         if(addDay == 0):  # this week
             today = date.today()
             todayWeekDay=today.weekday()
             dateField = today - timedelta(days=todayWeekDay)
         else:    # last week
             today = date.today()-timedelta(days=date.today().weekday(), weeks=addDay)
-            print('$$$$$$$$$$$$$$$')
-            print(today)
-            print('$$$$$$$$$$$$$$$')
+            
             todayWeekDay=6
             dateField = today
+        
 
         a={}
         b={}
+        d=[]
         c={}
         totalPowerWeekFAC=0
         totalPowerCostWeekFAC=0
@@ -1210,10 +1201,17 @@ def calculateWeek():
             a[floor.FloorName]=0
             c[floor.FloorName]=0
             b[floor.FloorName]=[]
-        
-
+        print('------------')
+        print(today)
         for day in range(0,todayWeekDay+1):
-            lastDate = today - timedelta(days=todayWeekDay-day)
+            if(addDay == 0):
+               lastDate = today - timedelta(days=todayWeekDay-day)
+            else:
+                lastDate = today + timedelta(days=todayWeekDay-day)
+
+            print('$$$$$$$$$$$$$$$')
+            print(lastDate)
+            print('$$$$$$$$$$$$$$$')
             for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
                 name=str(x.Machine_Name.floor.FloorName)
 
@@ -1224,25 +1222,27 @@ def calculateWeek():
             for floor in Floors.objects.all():
                 b[floor.FloorName].append(a[floor.FloorName])
                 a[floor.FloorName]=0
-        
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print(totalPowerWeekFAC)
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            d.append(totalPowerCostWeekFAC)
+        print('------------')
+
+        # print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        # print(totalPowerWeekFAC)
+        # print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         s1=json.dumps(b)
         s2=json.dumps(c)
+        s3=json.dumps(d)
         f=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
         if f.exists():
-            f.update(jsonData=json.loads(s1),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
+            f.update(jsonData=json.loads(s1),jsonDataCost=json.loads(s3),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
         else:
-            mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
+            mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,jsonDataCost=json.loads(s3),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
             mo.save()
     print('OOOOOOOOOOOOOOOOOOOOOOOOO')
 
 
 def calculateMonth():
     for year in range(1,-1,-1):  #for prev data to insert
-        totalPowerMonthFAC=0
-        totalPowerCostMonthFAC=0
+        
 
         zz=[]
         for x in range(1,13):
@@ -1251,13 +1251,14 @@ def calculateMonth():
             arr=WorkingHoursMachines.objects.filter(Date_Field__range=[str(date(date.today().year-year,x,1)), str(date(date.today().year-year,x,calendar.monthrange(date.today().year-year, x)[1]))])
             if arr.exists():
                 zz.append(date(date.today().year-year,x,1))
-        print(len(zz))
         
         for z in range(0,len(zz)):
-            print(zz[z])
             a={}
             c={}
             b={}
+            d=[]
+            totalPowerMonthFAC=0
+            totalPowerCostMonthFAC=0
             if(zz[z].month==date.today().month ):
                 today = date(date.today().year-year,date.today().month,date.today().day)
             else:
@@ -1273,23 +1274,25 @@ def calculateMonth():
                 for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
                     name=str(x.Machine_Name.floor.FloorName)
 
-                    a[name]=a[name]+float(x.PC_Machine)
-                    c[name]=c[name]+round(float(x.PC_Machine),2)
-                    totalPowerMonthFAC=totalPowerMonthFAC+round(float(x.PC_Machine),2)
-                    totalPowerCostMonthFAC=totalPowerCostMonthFAC+round(float(x.CostPC_Machine),2)
+                    a[name]=round(float(a[name]+float(x.PC_Machine)),2)
+                    c[name]=round(float(c[name]+round(float(x.PC_Machine),2)),2)
+                    totalPowerMonthFAC=round(float(totalPowerMonthFAC+round(float(x.PC_Machine),2)),2)
+                    totalPowerCostMonthFAC=round(float(totalPowerCostMonthFAC+round(float(x.CostPC_Machine),2)),2)
 
                 for floor in Floors.objects.all():
                     b[floor.FloorName].append(a[floor.FloorName])
                     a[floor.FloorName]=0
+                d.append(totalPowerCostMonthFAC)
                 
         
             s1=json.dumps(b)
             s2=json.dumps(c)
+            s3=json.dumps(d)
             f=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=dateField)
             if f.exists():
-                f.update(jsonData=json.loads(s1),totalPowerUsedFacMonth=totalPowerMonthFAC,totalPowerCostFacMonth=totalPowerCostMonthFAC,totalPowerMonth=json.loads(s2))
+                f.update(jsonData=json.loads(s1),jsonDataCost=json.loads(s3),totalPowerUsedFacMonth=totalPowerMonthFAC,totalPowerCostFacMonth=totalPowerCostMonthFAC,totalPowerMonth=json.loads(s2))
             else:
-                mo=PowerUsedArrayMonthFloors(startMonthDate=dateField,totalPowerCostFacMonth=totalPowerCostMonthFAC,totalPowerUsedFacMonth=totalPowerMonthFAC,totalPowerMonth=json.loads(s2),jsonData=json.loads(s1))
+                mo=PowerUsedArrayMonthFloors(startMonthDate=dateField,jsonDataCost=json.loads(s3),totalPowerCostFacMonth=totalPowerCostMonthFAC,totalPowerUsedFacMonth=totalPowerMonthFAC,totalPowerMonth=json.loads(s2),jsonData=json.loads(s1))
                 mo.save()
             
 
@@ -1300,6 +1303,7 @@ def calculateYear():
 
         b={}
         c={}
+        d=[0,0,0,0,0,0,0,0,0,0,0,0]
         for floor in Floors.objects.all():
             b[floor.FloorName]=[0,0,0,0,0,0,0,0,0,0,0,0]
             c[floor.FloorName]=0
@@ -1308,19 +1312,19 @@ def calculateYear():
             month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=start_day_of_prev_month)
             if month.exists():
                     for floor in month[0].totalPowerMonth:
-                        print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-                        print(month[0].totalPowerCostFacMonth)
                         b[floor][x]=("%.2f"% round(float(month[0].totalPowerMonth[floor]),2))
-                        c[floor]=c[floor]+round(float(month[0].totalPowerMonth[floor]),2)
-                        totalPowerYearFAC=totalPowerYearFAC+round(float(month[0].totalPowerMonth[floor]),2)
-                    totalPowerCostYearFAC=totalPowerCostYearFAC+round(float(month[0].totalPowerCostFacMonth),2)
+                        c[floor]=round(float(c[floor]+round(float(month[0].totalPowerMonth[floor]),2)),2)
+                        totalPowerYearFAC=round(float(totalPowerYearFAC+round(float(month[0].totalPowerMonth[floor]),2)),2)
+                    totalPowerCostYearFAC=round(float(totalPowerCostYearFAC+round(float(month[0].totalPowerCostFacMonth),2)),2)
+                    d[x]=totalPowerCostYearFAC
         s1=json.dumps(b)
         s2=json.dumps(c)
+        s3=json.dumps(d)
         yearArray=PowerUsedArrayYearFloors.objects.filter(startYearDate=date(year=date.today().year-year,month=1,day=1))
         if yearArray.exists():
-            yearArray.update(jsonData=json.loads(s1),totalPowerCostFacYear=totalPowerCostYearFAC,totalPowerUsedFacYear=totalPowerYearFAC,totalPowerYear=json.loads(s2))
+            yearArray.update(jsonData=json.loads(s1),jsonDataCost=json.loads(s3),totalPowerCostFacYear=totalPowerCostYearFAC,totalPowerUsedFacYear=totalPowerYearFAC,totalPowerYear=json.loads(s2))
         else:
-            a=PowerUsedArrayYearFloors(jsonData=json.loads(s1),totalPowerCostFacYear=totalPowerCostYearFAC,totalPowerUsedFacYear=totalPowerYearFAC,totalPowerYear=json.loads(s2),startYearDate=date(year=date.today().year-year,month=1,day=1))
+            a=PowerUsedArrayYearFloors(jsonData=json.loads(s1),jsonDataCost=json.loads(s3),totalPowerCostFacYear=totalPowerCostYearFAC,totalPowerUsedFacYear=totalPowerYearFAC,totalPowerYear=json.loads(s2),startYearDate=date(year=date.today().year-year,month=1,day=1))
             a.save()
     print('Saved to db year')
 

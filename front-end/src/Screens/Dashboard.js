@@ -36,10 +36,19 @@ function Dashboard() {
   const [totalPowerWeek,setTotalPowerWeek]=useState(0);
   const [totalPower,setTotalPower]=useState(0);
 
+  const [lineChartDataYear,setLineChartDataYear]=useState([]);
+  const [lineChartDataMonth,setLineChartDataMonth]=useState([]);
+  const [lineChartDataWeek,setLineChartDataWeek]=useState([]);
+
   const [totalPowerWeekCost,setTotalPowerWeekCost]=useState(0);
   const [totalPowerMonthCost,setTotalPowerMonthCost]=useState(0);
   const [totalPowerYearCost,setTotalPowerYearCost]=useState(0);
   const [totalPowerCost,setTotalPowerCost]=useState(0);
+  
+  const [incInCostYear,setIncInCostYear]=useState(0);
+  const [incInCostMonth,setIncInCostMonth]=useState(0);
+  const [incInCostWeek,setIncInCostWeek]=useState(0);
+  const [incInCost,setIncInCost]=useState(0);
 
   const [isLoading, setLoading] = useState(true);
   const [optIncreaseInCostChart, setOptIncreaseInCostChart] = useState( IncreaseInCostChart.optionIncInCost([`${new Date().getFullYear()-1}`,`${new Date().getFullYear()}`]));
@@ -54,7 +63,7 @@ function Dashboard() {
   var AddedYearLabel=[]
   var TotalPowerYear=0
   var TotalPowerCostYear=0
-  const [seriesLineChart, setSeriesLineChart] = useState([0,0,0,0,0,0, 0, 0]);
+  const [seriesLineChart, setSeriesLineChart] = useState([]);
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
@@ -64,6 +73,16 @@ function Dashboard() {
 		setTotalPowerWeek(response.data.totalPowerWeek)
 		setTotalPowerMonth(response.data.totalPowerMonth)
 		setTotalPower(response.data.totalPowerYear)
+
+		setIncInCost(response.data.incInCostYear)
+		setIncInCostYear(response.data.incInCostYear)
+		setIncInCostMonth(response.data.incInCostMonth)
+		setIncInCostWeek(response.data.incInCostWeek)
+
+		setSeriesLineChart(response.data.lineChartDataYear)
+		setLineChartDataYear(response.data.lineChartDataYear);
+		setLineChartDataMonth(response.data.lineChartDataMonth);
+		setLineChartDataWeek(response.data.lineChartDataWeek);
 
         TotalPowerCostYear=response.data.totalPowerYearCost
 		setTotalPowerYearCost(response.data.totalPowerYearCost)
@@ -115,7 +134,7 @@ function Dashboard() {
 
 	//For year Inital
     
-	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
+	
    
   }, []);
    
@@ -125,6 +144,8 @@ function Dashboard() {
 	var yearElem = document.getElementById('year');
 	if(e.target.id==='l1'){
 		//Weekly data
+		setSeriesLineChart(lineChartDataWeek)
+        setIncInCost(incInCostWeek)
         setTotalPower(totalPowerWeek)
 		setTotalPowerCost(totalPowerWeekCost)
 		setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(['Last Week','This Week']))
@@ -143,7 +164,6 @@ function Dashboard() {
 		setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageWeek))
 		
 		
-		setSeriesLineChart([15, 76, 51, 19, 85, 34, 89, 34])
 
 
 			monthElem.classList.remove("active");
@@ -152,7 +172,9 @@ function Dashboard() {
 
 
 		}else if(e.target.id==='l2'){
-			
+			setSeriesLineChart(lineChartDataMonth)
+			setIncInCost(incInCostMonth)
+
 			setTotalPower(totalPowerMonth)
 
 			setTotalPowerCost(totalPowerMonthCost)
@@ -171,16 +193,17 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 
 
-	setSeriesLineChart([95, 26, 11, 49, 75, 94, 29, 54])
-
     
 			monthElem.classList.add("active");
 			yearElem.classList.remove("active");
 			weekElem.classList.remove("active");
 
 		}else{
+			setSeriesLineChart(lineChartDataYear)
 			setTotalPower(totalPowerYear)
 			setTotalPowerCost(totalPowerYearCost)
+
+			setIncInCost(incInCostYear)
 
 			setOptIncreaseInCostChart( IncreaseInCostChart.optionIncInCost(addedYearLabel))
 	setSeriesIncreaseInCostChart( IncreaseInCostChart.seriesIncInCost(totalCostYear))
@@ -194,7 +217,6 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 	setSeriesUssageEstimateChart( UssageEstimateChart.seriesUssageEstimateChart(ussageYear))
 
-	setSeriesLineChart([45, 66, 41, 89, 25, 44, 9, 54])
 
 
 			monthElem.classList.remove("active");
@@ -273,7 +295,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
              </Col>
              <Col xs={12} sm={12} md={6}>
-             <TotalPowerCostCard isLoading={isLoading} totalPowerCost={totalPowerCost} series={seriesLineChart}/>
+             <TotalPowerCostCard isLoading={isLoading} totalPowerCost={totalPowerCost}   series={seriesLineChart}/>
              </Col>
            
              </Row>
@@ -296,8 +318,20 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
             textAlign:'center'
           }}>
 	            <Row xs={6} sm={6} md={6}>
-                <Col xs={12} sm={12} md={12}> <i class="fas fa-caret-up">&nbsp;5.42 %</i></Col>
-						   <Col xs={12} sm={12} md={12}>Increase in Cost</Col>
+				{ (incInCost < 0) ? 
+				 
+				<>
+				<Col xs={12} sm={12} md={12}> <i class="fas fa-caret-down">&nbsp;{ incInCost * -1 } %</i></Col>
+				<Col xs={12} sm={12} md={12}>{'Decrease'} in Cost</Col>
+				</>
+				: 
+				<>
+				<Col xs={12} sm={12} md={12}> <i class="fas fa-caret-up">&nbsp;{incInCost} %</i></Col>
+				<Col xs={12} sm={12} md={12}>{ 'Increase' } in Cost</Col>
+				
+				</>
+				}
+             	
 							</Row>
 							</div>
 

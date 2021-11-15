@@ -18,6 +18,7 @@ const useStyles = makeStyles(() => ({
         '&:after': {
             content: '""',
             position: 'absolute',
+            zIndex:0,
             width: '210px',
             height: '210px',
             background: 'linear-gradient(210.04deg, #900ff9 -50.94%, rgba(144, 202, 249, 0) 83.49%)',
@@ -33,6 +34,7 @@ const useStyles = makeStyles(() => ({
             height: '210px',
             background: 'linear-gradient(140.9deg, #90caf9 -14.02%, rgba(144, 202, 249, 0) 77.58%)',
             borderRadius: '50%',
+            zIndex:0,
             top: '-125px',
             right: '-15px',
             opacity: 0.5,
@@ -67,11 +69,11 @@ const TotalPowerCostCard = ({ isLoading ,option,series,totalPowerCost}) => {
                         
                 <Grid item sx={{ mb: 0.75 }}>
                             <Grid container alignItems="center">
-                                <Grid item xs={3}>
-                                    <Grid container alignItems="center">
+                                <Grid item xs={4}>
+                                    <Grid container alignItems="left">
                                         <Grid item>
                                          
-                                                <Typography className={classes.cardHeading}>${totalPowerCost}</Typography>
+                                                <Typography className={classes.cardHeading}>₹{Math.round(totalPowerCost)}</Typography>
                                             
                                         </Grid>
                                        
@@ -80,7 +82,7 @@ const TotalPowerCostCard = ({ isLoading ,option,series,totalPowerCost}) => {
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                                <Grid item xs={9}>
+                                <Grid item xs={8} style={{zIndex:1}}>
                                    <Chart height='95px' series={TotalOrderMonthLineCharData.seriesTotalOrderMonthLineCharData(series)} options={TotalOrderMonthLineCharData.optionTotalOrderMonthLineCharData(option)} type= 'line' /> 
                                 </Grid>
                             </Grid>

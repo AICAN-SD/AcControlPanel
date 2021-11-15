@@ -235,8 +235,6 @@ const TotalOrderMonthLineCharData = {
         width: 3
     },
     yaxis: {
-        min: 0,
-        max: 100
     },
     tooltip: {
         theme: 'dark',
@@ -248,7 +246,7 @@ const TotalOrderMonthLineCharData = {
         },
         y: {
             title: {
-                formatter: (seriesName) => 'Total Order'
+                formatter: (seriesName) => 'Total Cost'
             }
         },
         marker: {
