@@ -130,14 +130,22 @@ class PowerUsedArrayWeekFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     startWeekDate=models.DateField()
     totalPowerWeek = models.JSONField(null=True, blank=True)
+    
     totalPowerUsedFacWeek=models.CharField(max_length=200)
     totalPowerCostFacWeek=models.CharField(max_length=200)
+
     jsonData = models.JSONField(null=True, blank=True)
     jsonDataCost = models.JSONField(null=True, blank=True)
 
+    jsonDataPowerRooms = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerRooms = models.JSONField(null=True, blank=True)
+
+    jsonDataPowerMacs = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
+
     def __unicode__(self):
-        return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
-            self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.jsonDataCost,self.totalPowerUsedFacWeek,self.totalPowerWeek)
+        return "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}".format(
+            self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.jsonDataPowerRooms,self.jsonDataCostPowerRooms,self.jsonDataPowerMacs,self.jsonDataCostPowerMacs,self.jsonDataCost,self.totalPowerUsedFacWeek,self.totalPowerWeek)
     def __str__(self):
         return str(self.startWeekDate)
 class PowerUsedArrayMonthFloors(models.Model):
@@ -148,6 +156,12 @@ class PowerUsedArrayMonthFloors(models.Model):
     totalPowerCostFacMonth=models.CharField(max_length=200)
     jsonDataCost = models.JSONField(null=True, blank=True)
     jsonData = models.JSONField(null=True, blank=True)
+
+    jsonDataPowerRooms = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerRooms = models.JSONField(null=True, blank=True)
+
+    jsonDataPowerMacs = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
@@ -162,6 +176,12 @@ class PowerUsedArrayYearFloors(models.Model):
     totalPowerCostFacYear=models.CharField(max_length=200)
     jsonDataCost = models.JSONField(null=True, blank=True)
     jsonData = models.JSONField(null=True, blank=True)
+
+    jsonDataPowerRooms = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerRooms = models.JSONField(null=True, blank=True)
+
+    jsonDataPowerMacs = models.JSONField(null=True, blank=True)
+    jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return "{0} {1} {2} {3} {4} {5} {6} {7}".format(

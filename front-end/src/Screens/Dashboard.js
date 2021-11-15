@@ -19,6 +19,34 @@ import Chart from 'react-apexcharts';
 function Dashboard() { 
 
   const [data,setData]=useState([]);
+
+  const [powerRoom,setPowerRoom]=useState([]);
+  const [costRoom,setCostRoom]=useState([]);
+
+  const [yearRoomPower,setYearRoomPower]=useState([]);
+  const [yearRoomPowerCost,setYearRoomPowerCost]=useState([]);
+
+  const [monthRoomPower,setMonthRoomPower]=useState([]);
+  const [monthRoomPowerCost,setMonthRoomPowerCost]=useState([]);
+  
+  const [weekRoomPower,setWeekRoomPower]=useState([]);
+  const [weekRoomPowerCost,setWeekRoomPowerCost]=useState([]);
+  
+
+  const [powerMac,setPowerMac]=useState([]);
+  const [costMac,setCostMac]=useState([]);
+
+  const [yearMacPower,setYearMacPower]=useState([]);
+  const [yearMacPowerCost,setYearMacPowerCost]=useState([]);
+
+  const [monthMacPower,setMonthMacPower]=useState([]);
+  const [monthMacPowerCost,setMonthMacPowerCost]=useState([]);
+  
+  const [weekMacPower,setWeekMacPower]=useState([]);
+  const [weekMacPowerCost,setWeekMacPowerCost]=useState([]);
+
+
+
   const [weekPowerFloors,setWeekPowerFloors]=useState({});
   const [monthPowerFloors,setMonthPowerFloors]=useState({});
   const [yearPowerFloors,setYearPowerFloors]=useState({});
@@ -57,6 +85,8 @@ function Dashboard() {
   const [seriesHourlyPowerByDevice, setSeriesHourlyPowerByDevice] = useState([]);
   const [optUssageEstimateChart, setOptUssageEstimateChart] = useState(UssageEstimateChart.optionUssageEstimateChart(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']))
   const [seriesUssageEstimateChart, setSeriesUssageEstimateChart] = useState(UssageEstimateChart.seriesUssageEstimateChart(['0','0','0','0','0','0']));
+
+
   var appendRoomNameYear={}
   var ussageYearConst=[]
   var costYearConst=[]
@@ -73,6 +103,33 @@ function Dashboard() {
 		setTotalPowerWeek(response.data.totalPowerWeek)
 		setTotalPowerMonth(response.data.totalPowerMonth)
 		setTotalPower(response.data.totalPowerYear)
+
+		setPowerRoom(response.data.yearRoomPower);
+		setCostRoom(response.data.yearRoomPowerCost);
+
+		setYearRoomPower(response.data.yearRoomPower);
+		setYearRoomPowerCost(response.data.yearRoomPowerCost);
+
+		setMonthRoomPower(response.data.monthRoomPower);
+		setMonthRoomPowerCost(response.data.monthRoomPowerCost);
+
+		setWeekRoomPower(response.data.weekRoomPower);
+		setWeekRoomPowerCost(response.data.weekRoomPowerCost);
+
+
+		// For Mac Power & Cost 
+		setPowerMac(response.data.yearMacPower);
+		setCostMac(response.data.yearMacPowerCost);
+
+		setYearMacPower(response.data.yearMacPower);
+		setYearMacPowerCost(response.data.yearMacPowerCost);
+
+		setMonthMacPower(response.data.monthMacPower);
+		setMonthMacPowerCost(response.data.monthMacPowerCost);
+
+		setWeekMacPower(response.data.weekMacPower);
+		setWeekMacPowerCost(response.data.weekMacPowerCost);
+
 
 		setIncInCost(response.data.incInCostYear)
 		setIncInCostYear(response.data.incInCostYear)
@@ -144,6 +201,12 @@ function Dashboard() {
 	var yearElem = document.getElementById('year');
 	if(e.target.id==='l1'){
 		//Weekly data
+		setPowerMac(weekMacPower);
+		setCostMac(weekMacPowerCost);
+
+		setPowerRoom(weekRoomPower)
+		setCostRoom(weekRoomPowerCost)
+
 		setSeriesLineChart(lineChartDataWeek)
         setIncInCost(incInCostWeek)
         setTotalPower(totalPowerWeek)
@@ -172,6 +235,12 @@ function Dashboard() {
 
 
 		}else if(e.target.id==='l2'){
+			setPowerMac(monthMacPower);
+		setCostMac(monthMacPowerCost);
+
+			setPowerRoom(monthRoomPower)
+			setCostRoom(monthRoomPowerCost)
+
 			setSeriesLineChart(lineChartDataMonth)
 			setIncInCost(incInCostMonth)
 
@@ -199,6 +268,10 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 			weekElem.classList.remove("active");
 
 		}else{
+			setPowerMac(yearMacPower);
+		setCostMac(yearMacPowerCost);
+			setPowerRoom(yearRoomPower)
+			setCostRoom(yearRoomPowerCost)
 			setSeriesLineChart(lineChartDataYear)
 			setTotalPower(totalPowerYear)
 			setTotalPowerCost(totalPowerYearCost)
@@ -236,7 +309,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 			</div>
  <GridContainer>
          <GridItem xs={12} sm={12} md={9}>
-           <div style={{paddingTop:'15px'}}>
+           <div style={{paddingTop:'0px'}}>
            <Row>
              <Col xs={12} sm={12} md={3}>
 			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF3333'}}>
@@ -303,7 +376,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 		</GridItem>
         <GridItem xs={12} sm={12} md={3}>
 		
-          <div style={{marginTop:'20px',backgroundColor:'white' ,width:'100%',height:'92%'}}>
+		<div style={{backgroundColor:'white' ,width:'100%',height:'100%'}}>
 			  <Row  style={{height:'100%',minHeight:'250px'}}>
           <Col xs={6} sm={6} md={6}>
                 <Chart  options={optIncreaseInCostChart} series={seriesIncreaseInCostChart} type='bar' height='100%' /> 
@@ -411,8 +484,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 												</div>
 											</div>
 										</th>
-										<th class="text-center text-muted">1,640</th>
-										<th class="text-center text-muted">₹ 1043</th>
+										<th class="text-center text-muted">{powerRoom[room.roomName]}</th>
+										<th class="text-center text-muted">₹ {costRoom[room.roomName]}</th>
 									</tr>
 									
                           {room.machines !== undefined &&
@@ -436,8 +509,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 												</div>
 											</div>
 										</th>
-										<th class="text-center text-muted">1,640</th>
-										<th class="text-center text-muted">₹ 1043</th>
+										<th class="text-center text-muted">{powerMac[machine.MachineName]}</th>
+										<th class="text-center text-muted">₹ {costMac[machine.MachineName]}</th>
 									</tr>
 									
 							
