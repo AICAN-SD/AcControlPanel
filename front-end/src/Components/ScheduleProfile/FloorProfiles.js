@@ -27,7 +27,7 @@ function FloorProfiles({profiles,floors,onDelete}) {
                 <Button onClick={clickHandler} style={{float:"right"}}> {form?"Back":"+ Create New"}</Button><br/><br/>
             {!form && 
             <>
-            {profiles.map(profile=>{
+            {profiles!==undefined && profiles.map(profile=>{
                 return <div style={{margin:"10px",padding:"20px",borderRadius:"10px",border: '1px solid black'}} key={profile.id}>
                     <h3 style={{display:"inline"}}>{profile.data.profName}{' '}</h3>
                     <Button style={{float:"right"}} variant="clear"  onClick={()=>update(profile.id)}><FontAwesomeIcon icon={faEdit} style={{color:"blue"}} size="lg"/></Button>

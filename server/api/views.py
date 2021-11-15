@@ -2,6 +2,7 @@ import calendar
 from codecs import register
 from os import stat
 from django.db.models import indexes
+from django.db.models.expressions import Exists
 from django.http import response
 from django.views.decorators.csrf import csrf_exempt
 from numpy import floor, power
@@ -427,6 +428,7 @@ def UpdateCost(request):
         return JsonResponse({'message':'Updated'},safe=False)   
 
 def AllData():
+    finalData={}
     floors=Floors.objects.all()
     profiles = Profiles.objects.all()
     floorProfiles=[]
@@ -643,6 +645,10 @@ def dashboard(request):
     maxPowerWeekRoom=[]
     maxPowerMonthRoom=[]
     maxPowerYearRoom=[]
+
+    incInCostWeek=0
+    incInCostMonth=0
+    incInCostYear=0
     
 
     monthDays=monthrange(date.today().year, date.today().month)[1]
@@ -742,7 +748,7 @@ def dashboard(request):
         yearRoomPowerCost=year[0].jsonDataCostPowerRooms
         yearMacPower=year[0].jsonDataPowerMacs
         yearMacPowerCost=year[0].jsonDataCostPowerMacs
-        sortedDic=sorted(month[0].jsonDataPowerRooms, key=year[0].jsonDataPowerRooms.get, reverse=True)
+        sortedDic=sorted(year[0].jsonDataPowerRooms, key=year[0].jsonDataPowerRooms.get, reverse=True)
         for x in range(0,4):
             if x<len(sortedDic):
                 ff={}
@@ -755,10 +761,12 @@ def dashboard(request):
     else:
         yearJson=[]
         totalCostYear.append(0)
-    
-    incInCostWeek=round(float(100*(totalCostWeek[1] - totalCostWeek[0])/totalCostWeek[0]),2)
-    incInCostMonth=round(float(100*(totalCostMonth[1] - totalCostMonth[0])/totalCostMonth[0]),2)
-    incInCostYear=round(float(100*(totalCostYear[1] - totalCostYear[0])/totalCostYear[0]),2)
+
+    if(totalCostWeek[0]!=0 and totalCostMonth[0]!=0 and totalCostYear[0]!=0):
+        
+        incInCostWeek=round(float(100*(totalCostWeek[1] - totalCostWeek[0])/totalCostWeek[0]),2)
+        incInCostMonth=round(float(100*(totalCostMonth[1] - totalCostMonth[0])/totalCostMonth[0]),2)
+        incInCostYear=round(float(100*(totalCostYear[1] - totalCostYear[0])/totalCostYear[0]),2)
 
 
     for length in range(0,monthDays):
@@ -823,7 +831,7 @@ def dashboard(request):
 
     
     return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,
-    'monthDates':days_cur_month(),'yearPowerFloors':year[0].jsonData,'ussageWeek':addedWeek,
+    'monthDates':days_cur_month(),'yearPowerFloors':yearJson,'ussageWeek':addedWeek,
     'ussageMonth':addedMonth,'ussageYear':addedYear,'totalCostYear':totalCostYear,
     'totalCostMonth':totalCostMonth,'totalCostWeek':totalCostWeek,'addedMonthLabel':addedMonthLabel,
     'addedYearLabel':addedYearLabel,'totalPowerYear':totalPowerYear,'totalPowerMonth':totalPowerMonth,
@@ -846,6 +854,8 @@ def working_hours_machine(request):
         w=timedelta(seconds=0,minutes=0,hours=0)
         df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
         a=df.loc[df['ID']==m.MachineName].reset_index(drop=True)
+        maxPowerRating=round(float((device.powerRating*86400)/(1000*3600)),2)
+        print(maxPowerRating)
         if a.shape[0]!=0:
             for i in range(0,a.shape[0]):
                 
@@ -865,7 +875,7 @@ def working_hours_machine(request):
                         whm.update(WH_Machine=w)
                     elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                         whm.update(WH_Machine=w)
-                        y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
+                        y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                         z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         y.save()
                         z.save()
@@ -877,7 +887,7 @@ def working_hours_machine(request):
                         z.save()
                     elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                         x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
-                        y=PowerConsMachines(Machine_Name=m,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
+                        y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         x.save()
                         y.save()     
                         whm.update(WH_Machine=w)  
@@ -894,13 +904,13 @@ def working_hours_machine(request):
                         x.save()
 
                     elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                        y=PowerConsMachines(Machine_Name=m,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
+                        y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         y.save()
                         costpcm.update(CostPC_Machine=str(costPowerRating))
                         whm.update(WH_Machine=w)
                     else:
                         x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
-                        y=PowerConsMachines(Machine_Name=m,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
+                        y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,PC_Machine=str(powerRating),CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                         x.save()
                         y.save()
@@ -943,7 +953,7 @@ def working_hours_machine(request):
                                     whm.update(WH_Machine=todayTime)
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                                     whm.update(WH_Machine=todayTime)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     y.save()
                                     z.save()
@@ -955,7 +965,7 @@ def working_hours_machine(request):
                                     z.save()
                                 elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()     
                                     whm.update(WH_Machine=todayTime)  
@@ -972,13 +982,13 @@ def working_hours_machine(request):
                                     x.save()
 
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     y.save()
                                     costpcm.update(CostPC_Machine=str(costPowerRating))
                                     whm.update(WH_Machine=todayTime)
                                 else:
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()
@@ -1008,7 +1018,7 @@ def working_hours_machine(request):
                                     whm.update(WH_Machine=oneDay)
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                                     whm.update(WH_Machine=oneDay)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     y.save()
                                     z.save()
@@ -1020,7 +1030,7 @@ def working_hours_machine(request):
                                     z.save()
                                 elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()     
                                     whm.update(WH_Machine=oneDay)  
@@ -1037,13 +1047,13 @@ def working_hours_machine(request):
                                     x.save()
 
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     y.save()
                                     costpcm.update(CostPC_Machine=str(costPowerRating))
                                     whm.update(WH_Machine=oneDay)
                                 else:
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()
@@ -1078,7 +1088,7 @@ def working_hours_machine(request):
                                     whm.update(WH_Machine=todayTime)
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                                     whm.update(WH_Machine=todayTime)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     y.save()
                                     z.save()
@@ -1090,7 +1100,7 @@ def working_hours_machine(request):
                                     z.save()
                                 elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()     
                                     whm.update(WH_Machine=todayTime)  
@@ -1107,13 +1117,13 @@ def working_hours_machine(request):
                                     x.save()
 
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     y.save()
                                     costpcm.update(CostPC_Machine=str(costPowerRating))
                                     whm.update(WH_Machine=todayTime)
                                 else:
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(todayTime),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()
@@ -1140,7 +1150,7 @@ def working_hours_machine(request):
                                     whm.update(WH_Machine=oneDay)
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                                     whm.update(WH_Machine=oneDay)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     y.save()
                                     z.save()
@@ -1152,7 +1162,7 @@ def working_hours_machine(request):
                                     z.save()
                                 elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()     
                                     whm.update(WH_Machine=oneDay)  
@@ -1169,13 +1179,13 @@ def working_hours_machine(request):
                                     x.save()
 
                                 elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     y.save()
                                     costpcm.update(CostPC_Machine=str(costPowerRating))
                                     whm.update(WH_Machine=oneDay)
                                 else:
                                     x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(oneDay),Date_Field=DATE)
-                                    y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
+                                    y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE)
                                     z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE)
                                     x.save()
                                     y.save()
@@ -1195,7 +1205,7 @@ def working_hours_machine(request):
                 whm.update(WH_Machine=w)
             elif(whm.exists() and pcm.exists()==False and costpcm.exists()==False):
                 whm.update(WH_Machine=w)
-                y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
+                y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                 z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                 y.save()
                 z.save()
@@ -1207,7 +1217,7 @@ def working_hours_machine(request):
                 z.save()
             elif(whm.exists()==False and pcm.exists()==False and costpcm.exists()):
                 x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
-                y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
+                y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                 x.save()
                 y.save()     
                 whm.update(WH_Machine=w)  
@@ -1224,13 +1234,13 @@ def working_hours_machine(request):
                 x.save()
 
             elif(whm.exists() and pcm.exists()==False and costpcm.exists()):
-                y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
+                y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                 y.save()
                 costpcm.update(CostPC_Machine=str(costPowerRating))
                 whm.update(WH_Machine=w)
             else:
                 x=WorkingHoursMachines(Machine_Name=m,WH_Machine=str(w),Date_Field=DATE_FIELD)
-                y=PowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
+                y=PowerConsMachines(Machine_Name=m,Max_PC_Machine=maxPowerRating,CostPC_Machine=str(costPowerRating),PC_Machine=str(powerRating),Date_Field=DATE_FIELD)
                 z=CostPowerConsMachines(Machine_Name=m,CostPC_Machine=str(costPowerRating),Date_Field=DATE_FIELD)
                 x.save()
                 y.save()
@@ -1278,7 +1288,6 @@ def calculateWeek():
             g[mac.MachineName]=0
             h[mac.MachineName]=0
 
-        print('------------')
         for day in range(0,todayWeekDay+1):
             if(addDay == 0):
                lastDate = today - timedelta(days=todayWeekDay-day)
@@ -1305,16 +1314,7 @@ def calculateWeek():
                 b[floor.FloorName].append(a[floor.FloorName])
                 a[floor.FloorName]=0
             d.append(totalPowerCostWeekFAC)
-        print(e)
-        print(f)
-        print(g)
-        print(h)
-        print(c)
-        print('------------')
 
-        # print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        # print(totalPowerWeekFAC)
-        # print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         s1=json.dumps(b)
         s2=json.dumps(c)
         s3=json.dumps(d)
@@ -1329,7 +1329,6 @@ def calculateWeek():
         else:
             mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
             mo.save()
-    print('OOOOOOOOOOOOOOOOOOOOOOOOO')
 
 
 def calculateMonth():
@@ -1338,8 +1337,6 @@ def calculateMonth():
 
         zz=[]
         for x in range(1,13):
-            # print(calendar.monthrange(date.today().year, x))
-            # print(str(date(date.today().year,x,calendar.monthrange(date.today().year, x)[0])))
             arr=WorkingHoursMachines.objects.filter(Date_Field__range=[str(date(date.today().year-year,x,1)), str(date(date.today().year-year,x,calendar.monthrange(date.today().year-year, x)[1]))])
             if arr.exists():
                 zz.append(date(date.today().year-year,x,1))

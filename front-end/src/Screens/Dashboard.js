@@ -456,7 +456,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 									</tr>
 								</thead>
 								<tbody>
-								{data.map((floor, index) => {
+								{data!==undefined && data.map((floor, index) => {
         return (
           <>
            

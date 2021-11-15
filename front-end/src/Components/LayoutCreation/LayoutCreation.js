@@ -84,6 +84,7 @@ function LayoutCreation() {
         await axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
             setData(response.data.Data);
             
+            if(response.data.Data !==undefined){
                 response.data.Data.forEach(function (floor, i) {
                     setisSaveButVisible(true)
                    
@@ -93,6 +94,7 @@ function LayoutCreation() {
                   return ([...oldArray,<FloorLayout devices={macType} floorData={null} setRoom={setRoom} setRoomArray={setRoomArray} room={room} roomArray={roomArray} floorData={floor} key={i} setMachines={setMachines} names={nms} floorNumber={i+1}></FloorLayout>])
                  });
           });
+        }
         });
              
         }

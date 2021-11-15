@@ -62,7 +62,7 @@ function ControlPanel() {
     <div id='MainDiv' >
       <ControlPanelDropDown floorProfile={floorProfile} roomProfile={roomProfile} machineProfile={machineProfile} submitHandler={submitHandler}></ControlPanelDropDown>
    
-      {data.map((floor, index) => {
+      {data!==undefined && data.map((floor, index) => {
         return (
           <>
             <div className="rectangle" >
