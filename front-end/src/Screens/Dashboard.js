@@ -19,6 +19,8 @@ import Chart from 'react-apexcharts';
 function Dashboard() { 
 
   const [data,setData]=useState([]);
+  const [blockRoom,setBlockRoom]=useState({});
+
 
   const [powerRoom,setPowerRoom]=useState([]);
   const [costRoom,setCostRoom]=useState([]);
@@ -68,6 +70,12 @@ function Dashboard() {
   const [lineChartDataMonth,setLineChartDataMonth]=useState([]);
   const [lineChartDataWeek,setLineChartDataWeek]=useState([]);
 
+  const [maxPowerRoom,setMaxPowerRoom]=useState([]);
+  const [maxPowerYearRoom,setMaxPowerYearRoom]=useState({});
+  const [maxPowerMonthRoom,setMaxPowerMonthRoom]=useState({});
+  const [maxPowerWeekRoom,setMaxPowerWeekRoom]=useState({});
+
+
   const [totalPowerWeekCost,setTotalPowerWeekCost]=useState(0);
   const [totalPowerMonthCost,setTotalPowerMonthCost]=useState(0);
   const [totalPowerYearCost,setTotalPowerYearCost]=useState(0);
@@ -97,15 +105,25 @@ function Dashboard() {
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
-		console.log(response.data.weekPowerFloors)
+		console.log('------------------------------------')
+		console.log(response.data.maxPowerYearRoom)
+
         TotalPowerYear=response.data.totalPowerYear
 		setTotalPowerYear(response.data.totalPowerYear)
 		setTotalPowerWeek(response.data.totalPowerWeek)
 		setTotalPowerMonth(response.data.totalPowerMonth)
 		setTotalPower(response.data.totalPowerYear)
 
+		//
+		setMaxPowerRoom(response.data.maxPowerYearRoom)
+		setMaxPowerYearRoom(response.data.maxPowerYearRoom)
+		setMaxPowerMonthRoom(response.data.maxPowerMonthRoom)
+		setMaxPowerWeekRoom(response.data.maxPowerWeekRoom)
+
 		setPowerRoom(response.data.yearRoomPower);
 		setCostRoom(response.data.yearRoomPowerCost);
+		var x=response.data.yearRoomPower
+		setBlockRoom({'data':x})
 
 		setYearRoomPower(response.data.yearRoomPower);
 		setYearRoomPowerCost(response.data.yearRoomPowerCost);
@@ -152,7 +170,6 @@ function Dashboard() {
 		setMonthPowerFloors(response.data.monthPowerFloors)
 		setYearPowerFloors(response.data.yearPowerFloors)
 		appendRoomNameYear=response.data.yearPowerFloors
-		console.log(appendRoomNameYear)
 		setMonthDates(response.data.monthDates)
 		setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(appendRoomNameYear))
 		setUssageYear(response.data.ussageYear)
@@ -181,7 +198,8 @@ function Dashboard() {
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
       var Data=response.data.Data;
-	  
+	  console.log(response.data.Data)
+
       setData(Data)
       setLoading(false);
 	  
@@ -203,6 +221,7 @@ function Dashboard() {
 		//Weekly data
 		setPowerMac(weekMacPower);
 		setCostMac(weekMacPowerCost);
+		setMaxPowerRoom	(maxPowerWeekRoom)
 
 		setPowerRoom(weekRoomPower)
 		setCostRoom(weekRoomPowerCost)
@@ -235,6 +254,8 @@ function Dashboard() {
 
 
 		}else if(e.target.id==='l2'){
+			setMaxPowerRoom(maxPowerMonthRoom)
+
 			setPowerMac(monthMacPower);
 		setCostMac(monthMacPowerCost);
 
@@ -268,6 +289,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 			weekElem.classList.remove("active");
 
 		}else{
+			setMaxPowerRoom(maxPowerYearRoom)
+
 			setPowerMac(yearMacPower);
 		setCostMac(yearMacPowerCost);
 			setPowerRoom(yearRoomPower)
@@ -311,12 +334,15 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
          <GridItem xs={12} sm={12} md={9}>
            <div style={{paddingTop:'0px'}}>
            <Row>
-             <Col xs={12} sm={12} md={3}>
+			   {maxPowerRoom.map((obj)=>{
+				   return (
+					   <>
+					   <Col xs={12} sm={12} md={maxPowerRoom.length===4?3:(maxPowerRoom.length===3?4:(maxPowerRoom.length===2?6:12))}>
 			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF3333'}}>
 				<div class="widget-content-wrapper">
 					<div class="widget-content-left" style={{color:'white'}}>
-						<div class="widget-heading text-second" >Room II</div>
-						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
+						<div class="widget-heading text-second" >{obj.roomName}</div>
+						<div class="widget-numbers fsize-4 text-second"><span>{obj.value}</span></div>
 						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
 					</div>
 					<div class="widget-content-right">
@@ -324,45 +350,14 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 				</div>
 			</div>
              </Col>
-             <Col xs={12} sm={12} md={3}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF9933',color:'white'}}>
-				<div class="widget-content-wrapper">
-					<div class="widget-content-left">
-						<div class="widget-heading text-second">Room II</div>
-						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
-					</div>
-					<div class="widget-content-right">
-					</div>
-				</div>
-			</div>
-             </Col>
-             <Col xs={12} sm={12} md={3}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062',color:'white'}}>
-				<div class="widget-content-wrapper">
-					<div class="widget-content-left">
-						<div class="widget-heading text-second">Room II</div>
-						<div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
-					</div>
-					<div class="widget-content-right">
-					</div>
-				</div>
-			</div>
-             </Col>
-             <Col xs={12} sm={12} md={3}>
-              <div className={"card mb-2 widget-content"} style={{backgroundColor:'#74D062',color:'white'}}>
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading text-second">Room II</div>
-                    <div class="widget-numbers fsize-4 text-second"><span>79</span></div>
-                    <div class="widget-numbers fsize-1"><span>(kWh)</span></div>
-                  </div>
-                  <div class="widget-content-right">
-                  </div>
-                </div>
-              </div>
-             </Col>
+					   </>
+				   )
+			   })}
+		   
+             
+             
+             
+             
              <Col xs={12} sm={12} md={6} >
              <TotalPowerCard isLoading={isLoading} totalPower={totalPower}/>
 

@@ -640,6 +640,9 @@ def dashboard(request):
     yearMacPower=[]
     yearMacPowerCost=[]
 
+    maxPowerWeekRoom=[]
+    maxPowerMonthRoom=[]
+    maxPowerYearRoom=[]
     
 
     monthDays=monthrange(date.today().year, date.today().month)[1]
@@ -682,6 +685,17 @@ def dashboard(request):
         weekMacPowerCost=week[0].jsonDataCostPowerMacs
 
         totalCostWeek.append(float(week[0].totalPowerCostFacWeek))
+
+        sortedDic=sorted(week[0].jsonDataPowerRooms, key=week[0].jsonDataPowerRooms.get, reverse=True)
+        for x in range(0,4):
+            if x<len(sortedDic):
+                ff={}
+                ff['roomName']=sortedDic[x]
+                ff['value']=weekRoomPower[sortedDic[x]]
+                maxPowerWeekRoom.append(ff)
+            
+
+        
     else:
         totalCostWeek.append(0)
         weekJson=[]
@@ -703,6 +717,13 @@ def dashboard(request):
         monthRoomPowerCost=month[0].jsonDataCostPowerRooms
         monthMacPower=month[0].jsonDataPowerMacs
         monthMacPowerCost=month[0].jsonDataCostPowerMacs
+        sortedDic=sorted(month[0].jsonDataPowerRooms, key=week[0].jsonDataPowerRooms.get, reverse=True)
+        for x in range(0,4):
+            if x<len(sortedDic):
+                ff={}
+                ff['roomName']=sortedDic[x]
+                ff['value']=monthRoomPower[sortedDic[x]]
+                maxPowerMonthRoom.append(ff)
     else:
         monthJson=[]
         totalCostMonth.append(0)
@@ -721,6 +742,13 @@ def dashboard(request):
         yearRoomPowerCost=year[0].jsonDataCostPowerRooms
         yearMacPower=year[0].jsonDataPowerMacs
         yearMacPowerCost=year[0].jsonDataCostPowerMacs
+        sortedDic=sorted(month[0].jsonDataPowerRooms, key=year[0].jsonDataPowerRooms.get, reverse=True)
+        for x in range(0,4):
+            if x<len(sortedDic):
+                ff={}
+                ff['roomName']=sortedDic[x]
+                ff['value']=yearRoomPower[sortedDic[x]]
+                maxPowerYearRoom.append(ff)
 
 
         totalCostYear.append(float(year[0].totalPowerCostFacYear))
@@ -762,10 +790,9 @@ def dashboard(request):
     for x in yearJson:
         for l in range (0,len(yearJson[x])):
                 addedYear[l]=addedYear[l]+float(yearJson[x][l])
+
     print('}}}}}}}}}}')
-    print(addedWeek)
-    print(addedMonth)
-    print(addedYear)
+    print(maxPowerWeekRoom)
     print('}}}}}}}}}}')
 
     addedMonthLabel.append(prevMonthFirstDate.strftime("%b"))
@@ -786,11 +813,6 @@ def dashboard(request):
     
     
     
-
-
-    print(lineChartDataYear)
-    print(lineChartDataMonth)
-    print(lineChartDataWeek)
 
     
 
@@ -813,7 +835,8 @@ def dashboard(request):
     'weekMacPower':weekMacPower,'weekMacPowerCost':weekMacPowerCost,
     'yearRoomPower':yearRoomPower,'yearRoomPowerCost':yearRoomPowerCost,
     'monthRoomPower':monthRoomPower,'monthRoomPowerCost':monthRoomPowerCost,
-    'weekRoomPower':weekRoomPower,'weekRoomPowerCost':weekRoomPowerCost},safe=False) 
+    'weekRoomPower':weekRoomPower,'weekRoomPowerCost':weekRoomPowerCost,'maxPowerWeekRoom':maxPowerWeekRoom,
+    'maxPowerMonthRoom':maxPowerMonthRoom,'maxPowerYearRoom':maxPowerYearRoom},safe=False) 
 
 def working_hours_machine(request):
     

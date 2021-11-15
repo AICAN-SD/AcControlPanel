@@ -76,7 +76,7 @@ const IncreaseInCostChart = {
   seriesIncInCost: function(data){
   return  [
       {
-          name: 'Investment',
+          name: 'Cost (₹) ',
           data: data
       },
   ]
