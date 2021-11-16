@@ -70,6 +70,9 @@ function Dashboard() {
   const [lineChartDataMonth,setLineChartDataMonth]=useState([]);
   const [lineChartDataWeek,setLineChartDataWeek]=useState([]);
 
+  const [maxPowerCons,setMaxPowerCons]=useState([]);
+
+
   const [maxPowerRoom,setMaxPowerRoom]=useState([]);
   const [maxPowerYearRoom,setMaxPowerYearRoom]=useState({});
   const [maxPowerMonthRoom,setMaxPowerMonthRoom]=useState({});
@@ -113,6 +116,8 @@ function Dashboard() {
 		setTotalPowerWeek(response.data.totalPowerWeek)
 		setTotalPowerMonth(response.data.totalPowerMonth)
 		setTotalPower(response.data.totalPowerYear)
+
+		setMaxPowerCons(response.data.maxPowerCons)
 
 		//
 		setMaxPowerRoom(response.data.maxPowerYearRoom)
@@ -338,12 +343,12 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 				   return (
 					   <>
 					   <Col xs={12} sm={12} md={maxPowerRoom.length===4?3:(maxPowerRoom.length===3?4:(maxPowerRoom.length===2?6:12))}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:'#FF3333'}}>
+			<div className={"card mb-2 widget-content"} style={{backgroundColor:(obj.value<maxPowerCons[obj.roomName])?'green':'#FF0000'}}>
 				<div class="widget-content-wrapper">
 					<div class="widget-content-left" style={{color:'white'}}>
 						<div class="widget-heading text-second" >{obj.roomName}</div>
 						<div class="widget-numbers fsize-4 text-second"><span>{obj.value}</span></div>
-						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
+						<div class="widget-numbers fsize-1"><span>(kWhh){maxPowerCons[obj.roomName]} {obj.value<maxPowerCons[obj.roomName]?'green':maxPowerCons[obj.roomName]}</span></div>
 					</div>
 					<div class="widget-content-right">
 					</div>

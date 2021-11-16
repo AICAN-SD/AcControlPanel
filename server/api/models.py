@@ -144,6 +144,8 @@ class PowerUsedArrayWeekFloors(models.Model):
     jsonDataPowerMacs = models.JSONField(null=True, blank=True)
     jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
 
+    maxPowerCons=models.JSONField(null=True, blank=True)
+
     def __unicode__(self):
         return "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}".format(
             self, self.id,self.startWeekDate, self.jsonData,self.totalPowerCostFacWeek,self.jsonDataPowerRooms,self.jsonDataCostPowerRooms,self.jsonDataPowerMacs,self.jsonDataCostPowerMacs,self.jsonDataCost,self.totalPowerUsedFacWeek,self.totalPowerWeek)
@@ -163,6 +165,7 @@ class PowerUsedArrayMonthFloors(models.Model):
 
     jsonDataPowerMacs = models.JSONField(null=True, blank=True)
     jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
+    maxPowerCons=models.JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
@@ -183,6 +186,7 @@ class PowerUsedArrayYearFloors(models.Model):
 
     jsonDataPowerMacs = models.JSONField(null=True, blank=True)
     jsonDataCostPowerMacs = models.JSONField(null=True, blank=True)
+    maxPowerCons=models.JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return "{0} {1} {2} {3} {4} {5} {6} {7}".format(
