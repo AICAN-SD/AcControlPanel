@@ -68,7 +68,6 @@ def data(request):
     if request.method=='POST':
         data=JSONParser().parse(request)['data']
         machineids = []
-        print(data)
         for x in data:
             if 'RoomName' in x:
                 
@@ -78,28 +77,19 @@ def data(request):
                 modelRoom=Rooms(RoomId=x,floor=Floors.objects.get(FloorId=floorId),RoomName=data[x])
                 modelRoom.save()
             elif 'MachineAssignDevice' in x:
-                print(x)
                 MachineAssignDeviceArray=x.split('MachineAssignDevice')
                 machineId=MachineAssignDeviceArray[1]
                 roomArray=MachineAssignDeviceArray[0].split('Room')
                 floorId=roomArray[0].split('Floor')[1]
                 roomId=roomArray[1]
-                print('FloorId  '+floorId)
-                print('roomId  '+roomId)
-                print('machineId  '+machineId)
                 machineType=data['Floor'+floorId+'Room'+roomId+'MachineType'+machineId]
-                print(machineType)
                 machineids.append(data[x])
                 modelMachine=Machines(room=Rooms.objects.get(RoomId='Floor'+floorId+'RoomName'+roomId),floor=Floors.objects.get(FloorId=floorId),MachineId=MachineAssignDeviceArray[0]+'Machine'+machineId,MachineName=data[x],MachineType=machineType)
                 modelMachine.save()
             elif 'FloorName' in x:
-                print(x)
                 floorId=x.split('FloorName')[1]
                 model=Floors(FloorName=data[x],FloorId=floorId)
                 model.save()
-            else:
-                print("In else "+x)
-        print(machineids)  
         data = pd.read_csv(BASE_DIR/'machines.csv')
         count_row = data.shape[0]
         for x in range(count_row):
@@ -775,6 +765,7 @@ def dashboard(request):
         addedMonth.append(0)
 
     for x in weekJson:
+        print(weekJson)
         print(len(weekJson[x]))
         if len(weekJson[x]) < 7:
             for l in range (0,7-len(weekJson[x])):
@@ -1254,101 +1245,125 @@ def working_hours_machine(request):
     return HttpResponse('printed and saved')
 
 def calculateWeek():
-    # today-timedelta(days=today.weekday(), weeks=1)
-    for addDay in range(0,3):
-        if(addDay == 0):  # this week
-            today = date.today()
-            todayWeekDay=today.weekday()
-            dateField = today - timedelta(days=todayWeekDay)
-        else:    # last week
-            today = date.today()-timedelta(days=date.today().weekday(), weeks=addDay)
-            
-            todayWeekDay=6
-            dateField = today
+    today = date.today()
+    todayWeekDay=today.weekday()
+    dateField = today - timedelta(days=todayWeekDay)
+    
+
+    a={}
+    b={}
+    c={}
+    d=[]
+
+    # for roomCalculations
+    e={}
+    f={}
+    # for macCalculations
+    g={}
+    h={}
+    #for maxPowerCalculation(red orange green boxes)
+    i={}
+    totalPowerWeekFAC=0
+    totalPowerCostWeekFAC=0
+
+    for mac in Machines.objects.all():
+        a[mac.floor.FloorName]=0
+        c[mac.floor.FloorName]=0
+        b[mac.floor.FloorName]=[]
+        e[mac.room.RoomName]=0
+        f[mac.room.RoomName]=0
+        g[mac.MachineName]=0
+        h[mac.MachineName]=0
+        i[mac.room.RoomName]=0
+    for mac in Machines.objects.all():
+        macObj=PowerConsMachines.objects.filter(Machine_Name=mac,Date_Field=date.today())
+        if macObj.exists():
+            i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+7*float(macObj[0].Max_PC_Machine)),2)
+    powerWeek=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
+
+
+    for x in PowerConsMachines.objects.filter(Date_Field=today):
+        name=str(x.Machine_Name.floor.FloorName)
+        nameRoom=str(x.Machine_Name.room.RoomName)
+        nameMac=str(x.Machine_Name)
+
         
 
-        a={}
-        b={}
-        c={}
-        d=[]
-
-        # for roomCalculations
-        e={}
-        f={}
-        # for macCalculations
-        g={}
-        h={}
-        #for maxPowerCalculation(red orange green boxes)
-        i={}
-        totalPowerWeekFAC=0
-        totalPowerCostWeekFAC=0
-
-        for mac in Machines.objects.all():
-            a[mac.floor.FloorName]=0
-            c[mac.floor.FloorName]=0
-            b[mac.floor.FloorName]=[]
-            e[mac.room.RoomName]=0
-            f[mac.room.RoomName]=0
-            
-
-            
-            
-            g[mac.MachineName]=0
-            h[mac.MachineName]=0
-            i[mac.room.RoomName]=0
-        for mac in Machines.objects.all():
-            macObj=PowerConsMachines.objects.filter(Machine_Name=mac,Date_Field=date.today())
-            if macObj.exists():
-                i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+7*float(macObj[0].Max_PC_Machine)),2)
-
-        for day in range(0,todayWeekDay+1):
-            if(addDay == 0):
-               lastDate = today - timedelta(days=todayWeekDay-day)
-            else:
-                lastDate = today + timedelta(days=todayWeekDay-day)
-
-            for x in PowerConsMachines.objects.filter(Date_Field=lastDate):
-                name=str(x.Machine_Name.floor.FloorName)
-                nameRoom=str(x.Machine_Name.room.RoomName)
-                nameMac=str(x.Machine_Name)
-
-                
+        if powerWeek.exists():
+            print('in if')
+            zf=powerWeek[0].jsonData[name]
+            if(len(zf)>todayWeekDay):
+                print('----------')
+                print(zf[todayWeekDay])
+                print(x)
+                print(x.PC_Machine)
+                print(float(zf[todayWeekDay])+float(x.PC_Machine))
 
 
-                a[name]=a[name]+float(x.PC_Machine)
-                c[name]=c[name]+round(float(x.PC_Machine),2)
-
-                e[nameRoom]=round(float(e[nameRoom]+round(float(x.PC_Machine),2)),2)
-            
-                f[nameRoom]=round(float(f[nameRoom]+round(float(x.CostPC_Machine),2)),2)
-                g[nameMac]=round(float(g[nameMac]+round(float(x.PC_Machine),2)),2)
-                h[nameMac]=round(float(h[nameMac]+round(float(x.CostPC_Machine),2)),2)
-
-                totalPowerWeekFAC=totalPowerWeekFAC+round(float(x.PC_Machine),2)
-                totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x.CostPC_Machine),2)
-            for floor in Floors.objects.all():
-                b[floor.FloorName].append(a[floor.FloorName])
-                a[floor.FloorName]=0
-            d.append(totalPowerCostWeekFAC)
-
-        s1=json.dumps(b)
-        s2=json.dumps(c)
-        s3=json.dumps(d)
-
-        s4=json.dumps(e)
-        s5=json.dumps(f)
-        s6=json.dumps(g)
-        s7=json.dumps(h)
-        print(lastDate)
-        print(i)
-
-        s8=json.dumps(i)
-        f=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
-        if f.exists():
-            f.update(jsonData=json.loads(s1),maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
+                zf[todayWeekDay]=float(zf[todayWeekDay])+float(x.PC_Machine)
+                print(zf)
+                print('----------')
+            elif(len(zf)<todayWeekDay):
+                if(len(zf)!=todayWeekDay):
+                    for leng in range(len(zf),todayWeekDay):
+                        zf.append(0)
+                if(len(zf)==todayWeekDay):
+                    zf.append(float(x.PC_Machine))
+            a[name]=zf
+            c[name]=powerWeek[0].totalPowerWeek[name]+round(float(x.PC_Machine),2)
+            e[nameRoom]=round(float(float(powerWeek[0].jsonDataPowerRooms[nameRoom])+round(float(x.PC_Machine),2)),2)
+            f[nameRoom]=round(float(float(powerWeek[0].jsonDataCostPowerRooms[nameRoom])+round(float(x.CostPC_Machine),2)),2)
+            g[nameMac]=round(float(float(powerWeek[0].jsonDataPowerMacs[nameMac])+round(float(x.PC_Machine),2)),2)
+            h[nameMac]=round(float(float(powerWeek[0].jsonDataCostPowerMacs[nameMac])+round(float(x.CostPC_Machine),2)),2)
+            totalPowerWeekFAC=float(powerWeek[0].totalPowerUsedFacWeek)+round(float(x.PC_Machine),2)
+            totalPowerCostWeekFAC=float(powerWeek[0].totalPowerCostFacWeek)+round(float(x.CostPC_Machine),2)
         else:
-            mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
-            mo.save()
+            a[name]=a[name]+float(x.PC_Machine)
+            c[name]=c[name]+round(float(x.PC_Machine),2)
+
+            e[nameRoom]=round(float(e[nameRoom]+round(float(x.PC_Machine),2)),2)
+        
+            f[nameRoom]=round(float(f[nameRoom]+round(float(x.CostPC_Machine),2)),2)
+            g[nameMac]=round(float(g[nameMac]+round(float(x.PC_Machine),2)),2)
+            h[nameMac]=round(float(h[nameMac]+round(float(x.CostPC_Machine),2)),2)
+
+            totalPowerWeekFAC=totalPowerWeekFAC+round(float(x.PC_Machine),2)
+            totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x.CostPC_Machine),2)
+
+    for floor in Floors.objects.all():
+        if not powerWeek.exists():
+            b[floor.FloorName].append(a[floor.FloorName])
+            a[floor.FloorName]=0
+        else:
+            if(a[floor.FloorName]!=0):
+                b[floor.FloorName]= a[floor.FloorName]
+            else:
+                b[floor.FloorName]=[]
+
+    if powerWeek.exists():
+            if(len(powerWeek[0].jsonDataCost)>=todayWeekDay+1):
+                powerWeek[0].jsonDataCost[todayWeekDay]=powerWeek[0].jsonDataCost[todayWeekDay]+float(totalPowerCostWeekFAC)
+            else:
+                powerWeek[0].jsonDataCost.append(float(totalPowerCostWeekFAC))
+    d=powerWeek[0].jsonDataCost
+
+    s1=json.dumps(b)
+    s2=json.dumps(c)
+    s3=json.dumps(d)
+
+    s4=json.dumps(e)
+    s5=json.dumps(f)
+    s6=json.dumps(g)
+    s7=json.dumps(h)
+    print(i)
+
+    s8=json.dumps(i)
+    f=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
+    if f.exists():
+        f.update(jsonData=json.loads(s1),maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC)
+    else:
+        mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
+        mo.save()
 
 
 def calculateMonth():
