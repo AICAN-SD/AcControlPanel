@@ -635,7 +635,9 @@ def dashboard(request):
     maxPowerWeekRoom=[]
     maxPowerMonthRoom=[]
     maxPowerYearRoom=[]
-    maxPowerCons=[]
+    maxPowerConsYear=[]
+    maxPowerConsMonth=[]
+    maxPowerConsWeek=[]
 
     incInCostWeek=0
     incInCostMonth=0
@@ -677,7 +679,7 @@ def dashboard(request):
 
         weekRoomPower=week[0].jsonDataPowerRooms
         weekRoomPowerCost=week[0].jsonDataCostPowerRooms
-        
+        maxPowerConsWeek=week[0].maxPowerCons
         weekMacPower=week[0].jsonDataPowerMacs
         weekMacPowerCost=week[0].jsonDataCostPowerMacs
 
@@ -714,6 +716,7 @@ def dashboard(request):
         monthRoomPowerCost=month[0].jsonDataCostPowerRooms
         monthMacPower=month[0].jsonDataPowerMacs
         monthMacPowerCost=month[0].jsonDataCostPowerMacs
+        maxPowerConsMonth=month[0].maxPowerCons
         sortedDic=sorted(month[0].jsonDataPowerRooms, key=week[0].jsonDataPowerRooms.get, reverse=True)
         for x in range(0,4):
             if x<len(sortedDic):
@@ -739,7 +742,7 @@ def dashboard(request):
         yearRoomPowerCost=year[0].jsonDataCostPowerRooms
         yearMacPower=year[0].jsonDataPowerMacs
         yearMacPowerCost=year[0].jsonDataCostPowerMacs
-        maxPowerCons=year[0].maxPowerCons
+        maxPowerConsYear=year[0].maxPowerCons
         sortedDic=sorted(year[0].jsonDataPowerRooms, key=year[0].jsonDataPowerRooms.get, reverse=True)
         for x in range(0,4):
             if x<len(sortedDic):
@@ -794,6 +797,7 @@ def dashboard(request):
 
     print('}}}}}}}}}}')
     print(maxPowerWeekRoom)
+    print(maxPowerConsYear)
     print('}}}}}}}}}}')
 
     addedMonthLabel.append(prevMonthFirstDate.strftime("%b"))
@@ -837,7 +841,8 @@ def dashboard(request):
     'yearRoomPower':yearRoomPower,'yearRoomPowerCost':yearRoomPowerCost,
     'monthRoomPower':monthRoomPower,'monthRoomPowerCost':monthRoomPowerCost,
     'weekRoomPower':weekRoomPower,'weekRoomPowerCost':weekRoomPowerCost,'maxPowerWeekRoom':maxPowerWeekRoom,
-    'maxPowerMonthRoom':maxPowerMonthRoom,'maxPowerYearRoom':maxPowerYearRoom,'maxPowerCons':maxPowerCons},safe=False) 
+    'maxPowerMonthRoom':maxPowerMonthRoom,'maxPowerYearRoom':maxPowerYearRoom,'maxPowerConsWeek':maxPowerConsWeek,
+    'maxPowerConsMonth':maxPowerConsMonth,'maxPowerConsYear':maxPowerConsYear},safe=False) 
 
 def working_hours_machine(request):
     
@@ -1291,17 +1296,20 @@ def calculateWeek():
         
 
         if powerWeek.exists():
+            print('in exists')
             zf=powerWeek[0].jsonData[name]
+            print(zf)
             if(len(zf)>todayWeekDay):
 
 
                 zf[todayWeekDay]=float(zf[todayWeekDay])+float(x.PC_Machine)
-            elif(len(zf)<todayWeekDay):
+            elif(len(zf)<=todayWeekDay):
                 if(len(zf)!=todayWeekDay):
                     for leng in range(len(zf),todayWeekDay):
                         zf.append(0)
                 if(len(zf)==todayWeekDay):
                     zf.append(float(x.PC_Machine))
+            print(zf)
             a[name]=zf
             c[name]=powerWeek[0].totalPowerWeek[name]+round(float(x.PC_Machine),2)
             e[nameRoom]=round(float(float(powerWeek[0].jsonDataPowerRooms[nameRoom])+round(float(x.PC_Machine),2)),2)
@@ -1401,25 +1409,29 @@ def calculateMonth():
         nameRoom=str(x.Machine_Name.room.RoomName)
         nameMac=str(x.Machine_Name)
         if powerMonth.exists():
-            print('in if')
+            # print('in if')
             zf=powerMonth[0].jsonData[name]
+            print('----------')
+            print(zf)
             if(len(zf)>today.day-1):
-                print('----------')
-                print(zf[today.day-1])
-                print(x)
-                print(x.PC_Machine)
-                print(float(zf[today.day-1])+float(x.PC_Machine))
+                # 
+                # print(zf[today.day-1])
+                # print(x)
+                # print(x.PC_Machine)
+                # print(float(zf[today.day-1])+float(x.PC_Machine))
 
 
                 zf[today.day-1]=float(zf[today.day-1])+float(x.PC_Machine)
-                print(zf)
-                print('----------')
-            elif(len(zf)<today.day-1):
+                # print(zf)
+                # print('----------')
+            elif(len(zf)<=today.day-1):
                 if(len(zf)!=today.day-1):
                     for leng in range(len(zf),today.day-1):
                         zf.append(0)
                 if(len(zf)==today.day-1):
                     zf.append(float(x.PC_Machine))
+            print(zf)
+            print('----------')
             a[name]=zf
             c[name]=powerMonth[0].totalPowerMonth[name]+round(float(x.PC_Machine),2)
             e[nameRoom]=round(float(float(powerMonth[0].jsonDataPowerRooms[nameRoom])+round(float(x.PC_Machine),2)),2)
@@ -1517,7 +1529,7 @@ def calculateYear():
     for mac in Machines.objects.all():
         macObj=PowerConsMachines.objects.filter(Machine_Name=mac,Date_Field=date.today())
         if macObj.exists():
-            i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+7*float(macObj[0].Max_PC_Machine)),2)
+            i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+float((date(date.today().year, 12, 31)-date(date.today().year,1, 1)).days)*float(macObj[0].Max_PC_Machine)),2)
             
     if powerYear.exists():
         for x in PowerConsMachines.objects.filter(Date_Field=today):
@@ -1525,7 +1537,7 @@ def calculateYear():
             nameRoom=str(x.Machine_Name.room.RoomName)
             nameMac=str(x.Machine_Name)
         
-            print('in if')
+            # print('in if')
             zf=powerYear[0].jsonData[name]
             zf[today.month-1]=float(zf[today.month-1])+float(x.PC_Machine)
                 
@@ -1563,7 +1575,7 @@ def calculateYear():
     
     for floor in Floors.objects.all():
         if powerYear.exists():
-            print(a[floor.FloorName])
+            # print(a[floor.FloorName])
             if(a[floor.FloorName]!=0):
                 b[floor.FloorName]= a[floor.FloorName]
             else:

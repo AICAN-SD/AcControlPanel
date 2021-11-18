@@ -71,6 +71,9 @@ function Dashboard() {
   const [lineChartDataWeek,setLineChartDataWeek]=useState([]);
 
   const [maxPowerCons,setMaxPowerCons]=useState([]);
+  const [maxPowerConsYear,setMaxPowerConsYear]=useState([]);
+  const [maxPowerConsMonth,setMaxPowerConsMonth]=useState([]);
+  const [maxPowerConsWeek,setMaxPowerConsWeek]=useState([]);
 
 
   const [maxPowerRoom,setMaxPowerRoom]=useState([]);
@@ -117,7 +120,10 @@ function Dashboard() {
 		setTotalPowerMonth(response.data.totalPowerMonth)
 		setTotalPower(response.data.totalPowerYear)
 
-		setMaxPowerCons(response.data.maxPowerCons)
+		setMaxPowerCons(response.data.maxPowerConsYear)
+		setMaxPowerConsYear(response.data.maxPowerConsYear)
+		setMaxPowerConsMonth(response.data.maxPowerConsMonth)
+		setMaxPowerConsWeek(response.data.maxPowerConsWeek)
 
 		//
 		setMaxPowerRoom(response.data.maxPowerYearRoom)
@@ -224,6 +230,8 @@ function Dashboard() {
 	var yearElem = document.getElementById('year');
 	if(e.target.id==='l1'){
 		//Weekly data
+		setMaxPowerCons(maxPowerConsWeek)
+
 		setPowerMac(weekMacPower);
 		setCostMac(weekMacPowerCost);
 		setMaxPowerRoom	(maxPowerWeekRoom)
@@ -260,6 +268,7 @@ function Dashboard() {
 
 		}else if(e.target.id==='l2'){
 			setMaxPowerRoom(maxPowerMonthRoom)
+			setMaxPowerCons(maxPowerConsMonth)
 
 			setPowerMac(monthMacPower);
 		setCostMac(monthMacPowerCost);
@@ -294,6 +303,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 			weekElem.classList.remove("active");
 
 		}else{
+			setMaxPowerCons(maxPowerConsYear)
+
 			setMaxPowerRoom(maxPowerYearRoom)
 
 			setPowerMac(yearMacPower);
@@ -343,7 +354,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 				   return (
 					   <>
 					   <Col xs={12} sm={12} md={maxPowerRoom.length===4?3:(maxPowerRoom.length===3?4:(maxPowerRoom.length===2?6:12))}>
-			<div className={"card mb-2 widget-content"} style={{backgroundColor:(obj.value<maxPowerCons[obj.roomName])?'green':'#FF0000'}}>
+			<div className={"card mb-2 widget-content"} style={{backgroundColor:(obj.value<0.8*maxPowerCons[obj.roomName])?((obj.value<0.6*maxPowerCons[obj.roomName])?'green':'orange'):(maxPowerCons[obj.roomName]!==0?'red':'green')}}>
 				<div class="widget-content-wrapper">
 					<div class="widget-content-left" style={{color:'white'}}>
 						<div class="widget-heading text-second" >{obj.roomName}</div>
