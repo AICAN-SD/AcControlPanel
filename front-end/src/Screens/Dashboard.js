@@ -350,7 +350,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
          <GridItem xs={12} sm={12} md={9}>
            <div style={{paddingTop:'0px'}}>
            <Row>
-			   {maxPowerRoom.map((obj)=>{
+			   {maxPowerRoom !==undefined && maxPowerRoom.map((obj)=>{
 				   return (
 					   <>
 					   <Col xs={12} sm={12} md={maxPowerRoom.length===4?3:(maxPowerRoom.length===3?4:(maxPowerRoom.length===2?6:12))}>
@@ -359,7 +359,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 					<div class="widget-content-left" style={{color:'white'}}>
 						<div class="widget-heading text-second" >{obj.roomName}</div>
 						<div class="widget-numbers fsize-4 text-second"><span>{obj.value}</span></div>
-						<div class="widget-numbers fsize-1"><span>(kWhh){maxPowerCons[obj.roomName]} {obj.value<maxPowerCons[obj.roomName]?'green':maxPowerCons[obj.roomName]}</span></div>
+						<div class="widget-numbers fsize-1"><span>(kWh)</span></div>
 					</div>
 					<div class="widget-content-right">
 					</div>
