@@ -12,7 +12,7 @@
   height: 100%;
   width: 78px;
   background: #3326ae;
-  z-index: 99;
+  z-index: 1;
   transition: all 0.5s ease;
 }
 ul {
@@ -136,7 +136,20 @@ ul {
   font-size: 18px;
   border-radius: 12px;
 }
-@media (max-width: 420px) {
+#header{
+  display:none !important
+}
+@media (max-width: 991px) {
+  .sidebar{
+    display: none;
+  }
+  #header{
+    display: inline-block !important;
+  }
+  #header a{
+    color: black;
+  }
+  
   .sidebar li .tooltip {
     display: none;
   }
