@@ -19,7 +19,7 @@ function MachineCard(props) {
     return (
         <>
       
-            <Col xs={3}>
+            <Col xs={12} md={6} lg={3}>
             <div className="machineCard">
         <Row>
           <Col xs={4}>
