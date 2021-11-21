@@ -717,7 +717,7 @@ def dashboard(request):
         monthMacPower=month[0].jsonDataPowerMacs
         monthMacPowerCost=month[0].jsonDataCostPowerMacs
         maxPowerConsMonth=month[0].maxPowerCons
-        sortedDic=sorted(month[0].jsonDataPowerRooms, key=week[0].jsonDataPowerRooms.get, reverse=True)
+        sortedDic=sorted(month[0].jsonDataPowerRooms, key=month[0].jsonDataPowerRooms.get, reverse=True)
         for x in range(0,4):
             if x<len(sortedDic):
                 ff={}

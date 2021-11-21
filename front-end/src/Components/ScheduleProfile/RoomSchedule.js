@@ -80,7 +80,7 @@ function RoomSchedule({rooms}) {
             <h5 className='mainColTitle'>{room.floor}</h5>
             <Row>
             {room.rooms.map((x)=>{
-              return<Col key={x.RoomId} sm="6"> <Form.Check type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} /></Col>
+              return<Col key={x.RoomId} lg="6" xs='12'> <Form.Check type="checkbox" onChange={onCheckChange} id={x.RoomId} value={x.RoomName} label={x.RoomName} /></Col>
             })}
             </Row>
             </Col>

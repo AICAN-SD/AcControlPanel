@@ -97,7 +97,7 @@ window.location.reload(false);
             <><h5 className='mainColTitle'>{machine.floor}:</h5>
             <Row >
             {machine.rooms.map((room,index)=>{
-              return<Col key={index} sm="6" >
+              return<Col key={index} sm="12">
               <div><b>{room.roomName}:</b>
               {room.machines.map(machine=>{
                  return <Form.Check key={machine.MachineId} type="checkbox" onChange={(e) => onCheckChange(e)} id={machine.MachineId} value={machine.MachineName} label={machine.MachineName} checked={items.includes(`${machine.MachineId}`)?true:false} />
