@@ -8,8 +8,8 @@ function AddRoomButton(props) {
     function onClick(){
        var setRoom= props.onClick
        var setRoomc= props.onC
-       setRoom(prevRoom=>prevRoom+1);
-       setRoomc((oldArray) => [...oldArray,<RoomLayout devices={props.devices}  roomData={props.roomData} key={props.counter} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber} roomNumber={props.roomNumber}></RoomLayout>]);
+       setRoom(props.counter+1);
+       setRoomc((oldArray) => [...oldArray,<RoomLayout devices={props.devices} del={props.del} roomData={props.roomData} key={props.counter+1} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber} counter={props.counter+1} roomNumber={props.roomNumber+1}></RoomLayout>]);
     }
     return (
 

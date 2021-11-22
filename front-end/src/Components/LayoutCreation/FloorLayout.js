@@ -1,25 +1,45 @@
 import React from 'react'
 
 import { useEffect, useState } from 'react';
-import { Row ,Col} from 'react-bootstrap';
+import { CloseButton,Row ,Col} from 'react-bootstrap';
 import AddRoomButton from './AddRoomButton';
 import '../../css/MachineCard.css'
 import RoomLayout from './RoomLayout'
 
 
 function FloorLayout(props) {
-    const [room, setRoom] = useState(1);
+    const [room, setRoom] = useState(0);
     const [isFloorData, setIsFloorData] = useState(false);
     
     const [roomArray, setRoomArray] = useState([]);
+    
+    function Del(e){
+        e.preventDefault()
+        console.log(e.target.id)
+        var roomNumber=e.target.id.split('Room')[1]
+        var floorRoom=e.target.id.split('Room')[0]
+        console.log(e.target.id)
+      
+        setRoomArray(prev=>{return prev.filter(function(item,index){
+            console.log(item);
+            console.log(roomNumber);
+            return item.key!=roomNumber
+        }
+        )
+       
+    })
+  
+
+      }
     useEffect(()=>{
 
         if(props.floorData!==null && props.floorData!==undefined){
             setIsFloorData(true)
             props.floorData.rooms.forEach(function (room, i) {
+                console.log(room.roomId.split('RoomName')[1])
 
-            setRoom(prevRoom=>prevRoom+1);
-            setRoomArray((oldArray) => [...oldArray,<RoomLayout devices={props.devices} roomData={room} key={i} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber} roomNumber={i+1}></RoomLayout>]);
+            setRoom(parseInt(room.roomId.split('RoomName')[1]));
+            setRoomArray((oldArray) => [...oldArray,<RoomLayout del={Del} devices={props.devices} roomData={room} key={parseInt(room.roomId.split('RoomName')[1])} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber} roomNumber={parseInt(room.roomId.split('RoomName')[1])}></RoomLayout>]);
            
         });
         }
@@ -29,9 +49,11 @@ function FloorLayout(props) {
     return (
         <div>
             <div className="rectangle">
+            {roomArray.length===0?<CloseButton className='closeBut' id={'Floor'+props.floorNumber} onClick={(e)=>props.del(e)}/>:null}
+
             <Row>
                 <Col xs={2}>
-                <AddRoomButton devices={props.devices} roomData={null} name='Add Room' setMachines={props.setMachines} names={props.names} key={roomArray.length} counter={roomArray.length} onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
+                <AddRoomButton devices={props.devices} del={Del} roomData={null} name='Add Room' setMachines={props.setMachines} names={props.names} key={room} counter={room} onClick={setRoom} onC={setRoomArray} floorNumber={props.floorNumber} roomNumber={room}></AddRoomButton>
 
                 </Col>
                 <Col xs={10}>

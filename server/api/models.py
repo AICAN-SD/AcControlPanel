@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Floors(models.Model):
     FloorId = models.AutoField(primary_key=True,unique=True)
     FloorName = models.CharField(max_length=200)
@@ -54,7 +53,7 @@ class Devices(models.Model):
 
 class WorkingHoursMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
+    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
     WH_Machine =models.CharField(max_length=200) 
     Date_Field=models.DateField()
 
@@ -63,70 +62,23 @@ class WorkingHoursMachines(models.Model):
         
 class PowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
+    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
     PC_Machine =models.CharField(max_length=200)
     Max_PC_Machine =models.CharField(max_length=200)
     CostPC_Machine =models.CharField(max_length=200)  
     Date_Field=models.DateField()
     def __str__(self):
         return str(str(self.Date_Field)+' '+str(self.Machine_Name))
-class PowerConsRooms(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Room_Name = models.ForeignKey(Rooms,on_delete=models.CASCADE) 
-    PC_Room =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Room_Name))
-class PowerConsFloors(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Floor_Name = models.ForeignKey(Floors,on_delete=models.CASCADE) 
-    PC_Floor =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Floor_Name))
-
+        
 class CostPowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.CASCADE) 
+    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
     CostPC_Machine =models.CharField(max_length=200) 
     Date_Field=models.DateField()
 
     def __str__(self):
         return str(str(self.Date_Field)+' '+str(self.Machine_Name))
-class CostPowerConsRooms(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Room_Name = models.ForeignKey(Rooms,on_delete=models.CASCADE) 
-    CostPC_Room =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
 
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Room_Name))
-class CostPowerConsFloors(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Floor_Name = models.ForeignKey(Floors,on_delete=models.CASCADE) 
-    CostPC_Floor =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Floor_Name))
-
-class WorkingHoursRooms(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Room_Name = models.ForeignKey(Rooms,on_delete=models.CASCADE)
-    WH_Room =models.CharField(max_length=200)  
-    Date_Field=models.DateField()
-
-    def __str__(self):
-        return str(self.Room_Name)
-
-class WorkingHoursFloors(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Floor_Name = models.ForeignKey(Floors,on_delete=models.CASCADE)
-    WH_Floor =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-
-    def __str__(self):
-        return str(self.Floor_Name)
 class PowerUsedArrayWeekFloors(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
     startWeekDate=models.DateField()

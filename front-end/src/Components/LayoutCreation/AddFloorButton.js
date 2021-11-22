@@ -9,9 +9,9 @@ function Button(props) {
        var setFloor= props.onClick
        var setFloorc= props.onC
        var setisSaveButVisible= props.setisSaveButVisible
-      setFloor(prevFloor=>prevFloor+1)
+      setFloor(props.counter+1)
      setFloorc(function (oldArray) { 
-       return [...oldArray,<FloorLayout devices={props.devices} floorData={props.floorData} key={props.counter} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber}></FloorLayout>];
+       return [...oldArray,<FloorLayout del={props.del} devices={props.devices} floorData={props.floorData} key={props.counter+1} setMachines={props.setMachines} names={props.names} floorNumber={props.counter+1}></FloorLayout>];
       });
 
       //to show save button

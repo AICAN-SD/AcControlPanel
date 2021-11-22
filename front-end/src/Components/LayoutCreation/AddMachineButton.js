@@ -10,8 +10,8 @@ function AddMachineButton(props) {
     function onClick(){
        var setRoom= props.onClick
        var setRoomc= props.onC
-       setRoom(prevRoom=>prevRoom+1);
-       setRoomc((oldArray) => [...oldArray, <MachineCard devices={props.devices}  machineData={null} key={props.counter} setMachines={props.setMachines} counter={props.counter} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={props.machineNumber} names={props.names} clickHandler={props.clickHandler}></MachineCard>]);
+       setRoom(props.counter+1);
+       setRoomc((oldArray) => [...oldArray, <MachineCard del={props.del} devices={props.devices}  machineData={null} key={props.counter+1} setMachines={props.setMachines} counter={props.counter+1} floorNumber={props.floorNumber} disabled={false} roomNumber={props.roomNumber} machineNumber={props.counter+1} names={props.names} clickHandler={props.clickHandler}></MachineCard>]);
     }
     return (
 

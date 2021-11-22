@@ -37,7 +37,7 @@ function formSave(e){
         }
 }
 function LayoutCreation() {
-    const [floor, setFloor] = useState(1);
+    const [floor, setFloor] = useState(0);
     const [isSaveButVisible, setisSaveButVisible] = useState(false);
     const [floorArray, setFloorArray] = useState([]);
     const [names,setNames] = useState([])
@@ -49,6 +49,22 @@ function LayoutCreation() {
     const [roomArray, setRoomArray] = useState([]);
 
     const [devices,setDevices] = useState([])
+    function Del(e){
+        e.preventDefault()
+        console.log(e.target.id)
+        var floorNumber=e.target.id.split('Floor')[1]
+      
+        setFloorArray(prev=>{return prev.filter(function(item,index){
+            console.log(item);
+            console.log(floorNumber);
+            return item.key!=floorNumber
+        }
+        )
+       
+    })
+  
+
+      }
 
   
    
@@ -86,12 +102,13 @@ function LayoutCreation() {
             
             if(response.data.Data !==undefined){
                 response.data.Data.forEach(function (floor, i) {
+                    console.log(floor)
                     setisSaveButVisible(true)
                    
 
-                    setFloor(prevFloor=>prevFloor+1)
+                    setFloor(parseInt(floor.floorId))
                 setFloorArray((oldArray)=> { 
-                  return ([...oldArray,<FloorLayout devices={macType} floorData={null} setRoom={setRoom} setRoomArray={setRoomArray} room={room} roomArray={roomArray} floorData={floor} key={i} setMachines={setMachines} names={nms} floorNumber={i+1}></FloorLayout>])
+                  return ([...oldArray,<FloorLayout del={Del} devices={macType} floorData={null} setRoom={setRoom} setRoomArray={setRoomArray} room={room} roomArray={roomArray} floorData={floor} key={parseInt(floor.floorId)} setMachines={setMachines} names={nms} floorNumber={parseInt(floor.floorId)}></FloorLayout>])
                  });
           });
         }
@@ -111,7 +128,7 @@ function LayoutCreation() {
             <Form onSubmit={formSave}>
             <Row>
                 <Col xs={2}>
-                <Button name='Add Floor' devices={devices} key={floorArray.length} names={names} setMachines={setMachines} counter={floorArray.length} onClick={setFloor} onC={setFloorArray} setisSaveButVisible={setisSaveButVisible} floorNumber={floor}></Button>
+                <Button name='Add Floor' del={Del} devices={devices} key={floor} names={names} setMachines={setMachines} counter={floor} onClick={setFloor} onC={setFloorArray} setisSaveButVisible={setisSaveButVisible} floorNumber={floor}></Button>
 
                 </Col>
                

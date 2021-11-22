@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (Floors,Rooms,Machines,Profiles,Devices, WorkingHoursMachines,
-                   WorkingHoursFloors,WorkingHoursRooms,PowerConsMachines,CostPowerConsMachines,
+                   PowerConsMachines,CostPowerConsMachines,
                    PowerUsedArrayWeekFloors,PowerUsedArrayMonthFloors,PowerUsedArrayYearFloors)
 
 # Register your models here.

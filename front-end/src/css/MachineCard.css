@@ -26,5 +26,11 @@ p{
   outline: none;
   border:0 !important;
 }
+.closeBut{
+  background-color: gray;
+  border-radius: 30px;
+  padding: 8px;
+  float:right
+}
 
 

@@ -23,5 +23,5 @@ urlpatterns = [
    path('api/machine/<str:id>',views.MachineToggle),
    path('api/readcsv',views.readCsv),
    path('api/dashboard/',views.dashboard),
-   path('api/working_hours_machine',views.working_hours_machine),
+   path('api/toDB',views.toDB), #reload this url on timer
 ]
