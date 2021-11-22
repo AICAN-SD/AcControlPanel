@@ -1,12 +1,5 @@
-import calendar
-from codecs import register
-from os import stat
-from django.db.models import indexes
-from django.db.models.expressions import Exists
-from django.http import response
+
 from django.views.decorators.csrf import csrf_exempt
-from numpy import floor, power
-from rest_framework.fields import DateField
 from rest_framework.parsers import JSONParser
 from django.http.response import HttpResponse, JsonResponse
 from .models import (Floors, PowerConsMachines,Rooms,Machines,Profiles,Devices, 
@@ -700,7 +693,7 @@ def dashboard(request):
         
     else:
         totalCostWeek.append(0)
-        weekJson=[]
+        weekJson={}
     
 
     if prevMonth.exists():
@@ -1259,6 +1252,7 @@ def toDB(request):
     return HttpResponse('printed and saved')
 
 def calculateWeek():
+    print('$$$$')
     today = date.today()
     todayWeekDay=today.weekday()
     dateField = today - timedelta(days=todayWeekDay)
@@ -1289,7 +1283,6 @@ def calculateWeek():
         g[mac.MachineName]=0
         h[mac.MachineName]=0
         i[mac.room.RoomName]=0
-    powerWeek=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=dateField)
 
 
     for mac in Machines.objects.all():
@@ -1299,88 +1292,39 @@ def calculateWeek():
             name=str(x[0].Machine_Name.floor.FloorName)
             nameRoom=str(x[0].Machine_Name.room.RoomName)
             nameMac=str(x[0].Machine_Name)
-
             
+            a[name]=a[name]+float(x[0].PC_Machine)
+            c[name]=c[name]+round(float(x[0].PC_Machine),2)
+            print('**********')
+            print(x[0].PC_Machine)
+            print(c)
+            print('**********')
 
-            if powerWeek.exists():
-                print('in exists')
-                if name in powerWeek[0].jsonData:
-                    zf=powerWeek[0].jsonData[name]
-                    c[name]=powerWeek[0].totalPowerWeek[name]+round(float(x[0].PC_Machine),2)
-                else:
-                    zf=[]
-                    c[name]=round(float(x[0].PC_Machine),2)
-                print(zf)
-                if(len(zf)>todayWeekDay):
+            e[nameRoom]=round(float(e[nameRoom]+round(float(x[0].PC_Machine),2)),2)
+        
+            f[nameRoom]=round(float(f[nameRoom]+round(float(x[0].CostPC_Machine),2)),2)
+            g[nameMac]=round(float(g[nameMac]+round(float(x[0].PC_Machine),2)),2)
+            h[nameMac]=round(float(h[nameMac]+round(float(x[0].CostPC_Machine),2)),2)
 
-
-                    zf[todayWeekDay]=float(zf[todayWeekDay])+float(x[0].PC_Machine)
-                elif(len(zf)<=todayWeekDay):
-                    if(len(zf)!=todayWeekDay):
-                        for leng in range(len(zf),todayWeekDay):
-                            zf.append(0)
-                    if(len(zf)==todayWeekDay):
-                        zf.append(float(x[0].PC_Machine))
-                print(zf)
-                a[name]=zf
-                print('----------------')
-                print(powerWeek[0].jsonDataPowerRooms)
-                if nameRoom in powerWeek[0].jsonDataPowerRooms:
-                    e[nameRoom]=round(float(float(powerWeek[0].jsonDataPowerRooms[nameRoom])+round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(float(powerWeek[0].jsonDataCostPowerRooms[nameRoom])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    e[nameRoom]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(round(float(x[0].CostPC_Machine),2)),2)
-                if nameMac in powerWeek[0].jsonDataPowerMacs:
-                    g[nameMac]=round(float(float(powerWeek[0].jsonDataPowerMacs[nameMac])+round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(float(powerWeek[0].jsonDataCostPowerMacs[nameMac])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    g[nameMac]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(+round(float(x[0].CostPC_Machine),2)),2)
-               
-
-                totalPowerWeekFAC=float(powerWeek[0].totalPowerUsedFacWeek)+round(float(x[0].PC_Machine),2)
-                totalPowerCostWeekFAC=float(powerWeek[0].totalPowerCostFacWeek)+round(float(x[0].CostPC_Machine),2)
-            else:
-                a[name]=a[name]+float(x[0].PC_Machine)
-                c[name]=c[name]+round(float(x[0].PC_Machine),2)
-
-                e[nameRoom]=round(float(e[nameRoom]+round(float(x[0].PC_Machine),2)),2)
-            
-                f[nameRoom]=round(float(f[nameRoom]+round(float(x[0].CostPC_Machine),2)),2)
-                g[nameMac]=round(float(g[nameMac]+round(float(x[0].PC_Machine),2)),2)
-                h[nameMac]=round(float(h[nameMac]+round(float(x[0].CostPC_Machine),2)),2)
-
-                totalPowerWeekFAC=totalPowerWeekFAC+round(float(x[0].PC_Machine),2)
-                totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x[0].CostPC_Machine),2)
+            totalPowerWeekFAC=totalPowerWeekFAC+round(float(x[0].PC_Machine),2)
+            totalPowerCostWeekFAC=totalPowerCostWeekFAC+round(float(x[0].CostPC_Machine),2)
 
 
     
 
     for floor in Floors.objects.all():
-        if not powerWeek.exists():
-            zeroArr=[]
-            for x in range(todayWeekDay):
-                zeroArr.append(0)
+        zeroArr=[]
+        for x in range(todayWeekDay):
+            zeroArr.append(0)
+        if floor.FloorName in a:
             zeroArr.append(a[floor.FloorName])
             b[floor.FloorName]=zeroArr
             a[floor.FloorName]=0
-        else:
-            print('{{{{{{')
-            print(a)
-            if floor.FloorName in a:
-                b[floor.FloorName]= a[floor.FloorName]
-            else:
-                b[floor.FloorName]=[]
 
-    if powerWeek.exists():
-        if(len(powerWeek[0].jsonDataCost)>=todayWeekDay+1):
-            powerWeek[0].jsonDataCost[todayWeekDay]=powerWeek[0].jsonDataCost[todayWeekDay]+float(totalPowerCostWeekFAC)
-        else:
-            powerWeek[0].jsonDataCost.append(float(totalPowerCostWeekFAC))
-        d=powerWeek[0].jsonDataCost
-    else:
-        d.append(totalPowerCostWeekFAC)
+    
+    d.append(totalPowerCostWeekFAC)
+
+    print(c)
 
     s1=json.dumps(b)
     s2=json.dumps(c)
@@ -1398,6 +1342,8 @@ def calculateWeek():
     else:
         mo=PowerUsedArrayWeekFloors(startWeekDate=dateField,maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerWeek=json.loads(s2),totalPowerCostFacWeek=totalPowerCostWeekFAC,totalPowerUsedFacWeek=totalPowerWeekFAC,jsonData=json.loads(s1))
         mo.save()
+    print('$$$$')
+
 
 
 def calculateMonth():
@@ -1428,8 +1374,6 @@ def calculateMonth():
         g[mac.MachineName]=0
         h[mac.MachineName]=0
         i[mac.room.RoomName]=0
-    powerMonth=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=dateField)
-
     for mac in Machines.objects.all():
         x=PowerConsMachines.objects.filter(Machine_Name=mac,Date_Field=date.today())
         if x.exists():
@@ -1437,98 +1381,36 @@ def calculateMonth():
             name=str(x[0].Machine_Name.floor.FloorName)
             nameRoom=str(x[0].Machine_Name.room.RoomName)
             nameMac=str(x[0].Machine_Name)
-            if powerMonth.exists():
-                # print('in if')
-                if name in powerMonth[0].jsonData:
-                    zf=powerMonth[0].jsonData[name]
-                    c[name]=powerMonth[0].totalPowerMonth[name]+round(float(x[0].PC_Machine),2)
-                else:
-                    zf=[]
-                    c[name]=round(float(x[0].PC_Machine),2)
-                print('----------')
-                print(zf)
-                if(len(zf)>today.day-1):
-                    # 
-                    # print(zf[today.day-1])
-                    # print(x)
-                    # print(x.PC_Machine)
-                    # print(float(zf[today.day-1])+float(x.PC_Machine))
+           
+            a[name]=round(float(a[name]+float(x[0].PC_Machine)),2)
+            c[name]=round(float(c[name]+round(float(x[0].PC_Machine),2)),2)
 
+            e[nameRoom]=round(float(e[nameRoom]+round(float(x[0].PC_Machine),2)),2)
+            f[nameRoom]=round(float(f[nameRoom]+round(float(x[0].CostPC_Machine),2)),2)
+            g[nameMac]=round(float(g[nameMac]+round(float(x[0].PC_Machine),2)),2)
+            h[nameMac]=round(float(h[nameMac]+round(float(x[0].CostPC_Machine),2)),2)
 
-                    zf[today.day-1]=float(zf[today.day-1])+float(x[0].PC_Machine)
-                    # print(zf)
-                    # print('----------')
-                elif(len(zf)<=today.day-1):
-                    if(len(zf)!=today.day-1):
-                        for leng in range(len(zf),today.day-1):
-                            zf.append(0)
-                    if(len(zf)==today.day-1):
-                        zf.append(float(x[0].PC_Machine))
-                print(zf)
-                print('----------')
-                a[name]=zf
-                
-                if nameRoom in powerMonth[0].jsonDataPowerRooms:
-
-                    e[nameRoom]=round(float(float(powerMonth[0].jsonDataPowerRooms[nameRoom])+round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(float(powerMonth[0].jsonDataCostPowerRooms[nameRoom])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    e[nameRoom]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(round(float(x[0].CostPC_Machine),2)),2)
-                
-
-
-                if nameRoom in powerMonth[0].jsonDataPowerMacs:
-                    g[nameMac]=round(float(float(powerMonth[0].jsonDataPowerMacs[nameMac])+round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(float(powerMonth[0].jsonDataCostPowerMacs[nameMac])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    g[nameMac]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(round(float(x[0].CostPC_Machine),2)),2)
-               
-
-                totalPowerMonthFAC=float(powerMonth[0].totalPowerUsedFacMonth)+round(float(x[0].PC_Machine),2)
-                totalPowerCostMonthFAC=float(powerMonth[0].totalPowerCostFacMonth)+round(float(x[0].CostPC_Machine),2)
-            else:
-
-                a[name]=round(float(a[name]+float(x[0].PC_Machine)),2)
-                c[name]=round(float(c[name]+round(float(x[0].PC_Machine),2)),2)
-
-                e[nameRoom]=round(float(e[nameRoom]+round(float(x[0].PC_Machine),2)),2)
-                f[nameRoom]=round(float(f[nameRoom]+round(float(x[0].CostPC_Machine),2)),2)
-                g[nameMac]=round(float(g[nameMac]+round(float(x[0].PC_Machine),2)),2)
-                h[nameMac]=round(float(h[nameMac]+round(float(x[0].CostPC_Machine),2)),2)
-
-                totalPowerMonthFAC=round(float(totalPowerMonthFAC+round(float(x[0].PC_Machine),2)),2)
-                totalPowerCostMonthFAC=round(float(totalPowerCostMonthFAC+round(float(x[0].CostPC_Machine),2)),2)
+            totalPowerMonthFAC=round(float(totalPowerMonthFAC+round(float(x[0].PC_Machine),2)),2)
+            totalPowerCostMonthFAC=round(float(totalPowerCostMonthFAC+round(float(x[0].CostPC_Machine),2)),2)
 
     
         
     for floor in Floors.objects.all():
-        if not powerMonth.exists():
-            zeroArr=[]
-            for x in range(todayDay-1):
-                zeroArr.append(0)
+        zeroArr=[]
+        for x in range(todayDay-1):
+            zeroArr.append(0)
+        
+        if floor.FloorName in a:
             zeroArr.append(a[floor.FloorName])
             b[floor.FloorName]=zeroArr
-            
             a[floor.FloorName]=0
-        else:
-            if floor.FloorName in a:
-                b[floor.FloorName]= a[floor.FloorName]
-            else:
-                b[floor.FloorName]=[]
 
 
 
-    if powerMonth.exists():
-        if(len(powerMonth[0].jsonDataCost)>=today.day):
-            powerMonth[0].jsonDataCost[today.day-1]=powerMonth[0].jsonDataCost[today.day-1]+float(totalPowerCostMonthFAC)
-        else:
-            powerMonth[0].jsonDataCost.append(float(totalPowerCostMonthFAC))
-        d=powerMonth[0].jsonDataCost
-    else:
-        d.append(totalPowerCostMonthFAC)
+    
+    d.append(totalPowerCostMonthFAC)
         
+    print(c)
 
     s1=json.dumps(b)
     s2=json.dumps(c)
@@ -1548,6 +1430,7 @@ def calculateMonth():
             
 
 def calculateYear():
+    print('^^^^^^^^^^^^^^^^')
     today=date.today()
     powerYear=PowerUsedArrayYearFloors.objects.filter(startYearDate=date(year=date.today().year,month=1,day=1))
     
@@ -1558,10 +1441,7 @@ def calculateYear():
     a={}
     b={}
     c={}
-    if(powerYear.exists()):
-        d=[]
-    else:
-        d=[0,0,0,0,0,0,0,0,0,0,0,0]
+    d=[0,0,0,0,0,0,0,0,0,0,0,0]
 
     # for roomCalculations
     e={}
@@ -1571,11 +1451,7 @@ def calculateYear():
     h={}
     for mac in Machines.objects.all():
         c[mac.floor.FloorName]=0
-        if(powerYear.exists()):
-            b[mac.floor.FloorName]=[]
-        else:
-            b[mac.floor.FloorName]=[0,0,0,0,0,0,0,0,0,0,0,0]
-        a[mac.floor.FloorName]=0
+        b[mac.floor.FloorName]=[0,0,0,0,0,0,0,0,0,0,0,0]
         e[mac.room.RoomName]=0
         f[mac.room.RoomName]=0
         g[mac.MachineName]=0
@@ -1585,84 +1461,36 @@ def calculateYear():
         x=PowerConsMachines.objects.filter(Machine_Name=mac,Date_Field=date.today())
         if x.exists():
             i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+float((date(date.today().year, 12, 31)-date(date.today().year,1, 1)).days)*float(x[0].Max_PC_Machine)),2)
-            if powerYear.exists():
-                name=str(x[0].Machine_Name.floor.FloorName)
-                nameRoom=str(x[0].Machine_Name.room.RoomName)
-                nameMac=str(x[0].Machine_Name)
-            
-                # print('in if')
-                if name in powerYear[0].jsonData:
-                    zf=powerYear[0].jsonData[name]
-                    zf[today.month-1]=float(zf[today.month-1])+float(x[0].PC_Machine)
-                    c[name]=powerYear[0].totalPowerYear[name]+round(float(x[0].PC_Machine),2)
-                else:
-                    zeroArr=[]
-                    for zero in range (today.month-1):
-                        zeroArr.append(0)
-                    zeroArr.append(float(x[0].PC_Machine))
-                    zf=zeroArr
-                    c[name]=round(float(x[0].PC_Machine),2)
-                    
-
-                    
-                a[name]=zf
-                if nameRoom in powerYear[0].jsonDataPowerRooms:
-                    e[nameRoom]=round(float(float(powerYear[0].jsonDataPowerRooms[nameRoom])+round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(float(powerYear[0].jsonDataCostPowerRooms[nameRoom])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    e[nameRoom]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    f[nameRoom]=round(float(round(float(x[0].CostPC_Machine),2)),2)
-                
-                if nameMac in powerYear[0].jsonDataPowerMacs:
-                    g[nameMac]=round(float(float(powerYear[0].jsonDataPowerMacs[nameMac])+round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(float(powerYear[0].jsonDataCostPowerMacs[nameMac])+round(float(x[0].CostPC_Machine),2)),2)
-                else:
-                    g[nameMac]=round(float(round(float(x[0].PC_Machine),2)),2)
-                    h[nameMac]=round(float(round(float(x[0].CostPC_Machine),2)),2)
-               
-
-                totalPowerYearFAC=float(powerYear[0].totalPowerUsedFacYear)+round(float(x[0].PC_Machine),2)
-                totalPowerCostYearFAC=float(powerYear[0].totalPowerCostFacYear)+round(float(x[0].CostPC_Machine),2)
-                    
+                   
     
-    if not powerYear.exists():
-        for x in range (0,date.today().month):
-            start_day_of_prev_month=date(year=date.today().year,month=x+1,day=1)
-            month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=start_day_of_prev_month)
-            if month.exists():
-                for floor in month[0].totalPowerMonth:
-                    b[floor][x]=("%.2f"% round(float(month[0].totalPowerMonth[floor]),2))
-                    c[floor]=round(float(c[floor]+round(float(month[0].totalPowerMonth[floor]),2)),2)
+    for x in range (0,date.today().month):
+        start_day_of_prev_month=date(year=date.today().year,month=x+1,day=1)
+        month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=start_day_of_prev_month)
+        if month.exists():
+            for floor in month[0].totalPowerMonth:
+                print('00000000000000000000')
+                print(month[0].totalPowerMonth)
+                print(floor)
+                print(month[0].totalPowerMonth[floor])
+                print('00000000000000000000')
+                b[floor][x]=("%.2f"% round(float(month[0].totalPowerMonth[floor]),2))
+                c[floor]=round(float(c[floor]+round(float(month[0].totalPowerMonth[floor]),2)),2)
 
-                for room in month[0].jsonDataPowerRooms:
+            for room in month[0].jsonDataPowerRooms:
 
-                    e[room]=round(float(e[room]+round(float(month[0].jsonDataPowerRooms[room]),2)),2)
-                    f[room]=round(float(f[room]+round(float(month[0].jsonDataCostPowerRooms[room]),2)),2)
-                for mac in month[0].jsonDataPowerMacs:
+                e[room]=round(float(e[room]+round(float(month[0].jsonDataPowerRooms[room]),2)),2)
+                f[room]=round(float(f[room]+round(float(month[0].jsonDataCostPowerRooms[room]),2)),2)
+            for mac in month[0].jsonDataPowerMacs:
 
-                    g[mac]=round(float(g[mac]+round(float(month[0].jsonDataPowerMacs[mac]),2)),2)
-                    h[mac]=round(float(h[mac]+round(float(month[0].jsonDataCostPowerMacs[mac]),2)),2)
+                g[mac]=round(float(g[mac]+round(float(month[0].jsonDataPowerMacs[mac]),2)),2)
+                h[mac]=round(float(h[mac]+round(float(month[0].jsonDataCostPowerMacs[mac]),2)),2)
 
-                totalPowerYearFAC=round(float(totalPowerYearFAC+round(float(month[0].totalPowerUsedFacMonth),2)),2)
-                totalPowerCostYearFAC=round(float(totalPowerCostYearFAC+round(float(month[0].totalPowerCostFacMonth),2)),2)
-                d[x]=totalPowerCostYearFAC
+            totalPowerYearFAC=round(float(totalPowerYearFAC+round(float(month[0].totalPowerUsedFacMonth),2)),2)
+            totalPowerCostYearFAC=round(float(totalPowerCostYearFAC+round(float(month[0].totalPowerCostFacMonth),2)),2)
+            d[x]=totalPowerCostYearFAC
+
     
-    for floor in Floors.objects.all():
-        if powerYear.exists():
-            # print(a[floor.FloorName])
-            if floor.FloorName in a:
-                b[floor.FloorName]= a[floor.FloorName]
-            else:
-                b[floor.FloorName]=[]
 
-
-
-    if powerYear.exists():
-        if(len(powerYear[0].jsonDataCost)>=today.day):
-            powerYear[0].jsonDataCost[today.day-1]=powerYear[0].jsonDataCost[today.day-1]+float(totalPowerCostYearFAC)
-        else:
-            powerYear[0].jsonDataCost.append(float(totalPowerCostYearFAC))
-        d=powerYear[0].jsonDataCost
 
     s1=json.dumps(b)
     s2=json.dumps(c)
