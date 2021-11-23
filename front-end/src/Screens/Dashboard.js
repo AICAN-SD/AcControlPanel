@@ -496,7 +496,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 												</div>
 											</div>
 										</th>
-										<th class="text-center text-muted">{powerRoom[room.roomName]} {maxPowerCons[room.roomName]}</th>
+										<th class="text-center text-muted">{powerRoom[room.roomName]} </th>
 										<th class="text-center text-muted">₹ {costRoom[room.roomName]}</th>
 									</tr>
 									
