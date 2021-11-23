@@ -478,6 +478,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
            
               {floor.rooms !== undefined &&
                 floor.rooms.map((room, indx) => {
+					console.log(room);
                   return (
                     <>
 					
@@ -489,18 +490,19 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 												<div class="mb progress">
 													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
 														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: '100%'}}>1,640 kWh
+														aria-valuemax="100" style={{width: powerRoom[room.roomName]!==0?`${(powerRoom[room.roomName]/maxPowerCons[room.roomName])*100}%`:'0%'}}>{powerRoom[room.roomName]} kWh
 
 													</div>
 												</div>
 											</div>
 										</th>
-										<th class="text-center text-muted">{powerRoom[room.roomName]}</th>
+										<th class="text-center text-muted">{powerRoom[room.roomName]} {maxPowerCons[room.roomName]}</th>
 										<th class="text-center text-muted">₹ {costRoom[room.roomName]}</th>
 									</tr>
 									
                           {room.machines !== undefined &&
                             room.machines.map((machine, indxx) => {
+								console.log(machine);
                               return (
                                 
                               
