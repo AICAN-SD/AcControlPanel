@@ -35,6 +35,7 @@ function FloorLayout(props) {
 
         if(props.floorData!==null && props.floorData!==undefined){
             setIsFloorData(true)
+          
             props.floorData.rooms.forEach(function (room, i) {
                 console.log(room.roomId.split('RoomName')[1])
 
