@@ -6,7 +6,7 @@ function ControlPanelDropDown(props) {
   
     return (
         <div className="dropdown chooseProfile">
-  <button className="btn btn-default dropdown-toggle chooseProfileBut" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button style={{float:'right'}} className="btn btn-default dropdown-toggle chooseProfileBut" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Choose Profile
   </button>
   <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">

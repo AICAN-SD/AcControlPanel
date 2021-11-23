@@ -60,18 +60,21 @@ function ControlPanel() {
   }
   return (
     <div id='MainDiv' >
+      <Row id='DropDownBut'>
       <ControlPanelDropDown floorProfile={floorProfile} roomProfile={roomProfile} machineProfile={machineProfile} submitHandler={submitHandler}></ControlPanelDropDown>
-   
+   </Row>
       {data!==undefined && data.map((floor, index) => {
         return (
           <>
             <div className="rectangle" >
-              <strong className="ac"  > {floor.floor}</strong>
+              <Row>
+              <strong className="ac"> {floor.floor}</strong>
+              </Row>
               {floor.rooms !== undefined &&
                 floor.rooms.map((room, indx) => {
                   return (
                     <>
-                      <div className="">
+                      <Row>
                         <strong className="ac"> {room.roomName}</strong>
 
                         <Row>
@@ -89,7 +92,7 @@ function ControlPanel() {
                               );
                             })}
                         </Row>
-                      </div>
+                      </Row>
                     </>
                   );
                 })}

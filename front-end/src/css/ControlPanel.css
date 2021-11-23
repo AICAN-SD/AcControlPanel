@@ -13,6 +13,10 @@
 .chooseProfileBut :hover{
     color: black !important;
 }
+.ac{
+    
+    text-align: center !important;
+}
 
 .switch-on{
     background-color: #ff9211 !important;
@@ -33,6 +37,13 @@
     color: white;
 }
 #MainDiv{
-    padding: 20px 0;
+    padding: 5px 0;
+}
+#DropDownBut{
+    color: white;
+    padding: 0 0 10px 0 !important;
+}
+#DropDownBut :hover{
+    color: grey !important;
 }
 
