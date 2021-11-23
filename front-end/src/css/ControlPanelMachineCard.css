@@ -11,7 +11,7 @@
 }
 
 #macSwitch{
-  padding:0 0 0 80%
+  padding:0 0 0 85%
 }
 
 .MachineName{
@@ -140,4 +140,10 @@ input:checked + .slider:before {
 }
 #rowTime ,#rowBut {
   text-align:center !important
+}
+@media (max-width: 580px) {
+  #macSwitch{
+    padding:0 0 0 90%
+  }
+  
 }
