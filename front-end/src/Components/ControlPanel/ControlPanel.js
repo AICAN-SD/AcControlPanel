@@ -101,10 +101,10 @@ function ControlPanel() {
   return (
     <div id='MainDiv' >
       <Row>
-        <Col className="ac" style={{paddingTop:'10px'}}>
+        <Col className="ac" id='FacTogBut' sm={6} >
       <strong >Factory   </strong><BootstrapSwitchButton onChange={(e)=>{FactoryToggle(e)}} checked={factoryStatus} size="sm" />
       </Col>
-      <Col id='DropDownBut'>
+      <Col style={{float:'right'}} sm={6} id='DropDownBut'>
       <ControlPanelDropDown floorProfile={floorProfile} roomProfile={roomProfile} machineProfile={machineProfile} submitHandler={submitHandler}></ControlPanelDropDown>
    </Col>
    </Row>

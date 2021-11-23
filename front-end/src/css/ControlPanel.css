@@ -46,4 +46,38 @@
 #DropDownBut :hover{
     color: grey !important;
 }
+#FacTogBut{
+    padding-top: 5px;
+}
 
+@media (max-width: 580px) {
+    #DropDownBut{
+        text-align: center;
+        float: center !important;
+        padding-right: 32% !important;
+        
+    }
+    #FacTogBut{
+        text-align: center;
+        float: center !important;
+        padding-left: 32% !important;
+
+    }
+    
+}
+
+@media (max-width: 420px) {
+    #DropDownBut{
+        text-align: center;
+        float: center !important;
+        padding-right: 25% !important;
+        
+    }
+    #FacTogBut{
+        text-align: center;
+        float: center !important;
+        padding-left: 25% !important;
+
+    }
+    
+}

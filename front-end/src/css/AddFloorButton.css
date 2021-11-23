@@ -23,9 +23,6 @@
   border-color: transparent;
   width: 100px !important;
 }
-input{
- 
-}
 input:focus {
   outline: none !important;
 }
