@@ -3,9 +3,6 @@ from . import views
 
 urlpatterns = [
    path('api/data',views.data),
-   path('api/factory',views.factory),
-   path('api/floortoggle/<str:id>',views.floorToggle),
-   path('api/roomtoggle/<str:id>',views.roomToggle),
    path('api/devices/',views.devices),
    path('api/devices/<str:id>',views.devices),
    path('api/cost/',views.UpdateCost),
@@ -18,6 +15,7 @@ urlpatterns = [
    path('api/profile/<str:id>',views.ProfileToggle),#make profile active
    path('api/getProf/<str:id>',views.GetProfile),
    path('api/editProf/<str:id>',views.EditProfile),
+   path('api/factoryToggle/<str:status>/<str:fid>/<str:rid>',views.FactoryToggle),
    path('api/profile/',views.ProfileOff),
    path('api/deleteProf/<str:id>',views.deleteProf),
    path('api/machine/<str:id>',views.MachineToggle),

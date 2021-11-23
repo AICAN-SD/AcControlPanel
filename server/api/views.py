@@ -17,44 +17,6 @@ from calendar import monthrange
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-@csrf_exempt
-def factory(request):
-    if request.method == 'GET':
-        machines = Machines.objects.all()
-        profiles = Profiles.objects.all()
-        for machine in machines:
-            machine.status=False
-            machine.save()
-        for profile in profiles:
-            profile.status = False
-            profile.save()    
-        return JsonResponse('success',safe=False)
-    if request.method == 'POST':
-        machines = Machines.objects.all()
-        profiles = Profiles.objects.all()
-        for machine in machines:
-            machine.status=True
-            machine.save()
-        for profile in profiles:
-            profile.status = True
-            profile.save() 
-        return JsonResponse('success',safe=False)    
-
-def floorToggle(request,id):
-    if request.method == 'GET':
-        Machines.objects.filter(floor = Floors.objects.get(FloorId = id)).update(status = False)
-        return JsonResponse('success',safe=False)
-    if request.method == 'POST':
-        Machines.objects.filter(floor = Floors.objects.get(FloorId = id)).update(status = True)
-        return JsonResponse('success',safe=False)    
-
-def roomToggle(request,id):
-    if request.method == 'GET':
-        Machines.objects.filter(room = Rooms.objects.get(RoomId = id)).update(status = False)
-        return JsonResponse('success',safe=False) 
-    if request.method == 'POST':
-        Machines.objects.filter(room = Rooms.objects.get(RoomId = id)).update(status = True)
-        return JsonResponse('success',safe=False)        
 
 @csrf_exempt
 def data(request):
@@ -178,7 +140,30 @@ def MachineToggle(request,id):
     
     if machine.status == True:
         machine.status=False
+        
+
         machine.endTime=str(time.hour)+':'+str(time.minute)
+        machine.save()
+        flrs=Floors.objects.filter(FloorId=machine.floor.FloorId)
+        stsF=False
+        for floor in flrs:
+            
+            rms=Rooms.objects.filter(floor=floor)
+            for room in rms:
+                stsR=False
+                mac=Machines.objects.filter(room=room)
+                for m in mac:
+                    if(m.status==True):
+                        stsF=True
+                        stsR=True
+                if not stsR:
+                    room.status=False
+                    room.save()
+        if not stsF:
+            Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=False)
+            
+
+        
         appendToCsv(indvData=machine,read=1)
         
     else:
@@ -191,6 +176,8 @@ def MachineToggle(request,id):
                 prof=ob
         
         machine.status = True
+        Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=True)
+        Rooms.objects.filter(RoomId=machine.room.RoomId).update(status=True)
         machine.startTime=str(time.hour)+':'+str(time.minute)
         if(prof!=0):
             print(prof.data)
@@ -212,7 +199,7 @@ def MachineToggle(request,id):
                 
         
         appendToCsv(indvData=machine)
-    machine.save()  
+        machine.save()  
     finalData=AllData()       
     return JsonResponse(finalData,safe=False)
 
@@ -220,12 +207,16 @@ def ProfileOff(request):
     machines = Machines.objects.all()
     for machine in machines:
         machine.status=False
+        Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=False)
+        Rooms.objects.filter(RoomId=machine.room.RoomId).update(status=False)
+        
         machine.startTime='00:00'
         machine.endTime='00:00'
         machine.save()
     profiles = Profiles.objects.all()
     for x in profiles:
         x.status=False
+        
         x.save() 
     appendToCsv(from_multiData=1) 
     finalData=AllData()
@@ -236,6 +227,74 @@ def deleteProf(request,id):
     if request.method == "DELETE":
         Profiles.objects.get(id=id).delete()
         return JsonResponse({"message":"Profile Deleted"},safe=False)       
+
+def FactoryToggle(request,status='',fid='null',rid='null'):
+    for profile in Profiles.objects.all():
+            profile.status = False
+            profile.save()  
+    if rid=='null' and fid!='null':
+        print(fid)
+        floor=Floors.objects.filter(FloorId=fid)
+        if floor.exists():
+            if floor.exists():
+                mac=Machines.objects.filter(floor=floor[0])
+                for m in mac:
+                    if int(status)==1:
+                        m.status=True 
+                        Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
+                        Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
+                    else:
+                        m.status=False
+                        Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
+                        Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
+                    m.save()
+    elif rid!='null' and fid!='null':
+        floor=Floors.objects.filter(FloorId=fid)
+        room=Rooms.objects.filter(floor=floor[0],RoomId=rid)
+        sts=False
+        if room.exists():
+            mac=Machines.objects.filter(room=room[0])
+            
+            for m in mac:
+                if int(status)==1:
+                    m.status=True 
+                    m.save()
+                    Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
+                    Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
+                else:
+                    m.status=False
+                    m.save()
+                    Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
+                    
+        for macc in Machines.objects.filter(floor=Floors.objects.get(FloorId=fid)):
+            if(macc.status==True):
+                sts=True
+        if not sts:
+            Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
+
+                    
+                
+    elif rid=='null' and fid=='null':
+        print('in else')
+        mac=Machines.objects.all()
+        for m in mac:
+            if int(status)==1:
+                m.status=True 
+                Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
+                Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
+            else:
+                m.status=False
+                Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
+                Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
+            m.save()
+    print(mac)
+    print(',,,,,,,,')
+    
+    finalData=AllData()
+    return JsonResponse(finalData,safe=False) 
+
+
+
 
 def ProfileToggle(request,id):
     if request.method == 'GET':
@@ -259,7 +318,10 @@ def ProfileToggle(request,id):
             floors = profile.data['selectedFloors']
             for floorid in floors:
                 floor = Floors.objects.get(FloorId=floorid)
+                floor.status=True
+                Rooms.objects.filter(floor=floor).update(status=True)
                 Machines.objects.filter(floor=floor).update(status=True)
+                floor.save()
                 
                 truth=True
                 for var in profile.data['timeSchedule']:
@@ -284,7 +346,10 @@ def ProfileToggle(request,id):
             rooms = profile.data['selectedRooms']
             for roomid in rooms:
                 room=Rooms.objects.get(RoomId=roomid)
+                room.status=True
+                Floors.objects.filter(FloorId=room.floor.FloorId).update(status=True)
                 Machines.objects.filter(room=room).update(status=True)
+                room.save()
                 roomID=roomid.split('RoomName')[1]
                 floorID=roomid.split('RoomName')[0].split('Floor')[1] 
                 truth=True
@@ -311,6 +376,8 @@ def ProfileToggle(request,id):
              for machineid in machineids:
                  machine = Machines.objects.get(MachineId=machineid)
                  machine.status=True
+                 Rooms.objects.filter(RoomId=machine.room.RoomId).update(status=True)
+                 Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=True)
                  truth=True
                  for var in profile.data['timeSchedule']:
                      startTime=var['start']
@@ -412,6 +479,10 @@ def UpdateCost(request):
         return JsonResponse({'message':'Updated'},safe=False)   
 
 def AllData():
+    macStatus=False
+    for m in Machines.objects.all():
+        if m.status==True:
+            macStatus=True
     finalData={}
     floors=Floors.objects.all()
     profiles = Profiles.objects.all()
@@ -427,9 +498,11 @@ def AllData():
             machineProfiles.append(profile)         
     data=[]
     for floor in floors:
+        print(floor.status)
         datax={
                 "floor":floor.FloorName,
-                'floorId':floor.FloorId
+                'floorId':floor.FloorId,
+                'status':floor.status
                 }
         rooms=Rooms.objects.filter(floor=floor)
         datay=[]
@@ -439,7 +512,8 @@ def AllData():
             x={
                 "roomName":room.RoomName,
                 "roomId":room.RoomId,
-                "machines":machines_serializer.data
+                'status':room.status,
+                "machines":machines_serializer.data,
             }
             datay.append(x)
         datax["rooms"]=datay
@@ -451,7 +525,8 @@ def AllData():
             "floorProfiles":floorProfilesS.data,
             "roomProfiles":roomProfilesS.data,
             "machineProfiles":machineProfilesS.data,
-            "Data":data
+            "Data":data,
+            "macStatus":macStatus
         }  
     return finalData
 
