@@ -136,12 +136,13 @@ function LayoutCreation() {
            <Row>
            {floorArray}
            </Row>
-        <div id='saveDiv'>
-           { isSaveButVisible && <button id='saveBut'type='submit'  href='/ControlPanel' style={{float:'right'}} className='btn btn-default' >
+
+        <Row id='saveDiv'>
+           { isSaveButVisible && <Col> <button id='saveBut'type='submit'  href='/ControlPanel' style={{float:'right'}} className='btn btn-default' >
               <i className="bx bx-grid-alt" />
               <span className="links_name">Save</span>
-            </button>}
-        </div>
+            </button></Col>}
+        </Row>
         </Form>
         </div>
         </>

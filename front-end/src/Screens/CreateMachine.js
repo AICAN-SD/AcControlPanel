@@ -59,7 +59,7 @@ function CreateMachine() {
           })
         }
     return (
-        <div style={{paddingLeft:"40px"}}>
+        <div style={{paddingLeft:"40px",paddingTop:'10px'}}>
             <label >Cost/unit:</label> <input
             style={{width:"60px"}}
         type="number"
