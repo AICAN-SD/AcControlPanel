@@ -124,7 +124,7 @@ function RoomLayout(props) {
              
                 </Col>
                 <Col xs={10}>
-                    {isRoomData?<input  name={'Floor'+props.floorNumber+'RoomName'+props.roomNumber} defaultValue={props.roomData.roomName} className="form-control ac" placeholder="Room Name" required />:<input name={'Floor'+props.floorNumber+'RoomName'+props.roomNumber} className="form-control ac" placeholder="Room Name" required />}
+                    {isRoomData?<input  name={'Floor'+props.floorNumber+'RoomName'+props.roomNumber} defaultValue={props.roomData.roomName} className="form-control ac1" placeholder="Room Name" required />:<input name={'Floor'+props.floorNumber+'RoomName'+props.roomNumber} className="form-control ac1" placeholder="Room Name" required />}
                 </Col>
 
             </Row>

@@ -59,7 +59,7 @@ function FloorLayout(props) {
                 </Col>
                 <Col xs={10}>
                 {(isFloorData) ?
-                <input name={'FloorName'+props.floorNumber} defaultValue={props.floorData.floor} key={roomArray.length}  className="ac form-control" placeholder="Floor Name" required />: <input name={'FloorName'+props.floorNumber}  key={roomArray.length}  className="ac form-control" placeholder="Floor Name" required />}
+                <input name={'FloorName'+props.floorNumber} defaultValue={props.floorData.floor} key={roomArray.length}  className="ac1 form-control" placeholder="Floor Name" required />: <input name={'FloorName'+props.floorNumber}  key={roomArray.length}  className="ac1 form-control" placeholder="Floor Name" required />}
                 </Col>
             </Row>
         

@@ -76,6 +76,12 @@ function Dashboard() {
   const [maxPowerConsWeek,setMaxPowerConsWeek]=useState([]);
 
 
+  const [maxPowerConsMachine,setMaxPowerConsMachine]=useState([]);
+  const [maxPowerConsYearMachine,setMaxPowerConsYearMachine]=useState([]);
+  const [maxPowerConsMonthMachine,setMaxPowerConsMonthMachine]=useState([]);
+  const [maxPowerConsWeekMachine,setMaxPowerConsWeekMachine]=useState([]);
+
+
   const [maxPowerRoom,setMaxPowerRoom]=useState([]);
   const [maxPowerYearRoom,setMaxPowerYearRoom]=useState({});
   const [maxPowerMonthRoom,setMaxPowerMonthRoom]=useState({});
@@ -130,6 +136,11 @@ function Dashboard() {
 		setMaxPowerYearRoom(response.data.maxPowerYearRoom)
 		setMaxPowerMonthRoom(response.data.maxPowerMonthRoom)
 		setMaxPowerWeekRoom(response.data.maxPowerWeekRoom)
+
+		setMaxPowerConsMachine(response.data.MacMaxPowerConsYear)
+		setMaxPowerConsYearMachine(response.data.MacMaxPowerConsYear)
+		setMaxPowerConsMonthMachine(response.data.MacMaxPowerConsMonth)
+		setMaxPowerConsWeekMachine(response.data.MacMaxPowerConsWeek)
 
 		setPowerRoom(response.data.yearRoomPower);
 		setCostRoom(response.data.yearRoomPowerCost);
@@ -231,6 +242,7 @@ function Dashboard() {
 	if(e.target.id==='l1'){
 		//Weekly data
 		setMaxPowerCons(maxPowerConsWeek)
+		setMaxPowerConsMachine(maxPowerConsWeekMachine)
 
 		setPowerMac(weekMacPower);
 		setCostMac(weekMacPowerCost);
@@ -270,6 +282,8 @@ function Dashboard() {
 			setMaxPowerRoom(maxPowerMonthRoom)
 			setMaxPowerCons(maxPowerConsMonth)
 
+			setMaxPowerConsMachine(maxPowerConsMonthMachine)
+
 			setPowerMac(monthMacPower);
 		setCostMac(monthMacPowerCost);
 
@@ -306,6 +320,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 			setMaxPowerCons(maxPowerConsYear)
 
 			setMaxPowerRoom(maxPowerYearRoom)
+			setMaxPowerConsMachine(maxPowerConsYearMachine)
 
 			setPowerMac(yearMacPower);
 		setCostMac(yearMacPowerCost);
@@ -490,13 +505,13 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 												<div class="mb progress">
 													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
 														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: powerRoom[room.roomName]!==0?`${(powerRoom[room.roomName]/maxPowerCons[room.roomName])*100}%`:'0%'}}>{powerRoom[room.roomName]} kWh
+														aria-valuemax="100" style={{width: powerRoom[room.roomName]!==0?`${(powerRoom[room.roomName]/maxPowerCons[room.roomName])*100}%`:'0%'}}>
 
 													</div>
 												</div>
 											</div>
 										</th>
-										<th class="text-center text-muted">{powerRoom[room.roomName]} </th>
+										<th class="text-center text-muted">{powerRoom[room.roomName]}</th>
 										<th class="text-center text-muted">₹ {costRoom[room.roomName]}</th>
 									</tr>
 									
@@ -514,9 +529,9 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 											<div class="widget-content p-0">
 
 												<div class="mb progress">
-													<div class="progress-bar progress-bar-animated progress-bar-striped text-muted"
+													<div class="progress-bar progress-bar-animated progress-bar-striped"
 														role="progressbar" aria-valuenow="10" aria-valuemin="0"
-														aria-valuemax="100" style={{width: '67%'}}>1,640 kWh
+														aria-valuemax="100" style={{width: powerMac[machine.MachineName]!==0?`${(powerMac[machine.MachineName]/maxPowerConsMachine[machine.MachineName])*100}%`:'0%'}}>
 
 													</div>
 												</div>
