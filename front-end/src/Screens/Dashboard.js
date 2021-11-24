@@ -477,8 +477,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 
 						
 						<div class="table-responsive">
-							<table class="align-middle mb-0 table table-borderless table-striped table-hover bg-light">
-								<thead>
+							<table class="align-middle mb-0 table table-borderless table-hover bg-light">
+								<thead className='tableHead'>
 									<tr>
 										<th class="text-center text-muted">Room</th>
 										<th class="text-center text-muted">Consumption</th>
@@ -497,8 +497,8 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
                   return (
                     <>
 					
-                      <tr  key={`${index}`+`${indx}`} data-toggle="collapse" id={'row'+index+indx} data-target={'.row'+index+indx}>
-										<th class="text-center text-muted">{room.roomName}</th>
+                      <tr  key={`${index}`+`${indx}`} data-toggle="collapse" className='roomRow' id={'row'+index+indx} data-target={'.row'+index+indx}>
+										<th className="text-center text-muted">{room.roomName}</th>
 										<th>
 											<div class="widget-content p-0">
 
@@ -523,7 +523,7 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
                               
 								      
 								
-									<tr key={`${index}`+`${indxx}`}  class={`collapse row${index}${indx}`}>
+									<tr key={`${index}`+`${indxx}`}  className={`collapse row${index}${indx} rowMachine`} >
 										<th class="text-center text-muted">{machine.MachineName}</th>
 										<th>
 											<div class="widget-content p-0">

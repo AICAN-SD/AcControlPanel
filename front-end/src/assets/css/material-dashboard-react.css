@@ -546,3 +546,21 @@ footer ul li a:hover {
 * {
   letter-spacing: normal !important;
 }
+
+.roomRow{
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+.roomRow th:hover{
+  cursor: pointer;
+}
+.roomRow .mb{
+  background-color: white;
+}
+.roomRow th:hover .mb{
+  background-color: #e9ecef;
+  
+}
+.tableHead th:hover , .rowMachine th:hover{
+  cursor: default;
+
+}
