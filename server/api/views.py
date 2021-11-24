@@ -230,6 +230,7 @@ def deleteProf(request,id):
         return JsonResponse({"message":"Profile Deleted"},safe=False)       
 
 def FactoryToggle(request,status='',fid='null',rid='null'):
+    nowTime=datetime.now().strftime('%H:%M')    
     for profile in Profiles.objects.all():
             profile.status = False
             profile.save()  
@@ -239,13 +240,17 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
         if floor.exists():
             if floor.exists():
                 mac=Machines.objects.filter(floor=floor[0])
+                appendToCsv(factoryToggleMac=mac,toggleStatus=int(status))
                 for m in mac:
                     if int(status)==1:
                         m.status=True 
+                        m.startTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                        m.endTime='23:59'
                         Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
                         Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
                     else:
                         m.status=False
+                        m.endTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                         Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
                         Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
                     m.save()
@@ -255,15 +260,19 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
         sts=False
         if room.exists():
             mac=Machines.objects.filter(room=room[0])
+            appendToCsv(factoryToggleMac=mac,toggleStatus=int(status))
             
             for m in mac:
                 if int(status)==1:
                     m.status=True 
+                    m.startTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                    m.endTime='23:59'
                     m.save()
                     Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
                     Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
                 else:
                     m.status=False
+                    m.endTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                     m.save()
                     Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
                     
@@ -278,13 +287,18 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
     elif rid=='null' and fid=='null':
         print('in else')
         mac=Machines.objects.all()
+        appendToCsv(factoryToggleMac=mac,toggleStatus=int(status))
         for m in mac:
             if int(status)==1:
                 m.status=True 
+                m.startTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+                m.endTime='23:59'
                 Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
                 Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
+
             else:
                 m.status=False
+                m.endTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                 Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
                 Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
             m.save()
@@ -548,11 +562,13 @@ def readCsv(request,id=0):
         data.to_csv(BASE_DIR/'machines.csv',index=False)       
         return JsonResponse({'message':"Done"},safe=False)  
 
-def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
+def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,toggleStatus=0):
 
     nowTime=datetime.now().strftime('%H:%M')
     df = pd.read_csv(BASE_DIR/'TO_DATA.csv')
     count_row = df.shape[0]
+
+    #to change status from ongoing => Done and drop pending profile schedule
     if(from_multiData): 
         for x in range(count_row):
             if(str(df.loc[x,'STATUS'])=='ONGOING'):
@@ -563,7 +579,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
                 df.loc[x,'STATUS']='DONE'            
             elif(str(df.loc[x,'STATUS'])=='PENDING'):
                 df=df.drop(x)
-    else:
+    elif(factoryToggleMac==0):
         print('cccccccc')
         if(indvData!=0 and read==0):
             for rowIndex in range(count_row):
@@ -591,7 +607,23 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
                 df.loc[index,'HRS']=tdeltaH+(tdeltaM/60)
                 print(indvData.endTime)
             
-                
+    elif(factoryToggleMac!=0 and toggleStatus==0):
+        
+
+        for x in range(count_row):
+            for mac in factoryToggleMac:
+                if(str(df.loc[x,'STATUS'])=='ONGOING' and str(df.loc[x,'ID'])==mac.MachineName):
+                    tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
+                    tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
+                    df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
+                    df.loc[x,'OFF_TIME']=nowTime
+                    df.loc[x,'STATUS']='DONE'  
+                    break          
+                elif(str(df.loc[x,'STATUS'])=='PENDING' and str(df.loc[x,'ID'])==mac.MachineName):
+                    df=df.drop(x)
+                    break
+
+       
 
 
 
@@ -648,6 +680,13 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0):
         else:
             #Already Done Before Selection
             pass 
+    elif(factoryToggleMac!=0 and toggleStatus==1):
+        for mac in factoryToggleMac:
+            strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
+            status='ONGOING'
+            writer.writerow(['-1',mac.MachineName,strt,'23:59',0,status])
+                    
+
 
     f.close()
     return True
