@@ -563,7 +563,7 @@ def readCsv(request,id=0):
         return JsonResponse({'message':"Done"},safe=False)  
 
 def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,toggleStatus=0):
-
+    todayDate=date.today()
     nowTime=datetime.now().strftime('%H:%M')
     df = pd.read_csv(BASE_DIR/'TO_DATA.csv')
     count_row = df.shape[0]
@@ -572,11 +572,10 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
     if(from_multiData): 
         for x in range(count_row):
             if(str(df.loc[x,'STATUS'])=='ONGOING'):
-                tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
-                tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
-                df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
                 df.loc[x,'OFF_TIME']=nowTime
-                df.loc[x,'STATUS']='DONE'            
+                df.loc[x,'STATUS']='DONE'
+                df.loc[x,'OFF_DATE']=todayDate
+                            
             elif(str(df.loc[x,'STATUS'])=='PENDING'):
                 df=df.drop(x)
     elif(factoryToggleMac==0):
@@ -584,12 +583,11 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
         if(indvData!=0 and read==0):
             for rowIndex in range(count_row):
                 if(str(df.loc[rowIndex,'STATUS'])=='ONGOING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):
-                    tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[rowIndex,'ON_TIME']),'%H:%M').hour
-                    tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[rowIndex,'ON_TIME']),'%H:%M').minute
-                    df.loc[rowIndex,'HRS']=tdeltaH+(tdeltaM/60)
+                    
                     print('xxxxxxxxxxxxxxxxxx')
                     df.loc[rowIndex,'STATUS']='DONE'
                     df.loc[rowIndex,'OFF_TIME']=nowTime
+                    df.loc[rowIndex,'OFF_DATE']=todayDate
                 elif(str(df.loc[rowIndex,'STATUS'])=='PENDING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):
                     pass
                                 
@@ -597,14 +595,12 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
         elif(read):
             print(')))))))))))')
             print(indvData)
-            listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME', 'OFF_TIME','HRS', 'STATUS']]
+            listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME','ON_DATE', 'OFF_TIME','OFF_DATE', 'STATUS']]
             if len(listtt.index.tolist())>0:
                 index=listtt.index.tolist()[0]
                 df.loc[index,'STATUS']='DONE'
                 df.loc[index,'OFF_TIME']=indvData.endTime
-                tdeltaH=datetime.strptime(str(indvData.endTime),'%H:%M').hour-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').hour
-                tdeltaM=datetime.strptime(str(indvData.endTime),'%H:%M').minute-datetime.strptime(str(df.loc[index,'ON_TIME']),'%H:%M').minute
-                df.loc[index,'HRS']=tdeltaH+(tdeltaM/60)
+                df.loc[index,'OFF_DATE']=todayDate
                 print(indvData.endTime)
             
     elif(factoryToggleMac!=0 and toggleStatus==0):
@@ -613,11 +609,10 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
         for x in range(count_row):
             for mac in factoryToggleMac:
                 if(str(df.loc[x,'STATUS'])=='ONGOING' and str(df.loc[x,'ID'])==mac.MachineName):
-                    tdeltaH=datetime.strptime(str(nowTime),'%H:%M').hour-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').hour
-                    tdeltaM=datetime.strptime(str(nowTime),'%H:%M').minute-datetime.strptime(str(df.loc[x,'ON_TIME']),'%H:%M').minute
-                    df.loc[x,'HRS']=tdeltaH+(tdeltaM/60)
+                    
                     df.loc[x,'OFF_TIME']=nowTime
                     df.loc[x,'STATUS']='DONE'  
+                    df.loc[x,'OFF_DATE']=todayDate
                     break          
                 elif(str(df.loc[x,'STATUS'])=='PENDING' and str(df.loc[x,'ID'])==mac.MachineName):
                     df=df.drop(x)
@@ -640,13 +635,13 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                     if(datetime.strptime(y['end'], '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M')):
 
                         if(datetime.strptime(y['start'], '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
-                            status='ONGOING'
+                            
                             strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                         else:
                             status='PENDING'
                             strt=y['start']
                         print(data.data)
-                        writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
+                        writer.writerow([data.id,x['MachineName'],strt,todayDate,y['end'],'',status])
                     else:
                         #Already Done Before Selection
                         pass       
@@ -662,7 +657,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                             status='PENDING'
                             strt=y['start']
                         print(data.data)
-                        writer.writerow([data.id,x['MachineName'],strt,y['end'],0,status])
+                        writer.writerow([data.id,x['MachineName'],strt,todayDate,y['end'],'',status])
                     else:
                         #Already Done Before Selection
                         pass 
@@ -676,7 +671,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
             else:
                 status='PENDING'
                 strt=indvData.startTime
-            writer.writerow(['-1',indvData.MachineName,strt,indvData.endTime,0,status])
+            writer.writerow(['-1',indvData.MachineName,strt,todayDate,indvData.endTime,todayDate,status])
         else:
             #Already Done Before Selection
             pass 
@@ -684,7 +679,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
         for mac in factoryToggleMac:
             strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
             status='ONGOING'
-            writer.writerow(['-1',mac.MachineName,strt,'23:59',0,status])
+            writer.writerow(['-1',mac.MachineName,strt,todayDate,'23:59',todayDate,status])
                     
 
 
