@@ -973,9 +973,9 @@ def toDB(request):
         df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
         a=df.loc[df['ID']==m.MachineName].reset_index(drop=True)
         maxPowerRating=round(float((device.powerRating*86400)/(1000*3600)),2)
-        print(maxPowerRating)
         if a.shape[0]!=0:
-            for i in range(0,a.shape[0]):
+            countRow=a.shape[0]
+            for i in range(0,countRow):
                 
 
                 onTime=datetime.strptime(str(a.loc[i,'ON_TIME']),'%d-%m-%Y %H:%M')
@@ -1364,6 +1364,13 @@ def toDB(request):
                 y.save()
                 z.save()
     
+    df=pd.read_csv(BASE_DIR/'FROM_DATA.csv')
+    for index, row in df.iterrows():
+        if row.STATUS=='DONE':
+            df=df.drop(index)
+        print(row.STATUS)
+        print(index)
+    df.to_csv(BASE_DIR/'FROM_DATA.csv',index=False)
     calculateWeek()
     calculateMonth()
     calculateYear()
@@ -1537,11 +1544,6 @@ def calculateMonth():
                     b[floor.FloorName].append(a[floor.FloorName])
                     a[floor.FloorName]=0
                 d.append(totalPowerCostMonthFAC)
-
-            print('******')
-            print(j)
-            print('******')
-                
         
             s1=json.dumps(b)
             s2=json.dumps(c)
@@ -1562,7 +1564,6 @@ def calculateMonth():
             
 
 def calculateYear():
-    print('^^^^^^^^^^^^^^^^')
     totalPowerYearFAC=0
     totalPowerCostYearFAC=0
     i={}
