@@ -53,7 +53,7 @@ class Devices(models.Model):
 
 class WorkingHoursMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
+    Machine_Name = models.CharField(max_length=200) 
     WH_Machine =models.CharField(max_length=200) 
     Date_Field=models.DateField()
 
@@ -62,7 +62,7 @@ class WorkingHoursMachines(models.Model):
         
 class PowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
+    Machine_Name = models.CharField(max_length=200) 
     PC_Machine =models.CharField(max_length=200)
     Max_PC_Machine =models.CharField(max_length=200)
     CostPC_Machine =models.CharField(max_length=200)  
@@ -72,7 +72,7 @@ class PowerConsMachines(models.Model):
         
 class CostPowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.ForeignKey(Machines,on_delete=models.DO_NOTHING) 
+    Machine_Name = models.CharField(max_length=200) 
     CostPC_Machine =models.CharField(max_length=200) 
     Date_Field=models.DateField()
 
