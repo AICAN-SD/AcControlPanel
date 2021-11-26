@@ -23,8 +23,6 @@ function RoomLayout(props) {
                 props.setMachines(prev=> {
                     return [...prev,{name:machine.MachineId,value:machine.MachineName}]
                   })
-                  console.log(parseInt(machine.MachineId.split('Machine')[1]))
-
                 setMachine(parseInt(machine.MachineId.split('Machine')[1]));
                 setMachineArray((oldArray) => [...oldArray, <MachineCard del={Del} disabled={true}  devices={props.devices} machineData={machine} key={parseInt(machine.MachineId.split('Machine')[1])} setMachines={props.setMachines} counter={parseInt(machine.MachineId.split('Machine')[1])} floorNumber={props.floorNumber} roomNumber={props.roomNumber} machineNumber={parseInt(machine.MachineId.split('Machine')[1])} names={props.names} clickHandler={clickHandler} ></MachineCard>]);
               });
@@ -38,8 +36,6 @@ function RoomLayout(props) {
       
         
         setMachineArray(prev=>{return prev.filter(function(item){
-            console.log(item.key)
-        console.log(machineNumber)
             return item.key!=machineNumber
         }
         )

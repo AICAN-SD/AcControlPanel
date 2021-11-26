@@ -15,14 +15,10 @@ function FloorLayout(props) {
     
     function Del(e){
         e.preventDefault()
-        console.log(e.target.id)
         var roomNumber=e.target.id.split('Room')[1]
         var floorRoom=e.target.id.split('Room')[0]
-        console.log(e.target.id)
       
         setRoomArray(prev=>{return prev.filter(function(item,index){
-            console.log(item);
-            console.log(roomNumber);
             return item.key!=roomNumber
         }
         )
@@ -37,8 +33,6 @@ function FloorLayout(props) {
             setIsFloorData(true)
           
             props.floorData.rooms.forEach(function (room, i) {
-                console.log(room.roomId.split('RoomName')[1])
-
             setRoom(parseInt(room.roomId.split('RoomName')[1]));
             setRoomArray((oldArray) => [...oldArray,<RoomLayout del={Del} devices={props.devices} roomData={room} key={parseInt(room.roomId.split('RoomName')[1])} setMachines={props.setMachines} names={props.names} floorNumber={props.floorNumber} roomNumber={parseInt(room.roomId.split('RoomName')[1])}></RoomLayout>]);
            

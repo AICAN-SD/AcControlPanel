@@ -51,12 +51,9 @@ function LayoutCreation() {
     const [devices,setDevices] = useState([])
     function Del(e){
         e.preventDefault()
-        console.log(e.target.id)
         var floorNumber=e.target.id.split('Floor')[1]
       
         setFloorArray(prev=>{return prev.filter(function(item,index){
-            console.log(item);
-            console.log(floorNumber);
             return item.key!=floorNumber
         }
         )
@@ -102,7 +99,6 @@ function LayoutCreation() {
             
             if(response.data.Data !==undefined){
                 response.data.Data.forEach(function (floor, i) {
-                    console.log(floor)
                     setisSaveButVisible(true)
                    
 

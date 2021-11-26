@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 @csrf_exempt
 def data(request):
     if request.method=='POST':
-        Floors.objects.all().delete()
+        Floors.objects.all().delete()  #Del first before adding data 
         data=JSONParser().parse(request)['data']
         machineids = []
         for x in data:
             if 'RoomName' in x:
-                
                 roomArray=x.split('RoomName')
                 floorId=roomArray[0].split('Floor')[1]
                 roomId=roomArray[1]
@@ -136,18 +135,13 @@ def MachineToggle(request,id):
     nowTime=datetime.now().strftime('%H:%M')
     time=datetime.strptime(str(nowTime),'%H:%M')
     machine = Machines.objects.get(MachineId = id)
-
-    
-    if machine.status == True:
+    if machine.status == True:  
         machine.status=False
-        
-
         machine.endTime=str(time.hour)+':'+str(time.minute)
         machine.save()
         flrs=Floors.objects.filter(FloorId=machine.floor.FloorId)
         stsF=False
         for floor in flrs:
-            
             rms=Rooms.objects.filter(floor=floor)
             for room in rms:
                 stsR=False
@@ -161,11 +155,7 @@ def MachineToggle(request,id):
                     room.save()
         if not stsF:
             Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=False)
-            
-
-        
         appendToCsv(indvData=machine,read=1)
-        
     else:
         obj=Profiles.objects.all()
         count=0
@@ -174,30 +164,25 @@ def MachineToggle(request,id):
             if(ob.status==True):
                 count=count+1
                 prof=ob
-        
         machine.status = True
         Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=True)
         Rooms.objects.filter(RoomId=machine.room.RoomId).update(status=True)
         machine.startTime=str(time.hour)+':'+str(time.minute)
         if(prof!=0):
-            print(prof.data)
             if(prof.type==1 or prof.type==2):
                 for var in prof.data['selectedMachines']:
                     if(var['MachineId']==id):
-                        print('yes in Floor or Room profile')
+                        #yes in Floor or Room profile
                         for timeSchd in prof.data['timeSchedule']:
                             if(timeSchd['start']<=str(time.hour)+':'+str(time.minute) and timeSchd['end']>=str(time.hour)+':'+str(time.minute)):
                                 machine.endTime=timeSchd['end']
             elif(prof.type==3):
                 for var in prof.data['machineObjects']:
                     if(var['MachineId']==id):
-                        print('yes in mac profile')
+                        #yes in mac profile
                         for timeSchd in prof.data['timeSchedule']:
                             if(timeSchd['start']<=str(time.hour)+':'+str(time.minute) and timeSchd['end']>=str(time.hour)+':'+str(time.minute)):
                                 machine.endTime=timeSchd['end'] 
-
-                
-        
         appendToCsv(indvData=machine)
         machine.save()  
     finalData=AllData()       
@@ -209,14 +194,12 @@ def ProfileOff(request):
         machine.status=False
         Floors.objects.filter(FloorId=machine.floor.FloorId).update(status=False)
         Rooms.objects.filter(RoomId=machine.room.RoomId).update(status=False)
-        
         machine.startTime='00:00'
         machine.endTime='00:00'
         machine.save()
     profiles = Profiles.objects.all()
     for x in profiles:
         x.status=False
-        
         x.save() 
     appendToCsv(from_multiData=1) 
     finalData=AllData()
@@ -234,7 +217,7 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
             profile.status = False
             profile.save()  
     if rid=='null' and fid!='null':
-        print(fid)
+        #floor Toggle
         floor=Floors.objects.filter(FloorId=fid)
         if floor.exists():
             if floor.exists():
@@ -254,13 +237,13 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
                         Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
                     m.save()
     elif rid!='null' and fid!='null':
+        # Room Toggle
         floor=Floors.objects.filter(FloorId=fid)
         room=Rooms.objects.filter(floor=floor[0],RoomId=rid)
         sts=False
         if room.exists():
             mac=Machines.objects.filter(room=room[0])
             appendToCsv(factoryToggleMac=mac,toggleStatus=int(status))
-            
             for m in mac:
                 if int(status)==1:
                     m.status=True 
@@ -284,25 +267,22 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
                     
                 
     elif rid=='null' and fid=='null':
-        print('in else')
+        # Factory Toggle
         mac=Machines.objects.all()
         appendToCsv(factoryToggleMac=mac,toggleStatus=int(status))
         for m in mac:
-            if int(status)==1:
+            if int(status)==1:  # On Toggle
                 m.status=True 
                 m.startTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                 m.endTime='23:59'
                 Floors.objects.filter(FloorId=m.floor.FloorId).update(status=True)
                 Rooms.objects.filter(RoomId=m.room.RoomId).update(status=True)
-
-            else:
+            else:  # Off Toggle
                 m.status=False
                 m.endTime=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
                 Floors.objects.filter(FloorId=m.floor.FloorId).update(status=False)
                 Rooms.objects.filter(RoomId=m.room.RoomId).update(status=False)
             m.save()
-    print(mac)
-    print(',,,,,,,,')
     
     finalData=AllData()
     return JsonResponse(finalData,safe=False) 
@@ -311,6 +291,7 @@ def FactoryToggle(request,status='',fid='null',rid='null'):
 
 
 def ProfileToggle(request,id):
+    #profile on/off
     if request.method == 'GET':
         nowTime=datetime.now().strftime('%H:%M')
         machines = Machines.objects.all()
@@ -326,7 +307,6 @@ def ProfileToggle(request,id):
         profile=Profiles.objects.get(id=id)
         profile.status=True
         profile.save()
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@')
         appendToCsv(data=profile,from_multiData=1)
         if profile.type == 1:
             floors = profile.data['selectedFloors']
@@ -336,7 +316,6 @@ def ProfileToggle(request,id):
                 Rooms.objects.filter(floor=floor).update(status=True)
                 Machines.objects.filter(floor=floor).update(status=True)
                 floor.save()
-                
                 truth=True
                 for var in profile.data['timeSchedule']:
                     startTime=var['start']
@@ -377,8 +356,6 @@ def ProfileToggle(request,id):
                             m.startTime=startTime
                             m.endTime=endTime
                             m.save()
-                    else:
-                        pass
                 if(truth):
                     mac=Machines.objects.filter(MachineId__contains='Floor'+floorID+'Room'+roomID)
                     for m in mac:
@@ -401,8 +378,6 @@ def ProfileToggle(request,id):
                          machine.startTime=startTime
                          machine.endTime=endTime
                          machine.save()
-                     else:
-                         pass
                  if(truth):
                      machine.startTime='00:00'
                      machine.endTime='00:00'
@@ -492,7 +467,7 @@ def UpdateCost(request):
             device.save()
         return JsonResponse({'message':'Updated'},safe=False)   
 
-def AllData():
+def AllData(): #return everything which is needed for frontend
     macStatus=False
     for m in Machines.objects.all():
         if m.status==True:
@@ -512,7 +487,6 @@ def AllData():
             machineProfiles.append(profile)         
     data=[]
     for floor in floors:
-        print(floor.status)
         datax={
                 "floor":floor.FloorName,
                 'floorId':floor.FloorId,
@@ -546,6 +520,7 @@ def AllData():
 
 @csrf_exempt
 def readCsv(request,id=0):
+    # reads device got from mqtt
     data = pd.read_csv(BASE_DIR/'machines.csv')
     count_row = data.shape[0]
     if request.method == 'GET':    
@@ -557,11 +532,11 @@ def readCsv(request,id=0):
         for x in range(count_row):
             if data.loc[x,'MACHINE_ID'] in array:
                data.loc[x,'ASSIGNED'] = True 
-        print(data)       
         data.to_csv(BASE_DIR/'machines.csv',index=False)       
         return JsonResponse({'message':"Done"},safe=False)  
 
 def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,toggleStatus=0):
+    #fucntion which append to TO_DATA.csv which sends data to mqtt
     todayDate=date.today()
     nowTime=datetime.now().strftime('%H:%M')
     df = pd.read_csv(BASE_DIR/'TO_DATA.csv')
@@ -578,12 +553,9 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
             elif(str(df.loc[x,'STATUS'])=='PENDING'):
                 df=df.drop(x)
     elif(factoryToggleMac==0):
-        print('cccccccc')
         if(indvData!=0 and read==0):
             for rowIndex in range(count_row):
-                if(str(df.loc[rowIndex,'STATUS'])=='ONGOING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):
-                    
-                    print('xxxxxxxxxxxxxxxxxx')
+                if(str(df.loc[rowIndex,'STATUS'])=='ONGOING' and str(df.loc[rowIndex,'ID'])==indvData.MachineName):                    
                     df.loc[rowIndex,'STATUS']='DONE'
                     df.loc[rowIndex,'OFF_TIME']=nowTime
                     df.loc[rowIndex,'OFF_DATE']=todayDate
@@ -592,19 +564,14 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                                 
 
         elif(read):
-            print(')))))))))))')
-            print(indvData)
             listtt=df.loc[( (df['ID'].str.contains(str(indvData))) & (df['STATUS'].str.contains("ONGOING"))),['PROFILE_ID', 'ID', 'ON_TIME','ON_DATE', 'OFF_TIME','OFF_DATE', 'STATUS']]
             if len(listtt.index.tolist())>0:
                 index=listtt.index.tolist()[0]
                 df.loc[index,'STATUS']='DONE'
                 df.loc[index,'OFF_TIME']=indvData.endTime
                 df.loc[index,'OFF_DATE']=todayDate
-                print(indvData.endTime)
             
     elif(factoryToggleMac!=0 and toggleStatus==0):
-        
-
         for x in range(count_row):
             for mac in factoryToggleMac:
                 if(str(df.loc[x,'STATUS'])=='ONGOING' and str(df.loc[x,'ID'])==mac.MachineName):
@@ -616,12 +583,7 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                 elif(str(df.loc[x,'STATUS'])=='PENDING' and str(df.loc[x,'ID'])==mac.MachineName):
                     df=df.drop(x)
                     break
-
-       
-
-
-
-
+    #saves data to csv
     df.to_csv(BASE_DIR/'TO_DATA.csv',index=False)
 
     # append to csv
@@ -640,7 +602,6 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                         else:
                             status='PENDING'
                             strt=y['start']
-                        print(data.data)
                         writer.writerow([data.id,x['MachineName'],strt,todayDate,y['end'],'',status])
                     else:
                         #Already Done Before Selection
@@ -656,14 +617,12 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
                         else:
                             status='PENDING'
                             strt=y['start']
-                        print(data.data)
                         writer.writerow([data.id,x['MachineName'],strt,todayDate,y['end'],'',status])
                     else:
                         #Already Done Before Selection
                         pass 
 
     elif(indvData and read==0):
-        print(indvData.endTime)
         if(datetime.strptime(indvData.endTime, '%H:%M')>=datetime.strptime(str(nowTime),'%H:%M') or str(datetime.strptime(indvData.endTime, '%H:%M').hour)+':'+str(datetime.strptime(indvData.endTime, '%H:%M').minute)=='0:0'):
             if(datetime.strptime(indvData.startTime, '%H:%M')<=datetime.strptime(str(nowTime),'%H:%M')):
                 status='ONGOING'
@@ -680,9 +639,6 @@ def appendToCsv(data=0,indvData=0,from_multiData=0,read=0,factoryToggleMac=0,tog
             strt=str(datetime.strptime(str(nowTime),'%H:%M').hour)+':'+str(datetime.strptime(str(nowTime),'%H:%M').minute)
             status='ONGOING'
             writer.writerow(['-1',mac.MachineName,strt,todayDate,'23:59',todayDate,status])
-                    
-
-
     f.close()
     return True
 
@@ -693,10 +649,10 @@ def days_cur_month():
     d1 = date(y, m, 1)
     d2 = date(y, m, ndays)
     delta = d2 - d1
-
     return [(d1 + timedelta(days=i)).strftime('%d') for i in range(delta.days + 1)]
 
 def dashboard(request):
+    #returns all data needed for Dashboard
     addedWeek=[0,0,0,0,0,0,0]
     addedYear=[0,0,0,0,0,0,0,0,0,0,0,0]
     totalCostYear=[]
@@ -716,65 +672,44 @@ def dashboard(request):
     totalPowerWeekCost=0
     today=date.today()
     todayWeekDay=today.weekday()
-
     weekRoomPower=[]
     weekRoomPowerCost=[]
-
     weekMacPower=[]
     weekMacPowerCost=[]
-
-    
-
     monthRoomPower=[]
     monthRoomPowerCost=[]
-
-    
     monthMacPower=[]
     monthMacPowerCost=[]
-
     yearRoomPower=[]
     yearRoomPowerCost=[]
-
     yearMacPower=[]
     yearMacPowerCost=[]
-
     maxPowerWeekRoom=[]
     maxPowerMonthRoom=[]
     maxPowerYearRoom=[]
     maxPowerConsYear=[]
     maxPowerConsMonth=[]
     maxPowerConsWeek=[]
-
     MacMaxPowerConsWeek=[]
     MacMaxPowerConsMonth=[]
     MacMaxPowerConsYear=[]
-
     incInCostWeek=0
     incInCostMonth=0
     incInCostYear=0
-    
-
     monthDays=monthrange(date.today().year, date.today().month)[1]
-
     startWeekDate=today-timedelta(days=todayWeekDay)
     lastWeekDate= today-timedelta(days=today.weekday(), weeks=1)
-
-
     startMonthDate=today-timedelta(days=today.day-1)
     prevMonthLastDate = date.today().replace(day=1) - timedelta(days=1)
     prevMonthFirstDate = prevMonthLastDate.replace(day=1)
     startYearDate=date(year=today.year,month=1,day=1)
     prevYearDate=date(year=today.year-1,month=1,day=1)
     week=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=startWeekDate)
-    print(startWeekDate)
-    print(lastWeekDate)
     prevWeek=PowerUsedArrayWeekFloors.objects.filter(startWeekDate=lastWeekDate)
-
     month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=startMonthDate)
     prevMonth=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=prevMonthFirstDate)
     year=PowerUsedArrayYearFloors.objects.filter(startYearDate=startYearDate)
     prevYear=PowerUsedArrayYearFloors.objects.filter(startYearDate=prevYearDate)
-    
     
     if prevWeek.exists():
         totalCostWeek.append(float(prevWeek[0].totalPowerCostFacWeek))
@@ -888,8 +823,6 @@ def dashboard(request):
         addedMonth.append(0)
 
     for x in weekJson:
-        print(weekJson)
-        print(len(weekJson[x]))
         if len(weekJson[x]) < 7:
             for l in range (0,7-len(weekJson[x])):
                 weekJson[x].append(0)
@@ -923,24 +856,6 @@ def dashboard(request):
 
     addedYearLabel.append(prevYearDate.year)
     addedYearLabel.append(startYearDate.year)
-
-    
-    
-
-    
-    
- 
-    
-    
-    
-
-    
-
-    
-        
-            
-   
-
     
     return JsonResponse({'weekPowerFloors':weekJson,'monthPowerFloors':monthJson,
     'monthDates':days_cur_month(),'yearPowerFloors':yearJson,'ussageWeek':addedWeek,
@@ -961,6 +876,7 @@ def dashboard(request):
     'MacMaxPowerConsYear':MacMaxPowerConsYear,'MacMaxPowerConsMonth':MacMaxPowerConsMonth,'MacMaxPowerConsWeek':MacMaxPowerConsWeek},safe=False) 
 
 def toDB(request):
+    # saves data from FROM_DATA.csv to database !important
     for m in Machines.objects.all():
         device=Devices.objects.filter(name=m.MachineType)[0]
         w=timedelta(seconds=0,minutes=0,hours=0)
@@ -1095,7 +1011,7 @@ def toDB(request):
     return HttpResponse('printed and saved')
 
 def calculateWeek():
-    # today-timedelta(days=today.weekday(), weeks=1)
+    #calculates this and last 2 weeks Week
     for addDay in range(0,3):
         if(addDay == 0):  # this week
             today = date.today()
@@ -1106,13 +1022,10 @@ def calculateWeek():
             
             todayWeekDay=6
             dateField = today
-        
-
         a={}
         b={}
         c={}
         d=[]
-
         # for roomCalculations
         e={}
         f={}
@@ -1192,11 +1105,10 @@ def calculateWeek():
 
 
 def calculateMonth():
-    for year in range(1,-1,-1):  #for prev data to insert
-        
-
+    for year in range(1,-1,-1):  #for prev year's month data to insert
         zz=[]
         for x in range(1,13):
+            #calculates month data
             arr=PowerConsMachines.objects.filter(Date_Field__range=[str(date(date.today().year-year,x,1)), str(date(date.today().year-year,x,calendar.monthrange(date.today().year-year, x)[1]))])
             if arr.exists():
                 zz.append(date(date.today().year-year,x,1))
@@ -1242,12 +1154,7 @@ def calculateMonth():
                     i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+float(monthrange(date.today().year, date.today().month)[1])*float(x[0].Max_PC_Machine)),2)
                 else:
                     x=PowerConsMachines.objects.filter(Machine_Name=mac).latest('Date_Field')
-                    print(x.Max_PC_Machine)
                     i[mac.room.RoomName]=round(float(i[mac.room.RoomName]+float(monthrange(date.today().year, date.today().month)[1])*float(x.Max_PC_Machine)),2)
-
-
-                        
-    
             
             for day in range(0,todayDay):
                 lastDate = today - timedelta(days=todayDay-(day+1))
@@ -1295,6 +1202,7 @@ def calculateMonth():
             
 
 def calculateYear():
+    # only CALC this year's data
     totalPowerYearFAC=0
     totalPowerCostYearFAC=0
     i={}
@@ -1303,7 +1211,6 @@ def calculateYear():
     b={}
     c={}
     d=[0,0,0,0,0,0,0,0,0,0,0,0]
-
     # for roomCalculations
     e={}
     f={}
@@ -1333,7 +1240,6 @@ def calculateYear():
     
     for x in range (0,date.today().month):
         start_day_of_prev_month=date(year=date.today().year,month=x+1,day=1)
-        print(start_day_of_prev_month)
         month=PowerUsedArrayMonthFloors.objects.filter(startMonthDate=start_day_of_prev_month)
         if month.exists():
             for floor in month[0].totalPowerMonth:
@@ -1372,7 +1278,6 @@ def calculateYear():
     else:
         a=PowerUsedArrayYearFloors(jsonData=json.loads(s1),maxPowerConsMachines=json.loads(s9),maxPowerCons=json.loads(s8),jsonDataCost=json.loads(s3),jsonDataPowerRooms=json.loads(s4),jsonDataCostPowerRooms=json.loads(s5),jsonDataPowerMacs=json.loads(s6),jsonDataCostPowerMacs=json.loads(s7),totalPowerCostFacYear=totalPowerCostYearFAC,totalPowerUsedFacYear=totalPowerYearFAC,totalPowerYear=json.loads(s2),startYearDate=date(year=date.today().year,month=1,day=1))
         a.save()
-        
     print('Saved to db year')
 
 

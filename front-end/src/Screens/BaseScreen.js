@@ -25,7 +25,6 @@ function dropdown(){
 
 
 function navBarLinksContainer(e){
-    console.log('prevented')
     e.preventDefault()
     e.stopPropagation()
 }
@@ -53,13 +52,11 @@ function navBarLinksContainer(e){
         const navbarToggle = navbar.querySelector(".navbar-toggle");
 
         if(navBarToggleState){
-            console.log('in close')
             setNavBarToggleState(!navBarToggleState)
 
             closeMobileNavbar(e,navbar,navbarToggle);
 
         }else{
-            console.log('in open')
             setNavBarToggleState(!navBarToggleState)
 
 

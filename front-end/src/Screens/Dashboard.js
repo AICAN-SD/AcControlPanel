@@ -117,8 +117,6 @@ function Dashboard() {
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/dashboard/").then((response) => {
-		console.log('------------------------------------')
-		console.log(response.data.maxPowerYearRoom)
 
         TotalPowerYear=response.data.totalPowerYear
 		setTotalPowerYear(response.data.totalPowerYear)
@@ -220,19 +218,12 @@ function Dashboard() {
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
       var Data=response.data.Data;
-	  console.log(response.data.Data)
 
       setData(Data)
       setLoading(false);
 	  
 
     });
-
-
-	//For year Inital
-    
-	
-   
   }, []);
    
 	function onCLICK(e){
@@ -493,7 +484,6 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
            
               {floor.rooms !== undefined &&
                 floor.rooms.map((room, indx) => {
-					console.log(room);
                   return (
                     <>
 					
@@ -517,7 +507,6 @@ setSeriesHourlyPowerByDevice(HourlyPowerByDevice.seriesHourlyPowerByDevice(month
 									
                           {room.machines !== undefined &&
                             room.machines.map((machine, indxx) => {
-								console.log(machine);
                               return (
                                 
                               

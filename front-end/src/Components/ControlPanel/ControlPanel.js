@@ -25,7 +25,6 @@ function ControlPanel() {
 
 
     axios.get("http://127.0.0.1:8000/api/machines/").then((response) => {
-      console.log(response.data.Data)
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)
@@ -74,7 +73,6 @@ function ControlPanel() {
     console.log(e)
     axios.get(`http://127.0.0.1:8000/api/factoryToggle/${status}/${fid}/${rid}`)
     .then((response) => {
-      console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)
@@ -88,7 +86,6 @@ function ControlPanel() {
   function MachineToggle(id){
     axios.get(`http://127.0.0.1:8000/api/machine/${id}`)
     .then((response) => {
-      console.log(response.data);
       setFloorProfile(response.data.floorProfiles)
       setRoomProfile(response.data.roomProfiles)
       setMachineProfile(response.data.machineProfiles)
