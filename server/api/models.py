@@ -51,14 +51,6 @@ class Devices(models.Model):
      def __str__(self):
         return self.name
 
-class WorkingHoursMachines(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.CharField(max_length=200) 
-    WH_Machine =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Machine_Name))
         
 class PowerConsMachines(models.Model):
     id= models.AutoField(primary_key=True,unique=True)
@@ -67,15 +59,6 @@ class PowerConsMachines(models.Model):
     Max_PC_Machine =models.CharField(max_length=200)
     CostPC_Machine =models.CharField(max_length=200)  
     Date_Field=models.DateField()
-    def __str__(self):
-        return str(str(self.Date_Field)+' '+str(self.Machine_Name))
-        
-class CostPowerConsMachines(models.Model):
-    id= models.AutoField(primary_key=True,unique=True)
-    Machine_Name = models.CharField(max_length=200) 
-    CostPC_Machine =models.CharField(max_length=200) 
-    Date_Field=models.DateField()
-
     def __str__(self):
         return str(str(self.Date_Field)+' '+str(self.Machine_Name))
 
